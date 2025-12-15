@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -27,7 +27,7 @@ interface Tutor {
     email: string;
 }
 
-const TutorsPage = () => {
+const TutorsContent = () => {
     const tutors = tutorsData as Tutor[];
     const searchParams = useSearchParams();
     const urlSearchQuery = searchParams.get('search') || '';
@@ -340,6 +340,21 @@ const TutorsPage = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+const TutorsPage = () => {
+    return (
+        <Suspense fallback={
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+                <div className="animate-pulse">
+                    <div className="h-8 bg-blue-100 rounded w-1/3 mx-auto mb-4"></div>
+                    <div className="h-4 bg-blue-50 rounded w-1/2 mx-auto"></div>
+                </div>
+            </div>
+        }>
+            <TutorsContent />
+        </Suspense>
     );
 };
 

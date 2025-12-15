@@ -1,29 +1,32 @@
 [
     {
         "id": 1,
-        "slug": "budi-santoso",
-        "nama": "Budi Santoso",
+        "slug": "rivaldi-permana",
+        "nama": "Rivaldi Permana",
         "mapel": [
             "Matematika",
-            "Fisika"
+            "IPA",
+            "Informatika"
         ],
         "harga": 150000,
-        "lokasi": "Jakarta Selatan",
+        "lokasi": "Badung Barat",
         "tipe": "keduanya",
         "tingkat": [
+            "SD",
             "SMP",
             "SMA"
         ],
         "foto": "/images/tutor-1.jpg",
-        "deskripsi": "Lulusan ITB dengan pengalaman mengajar 8 tahun. Spesialisasi dalam persiapan ujian SBMPTN dan Olimpiade Matematika. Metode mengajar yang mudah dipahami dan menyenangkan.",
-        "pengalaman": "8 tahun",
+        "deskripsi": "Lulusan UNPAS dengan pengalaman mengajar 3 tahun. Spesialisasi dalam persiapan ujian SBMPTN dan Olimpiade Matematika. Metode mengajar yang mudah dipahami dan menyenangkan.",
+        "pengalaman": "3 tahun",
         "pendidikan": "S1 Matematika ITB",
         "kategori": [
             "matematika",
-            "fisika"
+            "fisika",
+            "informatika"
         ],
-        "whatsapp": "6281234567001",
-        "email": "budi.santoso@email.com"
+        "whatsapp": "6283823245965",
+        "email": "rivalperman@gmail.com"
     },
     {
         "id": 2,
