@@ -1,0 +1,219 @@
+[
+    {
+        "id": 1,
+        "slug": "budi-santoso",
+        "nama": "Budi Santoso",
+        "mapel": [
+            "Matematika",
+            "Fisika"
+        ],
+        "harga": 150000,
+        "lokasi": "Jakarta Selatan",
+        "rating": 4.8,
+        "foto": "/images/tutor-1.jpg",
+        "deskripsi": "Lulusan ITB dengan pengalaman mengajar 8 tahun. Spesialisasi dalam persiapan ujian SBMPTN dan Olimpiade Matematika. Metode mengajar yang mudah dipahami dan menyenangkan.",
+        "pengalaman": "8 tahun",
+        "pendidikan": "S1 Matematika ITB",
+        "kategori": [
+            "matematika",
+            "fisika"
+        ],
+        "whatsapp": "6281234567001",
+        "email": "budi.santoso@email.com"
+    },
+    {
+        "id": 2,
+        "slug": "siti-nurhaliza",
+        "nama": "Siti Nurhaliza",
+        "mapel": [
+            "Bahasa Inggris",
+            "TOEFL",
+            "IELTS"
+        ],
+        "harga": 200000,
+        "lokasi": "Jakarta Pusat",
+        "rating": 4.9,
+        "foto": "/images/tutor-2.jpg",
+        "deskripsi": "Native speaker dengan sertifikasi TESOL. Berpengalaman mengajar di lembaga internasional dan membantu ratusan siswa mencapai skor TOEFL dan IELTS yang tinggi.",
+        "pengalaman": "10 tahun",
+        "pendidikan": "S2 English Literature, University of Melbourne",
+        "kategori": [
+            "bahasa-inggris"
+        ],
+        "whatsapp": "6281234567002",
+        "email": "siti.nurhaliza@email.com"
+    },
+    {
+        "id": 3,
+        "slug": "ahmad-rizki",
+        "nama": "Ahmad Rizki",
+        "mapel": [
+            "Pemrograman",
+            "Python",
+            "JavaScript"
+        ],
+        "harga": 175000,
+        "lokasi": "Bandung",
+        "rating": 4.7,
+        "foto": "/images/tutor-3.jpg",
+        "deskripsi": "Software Engineer dengan 5 tahun pengalaman di startup teknologi. Mengajar pemrograman dari dasar hingga advanced. Cocok untuk pemula maupun yang ingin meningkatkan skill.",
+        "pengalaman": "5 tahun",
+        "pendidikan": "S1 Teknik Informatika UI",
+        "kategori": [
+            "pemrograman"
+        ],
+        "whatsapp": "6281234567003",
+        "email": "ahmad.rizki@email.com"
+    },
+    {
+        "id": 4,
+        "slug": "dewi-lestari",
+        "nama": "Dewi Lestari",
+        "mapel": [
+            "Kimia",
+            "Biologi"
+        ],
+        "harga": 140000,
+        "lokasi": "Surabaya",
+        "rating": 4.6,
+        "foto": "/images/tutor-4.jpg",
+        "deskripsi": "Guru berpengalaman dengan metode pembelajaran interaktif. Fokus pada pemahaman konsep dasar dan aplikasi praktis dalam kehidupan sehari-hari.",
+        "pengalaman": "6 tahun",
+        "pendidikan": "S1 Pendidikan Kimia UNJ",
+        "kategori": [
+            "kimia",
+            "biologi"
+        ],
+        "whatsapp": "6281234567004",
+        "email": "dewi.lestari@email.com"
+    },
+    {
+        "id": 5,
+        "slug": "rudi-hermawan",
+        "nama": "Rudi Hermawan",
+        "mapel": [
+            "Akuntansi",
+            "Ekonomi"
+        ],
+        "harga": 160000,
+        "lokasi": "Yogyakarta",
+        "rating": 4.8,
+        "foto": "/images/tutor-5.jpg",
+        "deskripsi": "Akuntan profesional dengan pengalaman mengajar mahasiswa dan profesional. Materi disesuaikan dengan kebutuhan siswa, dari dasar hingga persiapan ujian sertifikasi.",
+        "pengalaman": "7 tahun",
+        "pendidikan": "S1 Akuntansi UGM, CPA",
+        "kategori": [
+            "ekonomi"
+        ],
+        "whatsapp": "6281234567005",
+        "email": "rudi.hermawan@email.com"
+    },
+    {
+        "id": 6,
+        "slug": "linda-wijaya",
+        "nama": "Linda Wijaya",
+        "mapel": [
+            "Bahasa Mandarin",
+            "HSK"
+        ],
+        "harga": 180000,
+        "lokasi": "Jakarta Barat",
+        "rating": 4.9,
+        "foto": "/images/tutor-6.jpg",
+        "deskripsi": "Tutor bahasa Mandarin bersertifikat HSK 6. Mengajar dari level dasar hingga persiapan ujian HSK. Metode pembelajaran yang efektif dan menyenangkan.",
+        "pengalaman": "9 tahun",
+        "pendidikan": "S1 Sastra China, Beijing University",
+        "kategori": [
+            "bahasa-asing"
+        ],
+        "whatsapp": "6281234567006",
+        "email": "linda.wijaya@email.com"
+    },
+    {
+        "id": 7,
+        "slug": "andi-pratama",
+        "nama": "Andi Pratama",
+        "mapel": [
+            "Gitar",
+            "Piano",
+            "Teori Musik"
+        ],
+        "harga": 125000,
+        "lokasi": "Semarang",
+        "rating": 4.7,
+        "foto": "/images/tutor-7.jpg",
+        "deskripsi": "Musisi profesional dengan pengalaman mengajar musik untuk segala usia. Metode pembelajaran yang fun dan disesuaikan dengan minat siswa.",
+        "pengalaman": "8 tahun",
+        "pendidikan": "S1 Seni Musik ISI Yogyakarta",
+        "kategori": [
+            "musik"
+        ],
+        "whatsapp": "6281234567007",
+        "email": "andi.pratama@email.com"
+    },
+    {
+        "id": 8,
+        "slug": "maya-kusuma",
+        "nama": "Maya Kusuma",
+        "mapel": [
+            "Desain Grafis",
+            "Adobe Photoshop",
+            "Illustrator"
+        ],
+        "harga": 170000,
+        "lokasi": "Bali",
+        "rating": 4.8,
+        "foto": "/images/tutor-8.jpg",
+        "deskripsi": "Desainer grafis profesional dengan portfolio di berbagai brand internasional. Mengajar dari basic hingga advanced design techniques.",
+        "pengalaman": "6 tahun",
+        "pendidikan": "S1 Desain Komunikasi Visual ITS",
+        "kategori": [
+            "desain"
+        ],
+        "whatsapp": "6281234567008",
+        "email": "maya.kusuma@email.com"
+    },
+    {
+        "id": 9,
+        "slug": "farhan-hakim",
+        "nama": "Farhan Hakim",
+        "mapel": [
+            "Matematika",
+            "Statistika"
+        ],
+        "harga": 155000,
+        "lokasi": "Medan",
+        "rating": 4.6,
+        "foto": "/images/tutor-9.jpg",
+        "deskripsi": "Data Scientist dengan kemampuan mengajar matematika dan statistika untuk berbagai tingkat. Fokus pada aplikasi praktis dan pemecahan masalah.",
+        "pengalaman": "5 tahun",
+        "pendidikan": "S2 Statistika IPB",
+        "kategori": [
+            "matematika"
+        ],
+        "whatsapp": "6281234567009",
+        "email": "farhan.hakim@email.com"
+    },
+    {
+        "id": 10,
+        "slug": "rina-sari",
+        "nama": "Rina Sari",
+        "mapel": [
+            "Yoga",
+            "Pilates",
+            "Meditasi"
+        ],
+        "harga": 130000,
+        "lokasi": "Jakarta Selatan",
+        "rating": 4.9,
+        "foto": "/images/tutor-10.jpg",
+        "deskripsi": "Certified yoga instructor dengan pengalaman mengajar berbagai style yoga. Fokus pada kesehatan fisik dan mental melalui praktik yang aman dan efektif.",
+        "pengalaman": "7 tahun",
+        "pendidikan": "200-Hour Yoga Teacher Training, Rishikesh",
+        "kategori": [
+            "olahraga"
+        ],
+        "whatsapp": "6281234567010",
+        "email": "rina.sari@email.com"
+    }
+]
