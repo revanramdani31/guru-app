@@ -1,87 +1,61 @@
 import Link from 'next/link';
+import { GraduationCap, Mail, Phone } from 'lucide-react';
 
-export default function Footer() {
+const Footer = () => {
     return (
-        <footer className="bg-gray-900 text-white mt-20">
+        <footer className="bg-blue-900 text-white mt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    {/* Brand */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div>
-                        <h3 className="text-2xl font-bold text-blue-400 mb-4">GuruKu</h3>
-                        <p className="text-gray-400">
-                            Platform terbaik untuk menemukan tutor profesional sesuai kebutuhan Anda.
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="bg-white p-2 rounded-lg">
+                                <GraduationCap className="w-6 h-6 text-blue-900" />
+                            </div>
+                            <span className="text-xl font-bold">GuruKu</span>
+                        </div>
+                        <p className="text-blue-200 text-sm">
+                            Terhubung dengan guru berkualitas untuk pengalaman belajar yang dipersonalisasi.
                         </p>
                     </div>
 
-                    {/* Quick Links */}
                     <div>
-                        <h4 className="text-lg font-semibold mb-4">Menu</h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link href="/" className="text-gray-400 hover:text-blue-400 transition">
-                                    Beranda
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/tutors" className="text-gray-400 hover:text-blue-400 transition">
-                                    Tutor
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/categories" className="text-gray-400 hover:text-blue-400 transition">
-                                    Kategori
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/contact" className="text-gray-400 hover:text-blue-400 transition">
-                                    Kontak
-                                </Link>
-                            </li>
-                        </ul>
+                        <span className="font-semibold text-lg mb-4 block">Tautan Cepat</span>
+                        <div className="flex flex-col gap-2">
+                            <Link href="/tutors" className="text-blue-200 hover:text-white transition-colors text-sm">
+                                Cari Guru
+                            </Link>
+                            <Link href="/categories" className="text-blue-200 hover:text-white transition-colors text-sm">
+                                Mata Pelajaran
+                            </Link>
+                            <Link href="/contact" className="text-blue-200 hover:text-white transition-colors text-sm">
+                                Hubungi Kami
+                            </Link>
+                        </div>
                     </div>
 
-                    {/* Categories */}
                     <div>
-                        <h4 className="text-lg font-semibold mb-4">Kategori Populer</h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link href="/categories/matematika" className="text-gray-400 hover:text-blue-400 transition">
-                                    Matematika
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/categories/bahasa-inggris" className="text-gray-400 hover:text-blue-400 transition">
-                                    Bahasa Inggris
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/categories/pemrograman" className="text-gray-400 hover:text-blue-400 transition">
-                                    Pemrograman
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/categories/musik" className="text-gray-400 hover:text-blue-400 transition">
-                                    Musik
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Contact Info */}
-                    <div>
-                        <h4 className="text-lg font-semibold mb-4">Hubungi Kami</h4>
-                        <ul className="space-y-2 text-gray-400">
-                            <li>Email: info@guruku.com</li>
-                            <li>Telepon: +62 812-3456-7890</li>
-                            <li>Jakarta, Indonesia</li>
-                        </ul>
+                        <span className="font-semibold text-lg mb-4 block">Kontak</span>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2 text-blue-200 text-sm">
+                                <Mail className="w-4 h-4" />
+                                <span>info@guruku.com</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-blue-200 text-sm">
+                                <Phone className="w-4 h-4" />
+                                <span>+62 812 3456 7890</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                    <p>&copy; {new Date().getFullYear()} GuruKu. All rights reserved.</p>
+                <div className="border-t border-blue-800 mt-8 pt-8 text-center">
+                    <p className="text-blue-200 text-sm">
+                        © 2025 GuruKu. Hak Cipta Dilindungi.
+                    </p>
                 </div>
             </div>
         </footer>
     );
-}
+};
+
+export default Footer;

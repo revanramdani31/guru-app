@@ -9,7 +9,11 @@
         ],
         "harga": 150000,
         "lokasi": "Jakarta Selatan",
-        "rating": 4.8,
+        "tipe": "keduanya",
+        "tingkat": [
+            "SMP",
+            "SMA"
+        ],
         "foto": "/images/tutor-1.jpg",
         "deskripsi": "Lulusan ITB dengan pengalaman mengajar 8 tahun. Spesialisasi dalam persiapan ujian SBMPTN dan Olimpiade Matematika. Metode mengajar yang mudah dipahami dan menyenangkan.",
         "pengalaman": "8 tahun",
@@ -32,9 +36,13 @@
         ],
         "harga": 200000,
         "lokasi": "Jakarta Pusat",
-        "rating": 4.9,
+        "tipe": "keduanya",
+        "tingkat": [
+            "SMA",
+            "Kuliah"
+        ],
         "foto": "/images/tutor-2.jpg",
-        "deskripsi": "Native speaker dengan sertifikasi TESOL. Berpengalaman mengajar di lembaga internasional dan membantu ratusan siswa mencapai skor TOEFL dan IELTS yang tinggi.",
+        "deskripsi": "Native speaker dengan sertifikasi TESOL. Berpengalaman mengajar di lembaga internasional dan membantu siswa mencapai skor TOEFL dan IELTS yang tinggi.",
         "pengalaman": "10 tahun",
         "pendidikan": "S2 English Literature, University of Melbourne",
         "kategori": [
@@ -54,7 +62,11 @@
         ],
         "harga": 175000,
         "lokasi": "Bandung",
-        "rating": 4.7,
+        "tipe": "online",
+        "tingkat": [
+            "SMA",
+            "Kuliah"
+        ],
         "foto": "/images/tutor-3.jpg",
         "deskripsi": "Software Engineer dengan 5 tahun pengalaman di startup teknologi. Mengajar pemrograman dari dasar hingga advanced. Cocok untuk pemula maupun yang ingin meningkatkan skill.",
         "pengalaman": "5 tahun",
@@ -75,7 +87,11 @@
         ],
         "harga": 140000,
         "lokasi": "Surabaya",
-        "rating": 4.6,
+        "tipe": "tatap_muka",
+        "tingkat": [
+            "SMP",
+            "SMA"
+        ],
         "foto": "/images/tutor-4.jpg",
         "deskripsi": "Guru berpengalaman dengan metode pembelajaran interaktif. Fokus pada pemahaman konsep dasar dan aplikasi praktis dalam kehidupan sehari-hari.",
         "pengalaman": "6 tahun",
@@ -97,7 +113,11 @@
         ],
         "harga": 160000,
         "lokasi": "Yogyakarta",
-        "rating": 4.8,
+        "tipe": "keduanya",
+        "tingkat": [
+            "SMA",
+            "Kuliah"
+        ],
         "foto": "/images/tutor-5.jpg",
         "deskripsi": "Akuntan profesional dengan pengalaman mengajar mahasiswa dan profesional. Materi disesuaikan dengan kebutuhan siswa, dari dasar hingga persiapan ujian sertifikasi.",
         "pengalaman": "7 tahun",
@@ -118,7 +138,13 @@
         ],
         "harga": 180000,
         "lokasi": "Jakarta Barat",
-        "rating": 4.9,
+        "tipe": "keduanya",
+        "tingkat": [
+            "SD",
+            "SMP",
+            "SMA",
+            "Kuliah"
+        ],
         "foto": "/images/tutor-6.jpg",
         "deskripsi": "Tutor bahasa Mandarin bersertifikat HSK 6. Mengajar dari level dasar hingga persiapan ujian HSK. Metode pembelajaran yang efektif dan menyenangkan.",
         "pengalaman": "9 tahun",
@@ -140,7 +166,13 @@
         ],
         "harga": 125000,
         "lokasi": "Semarang",
-        "rating": 4.7,
+        "tipe": "tatap_muka",
+        "tingkat": [
+            "SD",
+            "SMP",
+            "SMA",
+            "Kuliah"
+        ],
         "foto": "/images/tutor-7.jpg",
         "deskripsi": "Musisi profesional dengan pengalaman mengajar musik untuk segala usia. Metode pembelajaran yang fun dan disesuaikan dengan minat siswa.",
         "pengalaman": "8 tahun",
@@ -162,7 +194,11 @@
         ],
         "harga": 170000,
         "lokasi": "Bali",
-        "rating": 4.8,
+        "tipe": "online",
+        "tingkat": [
+            "SMA",
+            "Kuliah"
+        ],
         "foto": "/images/tutor-8.jpg",
         "deskripsi": "Desainer grafis profesional dengan portfolio di berbagai brand internasional. Mengajar dari basic hingga advanced design techniques.",
         "pengalaman": "6 tahun",
@@ -183,7 +219,11 @@
         ],
         "harga": 155000,
         "lokasi": "Medan",
-        "rating": 4.6,
+        "tipe": "online",
+        "tingkat": [
+            "SMA",
+            "Kuliah"
+        ],
         "foto": "/images/tutor-9.jpg",
         "deskripsi": "Data Scientist dengan kemampuan mengajar matematika dan statistika untuk berbagai tingkat. Fokus pada aplikasi praktis dan pemecahan masalah.",
         "pengalaman": "5 tahun",
@@ -205,7 +245,10 @@
         ],
         "harga": 130000,
         "lokasi": "Jakarta Selatan",
-        "rating": 4.9,
+        "tipe": "keduanya",
+        "tingkat": [
+            "Kuliah"
+        ],
         "foto": "/images/tutor-10.jpg",
         "deskripsi": "Certified yoga instructor dengan pengalaman mengajar berbagai style yoga. Fokus pada kesehatan fisik dan mental melalui praktik yang aman dan efektif.",
         "pengalaman": "7 tahun",

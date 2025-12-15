@@ -1,196 +1,211 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import tutorsData from '@/data/tutors.json';
-import categoriesData from '@/data/categories.json';
+'use client';
 
-export async function generateStaticParams() {
-    return tutorsData.map((tutor) => ({
-        slug: tutor.slug,
-    }));
+import Link from 'next/link';
+import { useParams, notFound } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { MapPin, Mail, Phone, ArrowLeft, MessageCircle, Monitor, BookOpen } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
+import tutorsData from '@/data/tutors.json';
+
+interface Tutor {
+    id: number;
+    slug: string;
+    nama: string;
+    mapel: string[];
+    harga: number;
+    lokasi: string;
+    tipe: string;
+    tingkat: string[];
+    foto: string;
+    deskripsi: string;
+    pengalaman: string;
+    pendidikan: string;
+    kategori: string[];
+    whatsapp: string;
+    email: string;
 }
 
-export default async function TutorDetailPage({ params }: Readonly<{ params: Promise<{ slug: string }> }>) {
-    const { slug } = await params;
-    const tutor = tutorsData.find((t) => t.slug === slug);
+// Format currency to IDR
+const formatIDR = (price: number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(price);
+};
+
+const getClassTypeLabel = (type: string) => {
+    switch (type) {
+        case 'online': return 'Online';
+        case 'tatap_muka': return 'Tatap Muka';
+        case 'keduanya': return 'Online & Tatap Muka';
+        default: return '';
+    }
+};
+
+export default function TutorDetailPage() {
+    const params = useParams();
+    const slug = params.slug as string;
+    const tutor = (tutorsData as Tutor[]).find(t => t.slug === slug);
 
     if (!tutor) {
-        notFound();
+        return (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+                <h1 className="text-3xl font-bold text-blue-900 mb-4">Guru Tidak Ditemukan</h1>
+                <Link href="/tutors">
+                    <Button>
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Kembali ke Daftar Guru
+                    </Button>
+                </Link>
+            </div>
+        );
     }
 
-    return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                {/* Back Button */}
-                <Link
-                    href="/tutors"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6"
-                >
-                    <svg
-                        className="w-5 h-5 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
-                        />
-                    </svg>
-                    Kembali ke Daftar Tutor
-                </Link>
+    const handleContact = (type: string) => {
+        if (type === 'whatsapp') {
+            window.open(`https://wa.me/${tutor.whatsapp}`, '_blank');
+        } else if (type === 'email') {
+            window.location.href = `mailto:${tutor.email}`;
+        } else if (type === 'call') {
+            window.location.href = `tel:${tutor.whatsapp}`;
+        }
+        toast({
+            title: "Menghubungi Guru",
+            description: `Membuka ${type === 'whatsapp' ? 'WhatsApp' : type === 'email' ? 'Email' : 'Telepon'}...`,
+            variant: "success"
+        });
+    };
 
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div className="md:flex">
-                        {/* Profile Image */}
-                        <div className="md:w-1/3 bg-gradient-to-br from-blue-400 to-purple-500 p-8 flex items-center justify-center">
-                            <div className="w-48 h-48 bg-white rounded-full flex items-center justify-center text-8xl">
+    return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <Link href="/tutors">
+                <Button variant="ghost" className="mb-6 text-blue-600 hover:text-blue-700">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Kembali ke Daftar Guru
+                </Button>
+            </Link>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Main Content */}
+                <div className="lg:col-span-2">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="bg-white border-2 border-blue-100 rounded-2xl overflow-hidden"
+                    >
+                        <div className="h-80 overflow-hidden relative bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                            <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center text-8xl">
                                 👨‍🏫
                             </div>
                         </div>
-
-                        {/* Profile Info */}
-                        <div className="md:w-2/3 p-8">
-                            <h1 className="text-4xl font-bold text-gray-900 mb-4">{tutor.nama}</h1>
-
-                            <div className="flex items-center mb-4">
-                                <span className="text-yellow-400 text-2xl">★</span>
-                                <span className="ml-2 text-xl font-semibold text-gray-700">
-                                    {tutor.rating}
-                                </span>
-                            </div>
-
-                            <div className="mb-6">
-                                <div className="flex items-center text-gray-600 mb-2">
-                                    <svg
-                                        className="w-5 h-5 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                                        />
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                                        />
-                                    </svg>
-                                    {tutor.lokasi}
-                                </div>
-
-                                <div className="flex items-center text-gray-600 mb-2">
-                                    <svg
-                                        className="w-5 h-5 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                        />
-                                    </svg>
-                                    Pengalaman: {tutor.pengalaman}
-                                </div>
-
-                                <div className="flex items-center text-gray-600">
-                                    <svg
-                                        className="w-5 h-5 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                        />
-                                    </svg>
-                                    {tutor.pendidikan}
-                                </div>
-                            </div>
-
-                            <div className="mb-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Mata Pelajaran:</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {tutor.mapel.map((mapel) => (
-                                        <span
-                                            key={mapel}
-                                            className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full"
-                                        >
-                                            {mapel}
+                        <div className="p-8">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
+                                <div>
+                                    <h1 className="text-4xl font-bold text-blue-900 mb-2">{tutor.nama}</h1>
+                                    <div className="flex items-center gap-2 text-gray-600 mb-3">
+                                        <MapPin className="w-5 h-5" />
+                                        <span>{tutor.lokasi}</span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {tutor.mapel.map((subject, idx) => (
+                                            <Link key={idx} href={`/categories/${tutor.kategori[0]}`}>
+                                                <span className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors">
+                                                    {subject}
+                                                </span>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-100">
+                                            <Monitor className="w-3 h-3" />
+                                            {getClassTypeLabel(tutor.tipe)}
                                         </span>
-                                    ))}
+                                        {tutor.tingkat.map((level, idx) => (
+                                            <span key={idx} className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">
+                                                <BookOpen className="w-3 h-3" />
+                                                {level}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="md:text-right">
+                                    <div className="text-3xl font-bold text-blue-600 mb-1">{formatIDR(tutor.harga)}</div>
+                                    <span className="text-gray-600">per jam</span>
                                 </div>
                             </div>
 
-                            <div className="bg-blue-50 p-6 rounded-lg mb-6">
-                                <div className="text-4xl font-bold text-blue-600">
-                                    Rp {tutor.harga.toLocaleString('id-ID')}
-                                    <span className="text-lg text-gray-600 font-normal">/jam</span>
+                            <div className="mb-6 pb-6 border-b border-blue-100">
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <span className="font-medium">Pengalaman:</span>
+                                    <span>{tutor.pengalaman}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-gray-600 mt-1">
+                                    <span className="font-medium">Pendidikan:</span>
+                                    <span>{tutor.pendidikan}</span>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row gap-3">
-                                <a
-                                    href={`https://wa.me/${tutor.whatsapp}?text=Halo%20${encodeURIComponent(tutor.nama)},%20saya%20tertarik%20untuk%20les%20privat`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex-1 inline-flex items-center justify-center bg-green-500 text-white px-6 py-4 rounded-lg font-semibold hover:bg-green-600 transition shadow-lg"
-                                >
-                                    <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                                    </svg>
-                                    WhatsApp
-                                </a>
-                                <a
-                                    href={`mailto:${tutor.email}?subject=Les%20Privat%20dengan%20${encodeURIComponent(tutor.nama)}&body=Halo%20${encodeURIComponent(tutor.nama)},%0A%0ASaya%20tertarik%20untuk%20mengikuti%20les%20privat.%0A%0ATerima%20kasih.`}
-                                    className="flex-1 inline-flex items-center justify-center bg-blue-600 text-white px-6 py-4 rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg"
-                                >
-                                    <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    Email
-                                </a>
+                            <div>
+                                <h2 className="text-2xl font-bold text-blue-900 mb-4">Tentang</h2>
+                                <p className="text-gray-700 leading-relaxed">{tutor.deskripsi}</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
+                </div>
 
-                    {/* Description */}
-                    <div className="border-t p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Tentang Tutor</h2>
-                        <p className="text-gray-700 leading-relaxed text-lg">{tutor.deskripsi}</p>
-                    </div>
+                {/* Sidebar */}
+                <div className="lg:col-span-1">
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="bg-white border-2 border-blue-100 rounded-2xl p-6 sticky top-24"
+                    >
+                        <h2 className="text-2xl font-bold text-blue-900 mb-6">Informasi Kontak</h2>
 
-                    {/* Categories */}
-                    <div className="border-t p-8 bg-gray-50">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Kategori</h2>
-                        <div className="flex flex-wrap gap-3">
-                            {tutor.kategori.map((katSlug) => {
-                                const category = categoriesData.find((c) => c.slug === katSlug);
-                                return category ? (
-                                    <Link
-                                        key={katSlug}
-                                        href={`/categories/${category.slug}`}
-                                        className="inline-flex items-center bg-white border-2 border-blue-500 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition"
-                                    >
-                                        <span className="text-2xl mr-2">{category.ikon}</span>
-                                        {category.nama}
-                                    </Link>
-                                ) : null;
-                            })}
+                        <div className="space-y-4 mb-6">
+                            <div className="flex items-center gap-3 text-gray-700">
+                                <div className="bg-blue-50 p-2 rounded-lg">
+                                    <Mail className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-1">Email</p>
+                                    <p className="font-medium text-sm break-all">{tutor.email}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3 text-gray-700">
+                                <div className="bg-blue-50 p-2 rounded-lg">
+                                    <Phone className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-1">WhatsApp</p>
+                                    <p className="font-medium text-sm">+{tutor.whatsapp}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
+                        <div className="space-y-3">
+                            <Button
+                                onClick={() => handleContact('email')}
+                                className="w-full py-6 rounded-xl"
+                            >
+                                <Mail className="w-5 h-5 mr-2" />
+                                Kirim Email
+                            </Button>
+                            <Button
+                                onClick={() => handleContact('whatsapp')}
+                                className="w-full bg-green-600 hover:bg-green-700 text-white py-6 rounded-xl"
+                            >
+                                <MessageCircle className="w-5 h-5 mr-2" />
+                                WhatsApp
+                            </Button>
+                        </div>
+
+                        <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+                            <p className="text-sm text-gray-700 text-center">
+                                Pesan sesi dan mulai perjalanan belajar Anda hari ini!
+                            </p>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </div>

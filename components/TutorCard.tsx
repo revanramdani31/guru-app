@@ -8,7 +8,6 @@ interface TutorCardProps {
         mapel: string[];
         harga: number;
         lokasi: string;
-        rating: number;
         foto: string;
     };
 }
@@ -27,11 +26,6 @@ export default function TutorCard({ tutor }: Readonly<TutorCardProps>) {
 
                 <div className="p-5">
                     <h3 className="text-xl font-bold text-gray-800 mb-2">{tutor.nama}</h3>
-
-                    <div className="flex items-center mb-2">
-                        <span className="text-yellow-400">★</span>
-                        <span className="ml-1 text-sm font-semibold text-gray-700">{tutor.rating}</span>
-                    </div>
 
                     <div className="mb-3">
                         <div className="flex flex-wrap gap-1">
