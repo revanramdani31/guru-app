@@ -134,34 +134,57 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-          {featuredTutors.map((tutor, index) => (
-            <motion.div
-              key={tutor.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/tutors/${tutor.slug}`}>
-                <div className="bg-white border-2 border-blue-100 rounded-xl md:rounded-2xl overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all group">
-                  <div className="h-36 md:h-48 overflow-hidden bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                    <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center text-3xl md:text-5xl group-hover:scale-105 transition-transform duration-300">
-                      👨‍🏫
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredTutors.map((tutor, index) => (
+              <motion.div
+                key={tutor.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Link href={`/tutors/${tutor.slug}`}>
+                  <div className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all group cursor-pointer border border-gray-100">
+                    {/* Photo Section with Overlay */}
+                    <div className="relative h-72 overflow-hidden">
+                      {tutor.foto ? (
+                        <img
+                          src={tutor.foto}
+                          alt={tutor.nama}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                          <span className="text-7xl">👨‍🏫</span>
+                        </div>
+                      )}
+
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                      {/* Name & Location on Photo */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                        <h3 className="text-xl font-bold mb-1">{tutor.nama}</h3>
+                        <p className="text-sm text-gray-200">
+                          {tutor.lokasi} ({tutor.tipe === 'online' ? 'online' : tutor.tipe === 'tatap_muka' ? 'tatap muka' : 'online & tatap muka'})
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Info Section */}
+                    <div className="p-4">
+                      <p className="text-blue-600 text-sm font-medium mb-2">{tutor.mapel.join(', ')}</p>
+                      <p className="text-gray-600 text-sm line-clamp-2 mb-3">{tutor.deskripsi}</p>
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                        <span className="text-xs text-gray-500">{tutor.pengalaman} pengalaman</span>
+                        <span className="text-blue-600 font-bold">{formatIDR(tutor.harga)}/jam</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-4 md:p-6">
-                    <h3 className="text-lg md:text-xl font-semibold text-blue-900 mb-1">{tutor.nama}</h3>
-                    <p className="text-blue-600 text-xs md:text-sm mb-2">{tutor.mapel.join(', ')}</p>
-                    <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">{tutor.deskripsi}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs md:text-sm text-gray-500">{tutor.lokasi}</span>
-                      <span className="text-blue-600 font-semibold text-sm md:text-base">{formatIDR(tutor.harga)}/jam</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 

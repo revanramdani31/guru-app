@@ -83,130 +83,150 @@ export default function TutorDetailPage() {
                 </Button>
             </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Main Content */}
-                <div className="lg:col-span-2">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="bg-white border-2 border-blue-100 rounded-2xl overflow-hidden"
-                    >
-                        <div className="h-80 overflow-hidden relative bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                            <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center text-8xl">
-                                👨‍🏫
-                            </div>
+            {/* Grid Layout: Main Content + Sidebar */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Main Content - Left (2/3 width) */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="lg:col-span-2 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg"
+                >
+                    <div className="grid grid-cols-1 lg:grid-cols-5">
+                        {/* Photo on Left - 2/5 width */}
+                        <div className="lg:col-span-2 relative h-64 lg:h-auto lg:min-h-[350px] overflow-hidden bg-gradient-to-br from-blue-400 to-purple-500">
+                            {tutor.foto ? (
+                                <img
+                                    src={tutor.foto}
+                                    alt={tutor.nama}
+                                    className="w-full h-full object-cover object-top"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <span className="text-9xl">👨‍🏫</span>
+                                </div>
+                            )}
                         </div>
-                        <div className="p-8">
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
-                                <div>
-                                    <h1 className="text-4xl font-bold text-blue-900 mb-2">{tutor.nama}</h1>
-                                    <div className="flex items-center gap-2 text-gray-600 mb-3">
-                                        <MapPin className="w-5 h-5" />
-                                        <span>{tutor.lokasi}</span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {tutor.mapel.map((subject, idx) => (
-                                            <Link key={idx} href={`/categories/${tutor.kategori[0]}`}>
-                                                <span className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors">
-                                                    {subject}
-                                                </span>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-100">
-                                            <Monitor className="w-3 h-3" />
-                                            {getClassTypeLabel(tutor.tipe)}
-                                        </span>
-                                        {tutor.tingkat.map((level, idx) => (
-                                            <span key={idx} className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">
-                                                <BookOpen className="w-3 h-3" />
-                                                {level}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="md:text-right">
-                                    <div className="text-3xl font-bold text-blue-600 mb-1">{formatIDR(tutor.harga)}</div>
-                                    <span className="text-gray-600">per jam</span>
-                                </div>
-                            </div>
 
-                            <div className="mb-6 pb-6 border-b border-blue-100">
+                        {/* Info on Right - 3/5 width */}
+                        <div className="lg:col-span-3 p-5 lg:p-6 flex flex-col">
+                            {/* Name & Location */}
+                            <div className="mb-6">
+                                <h1 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-2">{tutor.nama}</h1>
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <span className="font-medium">Pengalaman:</span>
-                                    <span>{tutor.pengalaman}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-gray-600 mt-1">
-                                    <span className="font-medium">Pendidikan:</span>
-                                    <span>{tutor.pendidikan}</span>
+                                    <MapPin className="w-5 h-5" />
+                                    <span>{tutor.lokasi}</span>
                                 </div>
                             </div>
 
-                            <div>
-                                <h2 className="text-2xl font-bold text-blue-900 mb-4">Tentang</h2>
+                            {/* Subjects */}
+                            <div className="flex flex-wrap gap-2 mb-4">
+                                {tutor.mapel.map((subject, idx) => (
+                                    <Link key={idx} href={`/categories/${tutor.kategori[0]}`}>
+                                        <span className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors">
+                                            {subject}
+                                        </span>
+                                    </Link>
+                                ))}
+                            </div>
+
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-100">
+                                    <Monitor className="w-3 h-3" />
+                                    {getClassTypeLabel(tutor.tipe)}
+                                </span>
+                                {tutor.tingkat.map((level, idx) => (
+                                    <span key={idx} className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">
+                                        <BookOpen className="w-3 h-3" />
+                                        {level}
+                                    </span>
+                                ))}
+                            </div>
+
+                            {/* Price */}
+                            <div className="bg-blue-50 rounded-xl p-4 mb-6">
+                                <div className="text-3xl font-bold text-blue-600">{formatIDR(tutor.harga)}</div>
+                                <span className="text-gray-600">per jam</span>
+                            </div>
+
+                            {/* Experience & Education */}
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div className="bg-gray-50 rounded-lg p-4">
+                                    <div className="text-sm text-gray-500 mb-1">Pengalaman</div>
+                                    <div className="font-semibold text-gray-800">{tutor.pengalaman}</div>
+                                </div>
+                                <div className="bg-gray-50 rounded-lg p-4">
+                                    <div className="text-sm text-gray-500 mb-1">Pendidikan</div>
+                                    <div className="font-semibold text-gray-800">{tutor.pendidikan}</div>
+                                </div>
+                            </div>
+
+                            {/* Description */}
+                            <div className="flex-1">
+                                <h2 className="text-xl font-bold text-blue-900 mb-3">Tentang</h2>
                                 <p className="text-gray-700 leading-relaxed">{tutor.deskripsi}</p>
                             </div>
                         </div>
-                    </motion.div>
-                </div>
+                    </div>
+                </motion.div>
 
-                {/* Sidebar */}
-                <div className="lg:col-span-1">
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        className="bg-white border-2 border-blue-100 rounded-2xl p-6 sticky top-24"
-                    >
-                        <h2 className="text-2xl font-bold text-blue-900 mb-6">Informasi Kontak</h2>
+                {/* Contact Sidebar - Right Side */}
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="bg-white border border-gray-200 rounded-2xl p-5 shadow-lg"
+                >
+                    <h2 className="text-xl font-bold text-blue-900 mb-4">Hubungi Guru</h2>
 
-                        <div className="space-y-4 mb-6">
-                            <div className="flex items-center gap-3 text-gray-700">
-                                <div className="bg-blue-50 p-2 rounded-lg">
-                                    <Mail className="w-5 h-5 text-blue-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500 mb-1">Email</p>
-                                    <p className="font-medium text-sm break-all">{tutor.email}</p>
-                                </div>
+                    <div className="space-y-3 mb-4">
+                        {/* Email Info */}
+                        <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-xl">
+                            <div className="bg-blue-100 p-2 rounded-lg">
+                                <Mail className="w-4 h-4 text-blue-600" />
                             </div>
-                            <div className="flex items-center gap-3 text-gray-700">
-                                <div className="bg-blue-50 p-2 rounded-lg">
-                                    <Phone className="w-5 h-5 text-blue-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500 mb-1">WhatsApp</p>
-                                    <p className="font-medium text-sm">+{tutor.whatsapp}</p>
-                                </div>
+                            <div>
+                                <p className="text-xs text-gray-500">Email</p>
+                                <p className="font-medium text-xs break-all">{tutor.email}</p>
                             </div>
                         </div>
 
-                        <div className="space-y-3">
-                            <Button
-                                onClick={() => handleContact('email')}
-                                className="w-full py-6 rounded-xl"
-                            >
-                                <Mail className="w-5 h-5 mr-2" />
-                                Kirim Email
-                            </Button>
-                            <Button
-                                onClick={() => handleContact('whatsapp')}
-                                className="w-full bg-green-600 hover:bg-green-700 text-white py-6 rounded-xl"
-                            >
-                                <MessageCircle className="w-5 h-5 mr-2" />
-                                WhatsApp
-                            </Button>
+                        {/* WhatsApp Info */}
+                        <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-xl">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <Phone className="w-4 h-4 text-green-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500">WhatsApp</p>
+                                <p className="font-medium text-xs">+{tutor.whatsapp}</p>
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="mt-6 p-4 bg-blue-50 rounded-xl">
-                            <p className="text-sm text-gray-700 text-center">
-                                Pesan sesi dan mulai perjalanan belajar Anda hari ini!
-                            </p>
-                        </div>
-                    </motion.div>
-                </div>
+                    <div className="space-y-2">
+                        <Button
+                            onClick={() => handleContact('email')}
+                            className="w-full py-5 rounded-xl text-sm"
+                        >
+                            <Mail className="w-4 h-4 mr-2" />
+                            Kirim Email
+                        </Button>
+                        <Button
+                            onClick={() => handleContact('whatsapp')}
+                            className="w-full bg-green-600 hover:bg-green-700 text-white py-5 rounded-xl text-sm"
+                        >
+                            <MessageCircle className="w-4 h-4 mr-2" />
+                            WhatsApp
+                        </Button>
+                    </div>
+
+                    <div className="mt-4 p-3 bg-blue-50 rounded-xl">
+                        <p className="text-xs text-gray-700 text-center">
+                            Pesan sesi dan mulai belajar hari ini!
+                        </p>
+                    </div>
+                </motion.div>
             </div>
         </div>
     );

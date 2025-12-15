@@ -152,17 +152,17 @@ const TutorsContent = () => {
 
                 {/* Sidebar Filters */}
                 <motion.div
-                    className={`lg:block ${isFilterOpen ? 'block' : 'hidden'} bg-white p-6 rounded-2xl border-2 border-blue-100 h-fit sticky top-24`}
+                    className={`lg:block ${isFilterOpen ? 'block' : 'hidden'} bg-white p-4 rounded-2xl border-2 border-blue-100 h-fit self-start`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-blue-900">Filter</h2>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-bold text-blue-900">Filter</h2>
                         {hasActiveFilters && (
                             <button
                                 onClick={resetFilters}
-                                className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                                className="text-xs text-blue-600 hover:text-blue-800 flex items-center"
                             >
                                 <X className="w-3 h-3 mr-1" /> Reset
                             </button>
@@ -170,8 +170,8 @@ const TutorsContent = () => {
                     </div>
 
                     {/* Search Input */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Cari</label>
+                    <div className="mb-4">
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Cari</label>
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                             <input
@@ -185,64 +185,62 @@ const TutorsContent = () => {
                     </div>
 
                     {/* Class Type Filter */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Tipe Kelas</label>
-                        <div className="flex flex-col gap-2">
+                    <div className="mb-4">
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Tipe Kelas</label>
+                        <div className="flex flex-wrap gap-2">
                             {[
                                 { value: 'all', label: 'Semua' },
                                 { value: 'online', label: 'Online' },
                                 { value: 'tatap_muka', label: 'Tatap Muka' }
                             ].map((type) => (
-                                <label key={type.value} className="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="classType"
-                                        checked={selectedClassType === type.value}
-                                        onChange={() => setSelectedClassType(type.value)}
-                                        className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                                    />
-                                    <span className="text-sm text-gray-600">
-                                        {type.label}
-                                    </span>
-                                </label>
+                                <button
+                                    key={type.value}
+                                    onClick={() => setSelectedClassType(type.value)}
+                                    className={`px-3 py-1 text-xs rounded-full transition-colors ${selectedClassType === type.value
+                                        ? 'bg-blue-600 text-white'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {type.label}
+                                </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Education Level Filter */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Tingkat Pendidikan</label>
-                        <select
-                            value={selectedLevel}
-                            onChange={(e) => setSelectedLevel(e.target.value)}
-                            className="w-full p-2 border-2 border-blue-100 rounded-lg focus:border-blue-400 focus:outline-none text-sm bg-white"
-                        >
-                            <option value="all">Semua Tingkat</option>
-                            <option value="SD">SD</option>
-                            <option value="SMP">SMP</option>
-                            <option value="SMA">SMA</option>
-                            <option value="Kuliah">Kuliah</option>
-                        </select>
-                    </div>
-
-                    {/* Location Filter */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
-                        <select
-                            value={locationFilter}
-                            onChange={(e) => setLocationFilter(e.target.value)}
-                            className="w-full p-2 border-2 border-blue-100 rounded-lg focus:border-blue-400 focus:outline-none text-sm bg-white"
-                        >
-                            <option value="">Semua Lokasi</option>
-                            {uniqueLocations.map(loc => (
-                                <option key={loc} value={loc}>{loc}</option>
-                            ))}
-                        </select>
+                    {/* Education Level & Location in one row */}
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Tingkat</label>
+                            <select
+                                value={selectedLevel}
+                                onChange={(e) => setSelectedLevel(e.target.value)}
+                                className="w-full p-2 border-2 border-blue-100 rounded-lg focus:border-blue-400 focus:outline-none text-xs bg-white"
+                            >
+                                <option value="all">Semua</option>
+                                <option value="SD">SD</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="Kuliah">Kuliah</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Lokasi</label>
+                            <select
+                                value={locationFilter}
+                                onChange={(e) => setLocationFilter(e.target.value)}
+                                className="w-full p-2 border-2 border-blue-100 rounded-lg focus:border-blue-400 focus:outline-none text-xs bg-white"
+                            >
+                                <option value="">Semua</option>
+                                {uniqueLocations.map(loc => (
+                                    <option key={loc} value={loc}>{loc}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
                     {/* Price Range Slider */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-3">Harga per Jam</label>
+                    <div className="mb-4">
+                        <label className="block text-xs font-medium text-gray-700 mb-2">Harga per Jam</label>
                         <div className="px-1">
                             <Slider
                                 defaultValue={[0, maxPrice]}
@@ -251,7 +249,7 @@ const TutorsContent = () => {
                                 max={maxPrice}
                                 step={10000}
                                 onValueChange={setPriceRange}
-                                className="mb-3"
+                                className="mb-2"
                             />
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
@@ -263,7 +261,7 @@ const TutorsContent = () => {
                     {/* Search Button */}
                     <Button
                         onClick={handleSearch}
-                        className="w-full py-3"
+                        className="w-full py-2 text-sm"
                     >
                         <Search className="w-4 h-4 mr-2" />
                         Cari Guru
@@ -285,7 +283,7 @@ const TutorsContent = () => {
                             </Button>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredTutors.map((tutor, index) => (
                                 <motion.div
                                     key={tutor.id}
@@ -294,41 +292,49 @@ const TutorsContent = () => {
                                     transition={{ duration: 0.5, delay: index * 0.05 }}
                                 >
                                     <Link href={`/tutors/${tutor.slug}`}>
-                                        <div className="bg-white border-2 border-blue-100 rounded-2xl overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all group h-full flex flex-col">
-                                            <div className="h-48 overflow-hidden relative bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                                                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center text-5xl group-hover:scale-105 transition-transform duration-300">
-                                                    👨‍🏫
-                                                </div>
-                                                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-blue-700 uppercase tracking-wide">
-                                                    {getClassTypeLabel(tutor.tipe)}
+                                        <div className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all group cursor-pointer border border-gray-100">
+                                            {/* Photo Section with Overlay */}
+                                            <div className="relative h-72 overflow-hidden">
+                                                {tutor.foto ? (
+                                                    <img
+                                                        src={tutor.foto}
+                                                        alt={tutor.nama}
+                                                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                                                        <span className="text-7xl">👨‍🏫</span>
+                                                    </div>
+                                                )}
+
+                                                {/* Gradient Overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                                                {/* Name & Location on Photo */}
+                                                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                                                    <h2 className="text-xl font-bold mb-1">{tutor.nama}</h2>
+                                                    <p className="text-sm text-gray-200">
+                                                        {tutor.lokasi} ({getClassTypeLabel(tutor.tipe).toLowerCase()})
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="p-6 flex-1 flex flex-col">
-                                                <h2 className="text-2xl font-semibold text-blue-900 mb-2">{tutor.nama}</h2>
 
-                                                <div className="flex flex-wrap gap-2 mb-3">
-                                                    {tutor.mapel.slice(0, 3).map((subject, idx) => (
-                                                        <span key={idx} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
-                                                            {subject}
-                                                        </span>
-                                                    ))}
-                                                    {tutor.mapel.length > 3 && (
-                                                        <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium">
-                                                            +{tutor.mapel.length - 3}
-                                                        </span>
-                                                    )}
-                                                </div>
+                                            {/* Info Section */}
+                                            <div className="p-4">
+                                                {/* Subjects */}
+                                                <p className="text-blue-600 text-sm font-medium mb-2">
+                                                    {tutor.mapel.join(', ')}
+                                                </p>
 
-                                                <div className="flex items-center gap-2 text-gray-600 mb-2">
-                                                    <MapPin className="w-4 h-4" />
-                                                    <span className="text-sm">{tutor.lokasi}</span>
-                                                </div>
+                                                {/* Description */}
+                                                <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                                                    {tutor.deskripsi}
+                                                </p>
 
-                                                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{tutor.deskripsi}</p>
-
-                                                <div className="mt-auto pt-4 border-t border-blue-100 flex items-center justify-between">
-                                                    <span className="text-sm text-gray-500">{tutor.pengalaman} pengalaman</span>
-                                                    <span className="text-blue-600 font-bold text-lg">{formatIDR(tutor.harga)}/jam</span>
+                                                {/* Footer */}
+                                                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                                    <span className="text-xs text-gray-500">{tutor.pengalaman} pengalaman</span>
+                                                    <span className="text-blue-600 font-bold">{formatIDR(tutor.harga)}/jam</span>
                                                 </div>
                                             </div>
                                         </div>

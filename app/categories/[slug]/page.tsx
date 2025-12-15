@@ -94,49 +94,54 @@ export default async function CategoryDetailPage({ params }: Props) {
                             Menampilkan {categoryTutors.length} guru
                         </p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {categoryTutors.map((tutor) => (
-                            <Link key={tutor.id} href={`/tutors/${tutor.slug}`}>
-                                <div className="bg-white border-2 border-blue-100 rounded-2xl overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all group h-full flex flex-col">
-                                    <div className="h-48 overflow-hidden relative bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center text-5xl group-hover:scale-105 transition-transform duration-300">
-                                            👨‍🏫
-                                        </div>
-                                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-blue-700 uppercase tracking-wide">
-                                            {getClassTypeLabel(tutor.tipe)}
-                                        </div>
-                                    </div>
-                                    <div className="p-6 flex-1 flex flex-col">
-                                        <h2 className="text-2xl font-semibold text-blue-900 mb-2">{tutor.nama}</h2>
-
-                                        <div className="flex flex-wrap gap-2 mb-3">
-                                            {tutor.mapel.slice(0, 3).map((subject, idx) => (
-                                                <span key={idx} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
-                                                    {subject}
-                                                </span>
-                                            ))}
-                                            {tutor.mapel.length > 3 && (
-                                                <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium">
-                                                    +{tutor.mapel.length - 3}
-                                                </span>
+                    <div className="max-w-5xl mx-auto">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {categoryTutors.map((tutor) => (
+                                <Link key={tutor.id} href={`/tutors/${tutor.slug}`}>
+                                    <div className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all group cursor-pointer border border-gray-100">
+                                        {/* Photo Section with Overlay */}
+                                        <div className="relative h-72 overflow-hidden">
+                                            {tutor.foto ? (
+                                                <img
+                                                    src={tutor.foto}
+                                                    alt={tutor.nama}
+                                                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                                                    <span className="text-7xl">👨‍🏫</span>
+                                                </div>
                                             )}
+
+                                            {/* Gradient Overlay */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                                            {/* Name & Location on Photo */}
+                                            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                                                <h2 className="text-xl font-bold mb-1">{tutor.nama}</h2>
+                                                <p className="text-sm text-gray-200">
+                                                    {tutor.lokasi} ({getClassTypeLabel(tutor.tipe).toLowerCase()})
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        <div className="flex items-center gap-2 text-gray-600 mb-2">
-                                            <MapPin className="w-4 h-4" />
-                                            <span className="text-sm">{tutor.lokasi}</span>
-                                        </div>
-
-                                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{tutor.deskripsi}</p>
-
-                                        <div className="mt-auto pt-4 border-t border-blue-100 flex items-center justify-between">
-                                            <span className="text-sm text-gray-500">{tutor.pengalaman} pengalaman</span>
-                                            <span className="text-blue-600 font-bold text-lg">{formatIDR(tutor.harga)}/jam</span>
+                                        {/* Info Section */}
+                                        <div className="p-4">
+                                            <p className="text-blue-600 text-sm font-medium mb-2">
+                                                {tutor.mapel.join(', ')}
+                                            </p>
+                                            <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                                                {tutor.deskripsi}
+                                            </p>
+                                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                                <span className="text-xs text-gray-500">{tutor.pengalaman} pengalaman</span>
+                                                <span className="text-blue-600 font-bold">{formatIDR(tutor.harga)}/jam</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </>
             )}
