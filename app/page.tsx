@@ -71,24 +71,25 @@ export default function Home() {
             Cukup daftar, tim kami yang urus sisanya.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center flex-wrap">
             <Link href="/daftar">
-              <button className="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 text-base rounded-xl font-semibold transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5">
+              <button className="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5">
                 Daftar Les Privat
                 <ArrowRight className="w-5 h-5 ml-2" />
               </button>
             </Link>
-            <Link href="/karir">
-              <button className="inline-flex items-center justify-center bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 px-6 py-3 text-base rounded-xl font-semibold transition-all">
-                Daftar Jadi Guru
-              </button>
-            </Link>
             <a href="https://wa.me/6283823245965?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat" target="_blank" rel="noopener noreferrer">
-              <button className="inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white px-6 py-3 text-base rounded-xl font-semibold transition-all">
+              <button className="inline-flex items-center justify-center bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 px-8 py-4 text-lg rounded-xl font-semibold transition-all">
                 <Phone className="w-5 h-5 mr-2" />
                 Hubungi Admin
               </button>
             </a>
+            <Link href="/karir">
+              <button className="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5">
+                Daftar Jadi Guru
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </button>
+            </Link>
           </div>
         </div>
       </motion.section>
