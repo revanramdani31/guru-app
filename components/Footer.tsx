@@ -1,57 +1,102 @@
 import Link from 'next/link';
-import { GraduationCap, Mail, Phone } from 'lucide-react';
+import { GraduationCap, Mail, Phone, MessageCircle, MapPin } from 'lucide-react';
 
 const Footer = () => {
+    const whatsappNumber = "6283820757532"; // Admin WhatsApp
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat`;
+
     return (
-        <footer className="bg-blue-900 text-white mt-20">
+        <footer className="bg-slate-900 text-white mt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    {/* Brand Section */}
+                    <div className="md:col-span-1">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="bg-white p-2 rounded-lg">
-                                <GraduationCap className="w-6 h-6 text-blue-900" />
+                            <div className="bg-emerald-500 p-2 rounded-xl">
+                                <GraduationCap className="w-6 h-6 text-white" />
                             </div>
-                            <span className="text-xl font-bold">GuruKu</span>
+                            <div className="flex flex-col">
+                                <span className="text-lg font-bold leading-tight">datanginguru</span>
+                                <span className="text-xs text-emerald-400 font-medium -mt-1">Privat</span>
+                            </div>
                         </div>
-                        <p className="text-blue-200 text-sm">
-                            Terhubung dengan guru berkualitas untuk pengalaman belajar yang dipersonalisasi.
+                        <p className="text-slate-400 text-sm">
+                            Menghubungkan Anda dengan guru les privat berkualitas untuk pengalaman belajar yang personal dan efektif.
                         </p>
                     </div>
 
+                    {/* Quick Links */}
                     <div>
-                        <span className="font-semibold text-lg mb-4 block">Tautan Cepat</span>
+                        <span className="font-semibold text-lg mb-4 block text-white">Navigasi</span>
                         <div className="flex flex-col gap-2">
-                            <Link href="/tutors" className="text-blue-200 hover:text-white transition-colors text-sm">
-                                Cari Guru
+                            <Link href="/tutors" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Katalog Guru
                             </Link>
-                            <Link href="/categories" className="text-blue-200 hover:text-white transition-colors text-sm">
-                                Mata Pelajaran
+                            <Link href="/daftar" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Daftar Siswa
                             </Link>
-                            <Link href="/contact" className="text-blue-200 hover:text-white transition-colors text-sm">
-                                Hubungi Kami
+                            <Link href="/karir" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Daftar Jadi Guru
                             </Link>
                         </div>
                     </div>
 
+                    {/* Subjects */}
                     <div>
-                        <span className="font-semibold text-lg mb-4 block">Kontak</span>
+                        <span className="font-semibold text-lg mb-4 block text-white">Mata Pelajaran</span>
                         <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2 text-blue-200 text-sm">
+                            <Link href="/tutors?search=matematika" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Matematika
+                            </Link>
+                            <Link href="/tutors?search=bahasa+inggris" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Bahasa Inggris
+                            </Link>
+                            <Link href="/tutors?search=pemrograman" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Pemrograman
+                            </Link>
+                            <Link href="/tutors?search=musik" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Musik
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Contact */}
+                    <div>
+                        <span className="font-semibold text-lg mb-4 block text-white">Hubungi Kami</span>
+                        <div className="flex flex-col gap-3">
+                            <a
+                                href={whatsappLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition-colors text-sm"
+                            >
+                                <MessageCircle className="w-4 h-4" />
+                                <span>WhatsApp Admin</span>
+                            </a>
+                            <div className="flex items-center gap-2 text-slate-400 text-sm">
                                 <Mail className="w-4 h-4" />
-                                <span>info@guruku.com</span>
+                                <span>info@datanginguru.com</span>
                             </div>
-                            <div className="flex items-center gap-2 text-blue-200 text-sm">
-                                <Phone className="w-4 h-4" />
-                                <span>+62 812 3456 7890</span>
+                            <div className="flex items-center gap-2 text-slate-400 text-sm">
+                                <MapPin className="w-4 h-4" />
+                                <span>Indonesia</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="border-t border-blue-800 mt-8 pt-8 text-center">
-                    <p className="text-blue-200 text-sm">
-                        © 2025 GuruKu. Hak Cipta Dilindungi.
+                <div className="border-t border-slate-800 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-slate-400 text-sm">
+                        © 2025 datanginguru Privat. Hak Cipta Dilindungi.
                     </p>
+                    <div className="flex gap-6">
+                        <Link href="/privacy" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                            Kebijakan Privasi
+                        </Link>
+                        <Link href="/terms" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                            Syarat & Ketentuan
+                        </Link>
+                    </div>
                 </div>
             </div>
         </footer>
