@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { GraduationCap, Mail, Phone, MessageCircle, MapPin } from 'lucide-react';
 
 const Footer = () => {
-    const whatsappNumber = "6283820757532"; // Admin WhatsApp
+    const whatsappNumber = "6283823245965"; // Admin WhatsApp
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat`;
 
     return (

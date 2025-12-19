@@ -83,7 +83,7 @@ export default function Home() {
                 Daftar Jadi Guru
               </button>
             </Link>
-            <a href="https://wa.me/6283820757532?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/6283823245965?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat" target="_blank" rel="noopener noreferrer">
               <button className="inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white px-6 py-3 text-base rounded-xl font-semibold transition-all">
                 <Phone className="w-5 h-5 mr-2" />
                 Hubungi Admin

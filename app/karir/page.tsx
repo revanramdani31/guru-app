@@ -139,7 +139,7 @@ const KarirPage = () => {
         return doc;
     };
 
-    const ADMIN_WHATSAPP = "6283820757532";
+    const ADMIN_WHATSAPP = "6283823245965";
 
     const generateWhatsAppMessage = (data: FormData): string => {
         const modeLabel = data.modeMengajar === 'online' ? 'Online' : data.modeMengajar === 'tatap_muka' ? 'Tatap Muka' : 'Online & Tatap Muka';
