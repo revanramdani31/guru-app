@@ -3,9 +3,8 @@
 import Link from 'next/link';
 import { useParams, notFound } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { MapPin, Mail, Phone, ArrowLeft, MessageCircle, Monitor, BookOpen } from 'lucide-react';
+import { MapPin, ArrowLeft, Monitor, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
 import tutorsData from '@/data/tutors.json';
 
 interface Tutor {
@@ -13,23 +12,18 @@ interface Tutor {
     slug: string;
     nama: string;
     mapel: string[];
-    harga: number;
     lokasi: string;
     tipe: string;
     tingkat: string[];
     foto: string;
     deskripsi: string;
-    pengalaman: string;
     pendidikan: string;
     kategori: string[];
     whatsapp: string;
     email: string;
 }
 
-// Format currency to IDR
-const formatIDR = (price: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(price);
-};
+
 
 const getClassTypeLabel = (type: string) => {
     switch (type) {
@@ -59,20 +53,7 @@ export default function TutorDetailPage() {
         );
     }
 
-    const handleContact = (type: string) => {
-        if (type === 'whatsapp') {
-            window.open(`https://wa.me/${tutor.whatsapp}`, '_blank');
-        } else if (type === 'email') {
-            window.location.href = `mailto:${tutor.email}`;
-        } else if (type === 'call') {
-            window.location.href = `tel:${tutor.whatsapp}`;
-        }
-        toast({
-            title: "Menghubungi Guru",
-            description: `Membuka ${type === 'whatsapp' ? 'WhatsApp' : type === 'email' ? 'Email' : 'Telepon'}...`,
-            variant: "success"
-        });
-    };
+
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -83,14 +64,12 @@ export default function TutorDetailPage() {
                 </Button>
             </Link>
 
-            {/* Grid Layout: Main Content + Sidebar */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Content - Left (2/3 width) */}
+            <div className="max-w-4xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="lg:col-span-2 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg"
+                    className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg"
                 >
                     <div className="grid grid-cols-1 lg:grid-cols-5">
                         {/* Photo on Left - 2/5 width */}
@@ -144,18 +123,10 @@ export default function TutorDetailPage() {
                                 ))}
                             </div>
 
-                            {/* Price */}
-                            <div className="bg-blue-50 rounded-xl p-4 mb-6">
-                                <div className="text-3xl font-bold text-blue-600">{formatIDR(tutor.harga)}</div>
-                                <span className="text-gray-600">per jam</span>
-                            </div>
 
-                            {/* Experience & Education */}
-                            <div className="grid grid-cols-2 gap-4 mb-6">
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 mb-1">Pengalaman</div>
-                                    <div className="font-semibold text-gray-800">{tutor.pengalaman}</div>
-                                </div>
+
+                            {/* Education */}
+                            <div className="mb-6">
                                 <div className="bg-gray-50 rounded-lg p-4">
                                     <div className="text-sm text-gray-500 mb-1">Pendidikan</div>
                                     <div className="font-semibold text-gray-800">{tutor.pendidikan}</div>
@@ -168,63 +139,6 @@ export default function TutorDetailPage() {
                                 <p className="text-gray-700 leading-relaxed">{tutor.deskripsi}</p>
                             </div>
                         </div>
-                    </div>
-                </motion.div>
-
-                {/* Contact Sidebar - Right Side */}
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="bg-white border border-gray-200 rounded-2xl p-5 shadow-lg"
-                >
-                    <h2 className="text-xl font-bold text-blue-900 mb-4">Hubungi Guru</h2>
-
-                    <div className="space-y-3 mb-4">
-                        {/* Email Info */}
-                        <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-xl">
-                            <div className="bg-blue-100 p-2 rounded-lg">
-                                <Mail className="w-4 h-4 text-blue-600" />
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500">Email</p>
-                                <p className="font-medium text-xs break-all">{tutor.email}</p>
-                            </div>
-                        </div>
-
-                        {/* WhatsApp Info */}
-                        <div className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-xl">
-                            <div className="bg-green-100 p-2 rounded-lg">
-                                <Phone className="w-4 h-4 text-green-600" />
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500">WhatsApp</p>
-                                <p className="font-medium text-xs">+{tutor.whatsapp}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Button
-                            onClick={() => handleContact('email')}
-                            className="w-full py-5 rounded-xl text-sm"
-                        >
-                            <Mail className="w-4 h-4 mr-2" />
-                            Kirim Email
-                        </Button>
-                        <Button
-                            onClick={() => handleContact('whatsapp')}
-                            className="w-full bg-green-600 hover:bg-green-700 text-white py-5 rounded-xl text-sm"
-                        >
-                            <MessageCircle className="w-4 h-4 mr-2" />
-                            WhatsApp
-                        </Button>
-                    </div>
-
-                    <div className="mt-4 p-3 bg-blue-50 rounded-xl">
-                        <p className="text-xs text-gray-700 text-center">
-                            Pesan sesi dan mulai belajar hari ini!
-                        </p>
                     </div>
                 </motion.div>
             </div>

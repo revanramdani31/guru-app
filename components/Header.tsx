@@ -3,21 +3,22 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { GraduationCap, Menu, X, UserPlus, Briefcase } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { GraduationCap, Menu, X, UserPlus, Briefcase, AlignJustify } from 'lucide-react';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
     const pathname = usePathname();
 
     const navLinks = [
         { path: '/', label: 'Beranda' },
         { path: '/tutors', label: 'Guru Kami' },
-        { path: '/artikel', label: 'Artikel' },
         { path: '/program', label: 'Program' },
         { path: '/biaya', label: 'Biaya' },
         { path: '/daftar', label: 'Daftar Siswa', icon: UserPlus },
         { path: '/karir', label: 'Daftar Jadi Guru', icon: Briefcase },
+        { path: '/artikel', label: 'Artikel' },
     ];
 
     const isActive = (path: string) => pathname === path;
@@ -59,6 +60,43 @@ const Header = () => {
                                 )}
                             </Link>
                         ))}
+
+                        {/* More Menu */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
+                                className="p-1 hover:bg-slate-100 rounded-lg transition-colors text-slate-600"
+                            >
+                                <AlignJustify className="w-6 h-6" />
+                            </button>
+
+                            <AnimatePresence>
+                                {isMoreMenuOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        onMouseLeave={() => setIsMoreMenuOpen(false)}
+                                        className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 overflow-hidden"
+                                    >
+                                        {[
+                                            { label: 'Layanan', href: '#' },
+                                            { label: 'Pengaduan', href: '/pengaduan' },
+                                            { label: 'Tentang', href: '/tentang' },
+                                            { label: 'Hubungi Kami', href: 'https://wa.me/6281234567890' },
+                                        ].map((item, idx) => (
+                                            <Link
+                                                key={idx}
+                                                href={item.href}
+                                                className="block px-4 py-2.5 text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -92,11 +130,26 @@ const Header = () => {
                                 {link.label}
                             </Link>
                         ))}
-                        <Link href="/daftar" onClick={() => setIsMenuOpen(false)}>
-                            <button className="w-full mt-3 bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-3 rounded-xl text-sm font-medium transition-all">
-                                Mulai Belajar
-                            </button>
-                        </Link>
+
+
+                        {/* More Menu Items for Mobile */}
+                        <div className="mt-4 pt-4 border-t border-emerald-50 grid grid-cols-2 gap-2">
+                            {[
+                                { label: 'Layanan', href: '#' },
+                                { label: 'Pengaduan', href: '/pengaduan' },
+                                { label: 'Tentang', href: '/tentang' },
+                                { label: 'Hubungi Kami', href: 'https://wa.me/6281234567890' },
+                            ].map((item, idx) => (
+                                <Link
+                                    key={idx}
+                                    href={item.href}
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="text-xs text-slate-500 hover:text-emerald-600 py-2"
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
                     </motion.div>
                 )}
             </nav>

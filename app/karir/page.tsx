@@ -13,6 +13,7 @@ interface FormData {
     namaLengkap: string;
     email: string;
     whatsapp: string;
+    jenisKelamin: string;
     tanggalLahir: string;
     pendidikan: string;
     asalKampus: string;
@@ -35,13 +36,15 @@ interface FormData {
     pasFotoBase64: string;
     paktaFile: File | null;
     paktaBase64: string;
+    ijazahFile: File | null;
+    ijazahBase64: string;
 }
 
 const mataPelajaranOptions = [
     'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Fisika', 'Kimia', 'Biologi',
     'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'PKN',
     'IPA Terpadu', 'IPS Terpadu', 'Calistung', 'Mengaji', 'Bahasa Arab',
-    'UTBK/SNBT', 'TOEFL', 'IELTS', 'Renang', 'Musik', 'Lainnya'
+    'UTBK/SNBT', 'TOEFL', 'IELTS', 'Metodologi Penelitian', 'Renang', 'Musik', 'Lainnya'
 ];
 
 const jenjangOptions = ['TK/PAUD', 'SD', 'SMP', 'SMA', 'Kuliah', 'Umum'];
@@ -53,6 +56,7 @@ const KarirPage = () => {
         namaLengkap: '',
         email: '',
         whatsapp: '',
+        jenisKelamin: '',
         tanggalLahir: '',
         pendidikan: '',
         asalKampus: '',
@@ -74,7 +78,9 @@ const KarirPage = () => {
         pasFotoPreview: '',
         pasFotoBase64: '',
         paktaFile: null,
-        paktaBase64: ''
+        paktaBase64: '',
+        ijazahFile: null,
+        ijazahBase64: ''
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -214,6 +220,11 @@ const KarirPage = () => {
     const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file maksimal 2MB');
+                e.target.value = '';
+                return;
+            }
             const reader = new FileReader();
             reader.onloadend = () => {
                 setFormData(prev => ({
@@ -230,12 +241,37 @@ const KarirPage = () => {
     const handlePaktaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file maksimal 2MB');
+                e.target.value = '';
+                return;
+            }
             const reader = new FileReader();
             reader.onloadend = () => {
                 setFormData(prev => ({
                     ...prev,
                     paktaFile: file,
                     paktaBase64: reader.result as string
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleIjazahChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file maksimal 2MB');
+                e.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({
+                    ...prev,
+                    ijazahFile: file,
+                    ijazahBase64: reader.result as string
                 }));
             };
             reader.readAsDataURL(file);
@@ -280,6 +316,7 @@ const KarirPage = () => {
         addField('Nama', data.namaLengkap);
         addField('Email', data.email);
         addField('WhatsApp', data.whatsapp);
+        addField('Jenis Kelamin', data.jenisKelamin);
         addField('Tgl Lahir', data.tanggalLahir);
         addField('Pendidikan', data.pendidikan);
         addField('Kampus', data.asalKampus);
@@ -336,6 +373,7 @@ const KarirPage = () => {
 Nama: ${data.namaLengkap}
 Email: ${data.email}
 WhatsApp: ${data.whatsapp}
+Jenis Kelamin: ${data.jenisKelamin}
 Tgl Lahir: ${data.tanggalLahir}
 
 🎓 *Pendidikan:*
@@ -369,6 +407,7 @@ Dikirim dari datanginguru Privat`;
                 namaLengkap: formData.namaLengkap,
                 email: formData.email,
                 whatsapp: formData.whatsapp,
+                jenisKelamin: formData.jenisKelamin,
                 tanggalLahir: formData.tanggalLahir,
                 pendidikan: formData.pendidikan,
                 asalKampus: formData.asalKampus,
@@ -390,6 +429,9 @@ Dikirim dari datanginguru Privat`;
                 paktaName: formData.paktaFile?.name,
                 paktaType: formData.paktaFile?.type,
                 paktaBase64: formData.paktaBase64.split(',')[1],
+                ijazahName: formData.ijazahFile?.name,
+                ijazahType: formData.ijazahFile?.type,
+                ijazahBase64: formData.ijazahBase64.split(',')[1],
             });
 
             const message = generateWhatsAppMessage(formData);
@@ -451,305 +493,355 @@ Dikirim dari datanginguru Privat`;
         );
     }
 
+
     return (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="min-h-screen bg-slate-50">
             {/* Hero Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-12"
-            >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-2xl mb-4">
-                    <Briefcase className="w-8 h-8 text-emerald-600" />
+            <section className="relative bg-emerald-600 text-white overflow-hidden pt-20 pb-32 mb-12">
+                {/* Background Effects */}
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3"></div>
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-400/20 rounded-full blur-[100px] -translate-x-1/3 translate-y-1/3"></div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <h1 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-white drop-shadow-sm">Daftar Jadi Guru</h1>
+                        <p className="text-lg md:text-xl text-emerald-50 max-w-2xl mx-auto font-medium leading-relaxed">
+                            Bagikan ilmu Anda dan dapatkan penghasilan tambahan dengan menjadi guru les privat di datanginguru.
+                        </p>
+                    </motion.div>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-3">Daftar Jadi Guru</h1>
-                <p className="text-slate-600 max-w-xl mx-auto">
-                    Bagikan ilmu Anda dan dapatkan penghasilan tambahan dengan menjadi guru les privat di datanginguru.
-                </p>
-            </motion.div>
 
-            {/* Benefits Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="grid md:grid-cols-3 gap-4 mb-12"
-            >
-                {[
-                    { icon: <Clock className="w-6 h-6" />, title: 'Jadwal Fleksibel', desc: 'Atur waktu mengajar sesuai ketersediaan Anda' },
-                    { icon: <Briefcase className="w-6 h-6" />, title: 'Penghasilan Menarik', desc: 'Tentukan tarif sendiri dan dapatkan bayaran layak' },
-                    { icon: <GraduationCap className="w-6 h-6" />, title: 'Kembangkan Karir', desc: 'Tingkatkan pengalaman dan portofolio mengajar' }
-                ].map((benefit, index) => (
-                    <div key={index} className="bg-emerald-50 rounded-xl p-4 text-center">
-                        <div className="inline-flex items-center justify-center w-10 h-10 bg-emerald-100 rounded-lg text-emerald-600 mb-2">
-                            {benefit.icon}
-                        </div>
-                        <h3 className="font-semibold text-slate-800 text-sm mb-1">{benefit.title}</h3>
-                        <p className="text-slate-600 text-xs">{benefit.desc}</p>
-                    </div>
-                ))}
-            </motion.div>
-
-            {/* Steps */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="mb-10"
-            >
-                <h2 className="text-lg font-bold text-slate-800 text-center mb-6">Konfirmasi ke Admin</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-                        <div className="flex items-start gap-4">
-                            <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">1</div>
-                            <div className="flex-1">
-                                <h3 className="font-bold text-slate-800 mb-1">Unduh Dokumen</h3>
-                                <p className="text-slate-600 text-sm mb-3">Download SOP dan Pakta Integritas, kemudian tanda tangani pakta integritas.</p>
-                                <div className="flex flex-wrap gap-2">
-                                    <a href="/docs/sop-guru.pdf" download>
-                                        <Button variant="outline" size="sm">
-                                            <Download className="w-4 h-4 mr-2" />
-                                            SOP Guru
-                                        </Button>
-                                    </a>
-                                    <a href="/docs/pakta-integritas-guru.docx" download>
-                                        <Button variant="outline" size="sm">
-                                            <Download className="w-4 h-4 mr-2" />
-                                            Pakta Integritas
-                                        </Button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-                        <div className="flex items-start gap-4">
-                            <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">2</div>
-                            <div className="flex-1">
-                                <h3 className="font-bold text-slate-800 mb-1">Isi Formulir di Bawah</h3>
-                                <p className="text-slate-600 text-sm">Lengkapi data diri Anda, lalu kirim lamaran. Setelah itu, Konfirmasi via WhatsApp</p>
-                            </div>
-                        </div>
-                    </div>
+                {/* Curved Divider */}
+                <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
+                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(113%+1.3px)] h-[60px] fill-slate-50 opacity-100">
+                        <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"></path>
+                    </svg>
                 </div>
-            </motion.div>
+            </section>
 
-            {/* Application Form */}
-            <motion.form
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                onSubmit={handleSubmit}
-                className="bg-white rounded-2xl shadow-xl shadow-slate-100/50 border border-slate-200 p-6 md:p-8"
-            >
-                <h2 className="text-xl font-bold text-slate-800 mb-6">Formulir Lamaran Guru</h2>
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
 
-                {/* 1. Personal Info */}
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                        <User className="w-5 h-5 text-emerald-600" />
-                        Data Pribadi
-                    </h3>
+                {/* Benefits Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="grid md:grid-cols-3 gap-4 mb-12"
+                >
+                    {[
+                        { icon: <Clock className="w-6 h-6" />, title: 'Jadwal Fleksibel', desc: 'Atur waktu mengajar sesuai ketersediaan Anda' },
+                        { icon: <Briefcase className="w-6 h-6" />, title: 'Penghasilan Menarik', desc: 'Tentukan tarif sendiri dan dapatkan bayaran layak' },
+                        { icon: <GraduationCap className="w-6 h-6" />, title: 'Kembangkan Karir', desc: 'Tingkatkan pengalaman dan portofolio mengajar' }
+                    ].map((benefit, index) => (
+                        <div key={index} className="bg-emerald-50 rounded-xl p-4 text-center">
+                            <div className="inline-flex items-center justify-center w-10 h-10 bg-emerald-100 rounded-lg text-emerald-600 mb-2">
+                                {benefit.icon}
+                            </div>
+                            <h3 className="font-semibold text-slate-800 text-sm mb-1">{benefit.title}</h3>
+                            <p className="text-slate-600 text-xs">{benefit.desc}</p>
+                        </div>
+                    ))}
+                </motion.div>
+
+                {/* Steps */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                    className="mb-10"
+                >
+                    <h2 className="text-lg font-bold text-slate-800 text-center mb-6">Konfirmasi ke Admin</h2>
                     <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">1. Nama Lengkap *</label>
-                            <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="input-modern" placeholder="Masukkan nama lengkap" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">2. Email *</label>
-                            <input type="email" name="email" value={formData.email} onChange={handleChange} required className="input-modern" placeholder="email@contoh.com" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">3. Nomor WhatsApp *</label>
-                            <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} required className="input-modern" placeholder="08xxxxxxxxxx" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">4. Tanggal Lahir *</label>
-                            <input type="date" name="tanggalLahir" value={formData.tanggalLahir} onChange={handleChange} required className="input-modern" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* 2. Education */}
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                        <GraduationCap className="w-5 h-5 text-emerald-600" />
-                        Pendidikan
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">5. Pendidikan Terakhir *</label>
-                            <select name="pendidikan" value={formData.pendidikan} onChange={handleChange} required className="input-modern">
-                                <option value="">Pilih pendidikan...</option>
-                                {pendidikanOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">6. Asal Kampus / Sekolah *</label>
-                            <input type="text" name="asalKampus" value={formData.asalKampus} onChange={handleChange} required className="input-modern" placeholder="Contoh: Universitas Indonesia" />
-                        </div>
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">7. Jurusan *</label>
-                            <input type="text" name="jurusan" value={formData.jurusan} onChange={handleChange} required className="input-modern" placeholder="Contoh: Pendidikan Matematika" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* 3. Spesialisasi */}
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-emerald-600" />
-                        Spesialisasi Pengajaran
-                    </h3>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-slate-700 mb-2">8. Mata Pelajaran yang Dikuasai * (Pilih lebih dari satu)</label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                            {mataPelajaranOptions.map(mapel => (
-                                <label key={mapel} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg p-2 transition-colors">
-                                    <input type="checkbox" checked={formData.spesialisasiMapel.includes(mapel)} onChange={() => handleMapelChange(mapel)} className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" />
-                                    <span className="text-sm text-slate-700">{mapel}</span>
-                                </label>
-                            ))}
-                        </div>
-                        {formData.spesialisasiMapel.includes('Lainnya') && (
-                            <div className="mt-3">
-                                <input
-                                    type="text"
-                                    name="mapelLainnya"
-                                    value={formData.mapelLainnya}
-                                    onChange={handleChange}
-                                    placeholder="Tulis mata pelajaran lainnya..."
-                                    className="input-modern"
-                                />
-                            </div>
-                        )}
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Jenjang yang Bisa Diajar * (Pilih lebih dari satu)</label>
-                        <div className="flex flex-wrap gap-2">
-                            {jenjangOptions.map(jenjang => (
-                                <label key={jenjang} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg px-4 py-2 transition-colors">
-                                    <input type="checkbox" checked={formData.spesialisasiJenjang.includes(jenjang)} onChange={() => handleJenjangChange(jenjang)} className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" />
-                                    <span className="text-sm text-slate-700">{jenjang}</span>
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">9. Mode Mengajar *</label>
-                        <div className="flex flex-wrap gap-3">
-                            {[{ value: 'tatap_muka', label: 'Tatap Muka' }, { value: 'online', label: 'Online' }, { value: 'keduanya', label: 'Keduanya' }].map(mode => (
-                                <label key={mode.value} className="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="modeMengajar" value={mode.value} checked={formData.modeMengajar === mode.value} onChange={handleChange} className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500" />
-                                    <span className="text-sm text-slate-700">{mode.label}</span>
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* 4. Domisili */}
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                        <MapPin className="w-5 h-5 text-emerald-600" />
-                        10. Domisili
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Provinsi *</label>
-                            <div className="relative">
-                                <select value={formData.provinsiId} onChange={handleProvinceChange} required className="input-modern appearance-none" disabled={loadingRegion.provinces}>
-                                    <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
-                                    {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
-                                </select>
-                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                            </div>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Kota/Kabupaten *</label>
-                            <div className="relative">
-                                <select value={formData.kotaId} onChange={handleCityChange} required className="input-modern appearance-none" disabled={!formData.provinsiId || loadingRegion.cities}>
-                                    <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
-                                    {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
-                                </select>
-                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                            </div>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Kecamatan *</label>
-                            <div className="relative">
-                                <select value={formData.kecamatanId} onChange={handleDistrictChange} required className="input-modern appearance-none" disabled={!formData.kotaId || loadingRegion.districts}>
-                                    <option value="">{!formData.kotaId ? 'Pilih kota dulu' : loadingRegion.districts ? 'Memuat...' : 'Pilih kecamatan...'}</option>
-                                    {districts.map(d => (<option key={d.id} value={d.id}>{d.name}</option>))}
-                                </select>
-                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                            </div>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Kelurahan/Desa *</label>
-                            <div className="relative">
-                                <select value={formData.kelurahanId} onChange={handleVillageChange} required className="input-modern appearance-none" disabled={!formData.kecamatanId || loadingRegion.villages}>
-                                    <option value="">{!formData.kecamatanId ? 'Pilih kecamatan dulu' : loadingRegion.villages ? 'Memuat...' : 'Pilih kelurahan...'}</option>
-                                    {villages.map(v => (<option key={v.id} value={v.id}>{v.name}</option>))}
-                                </select>
-                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                            </div>
-                        </div>
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Alamat Lengkap *</label>
-                            <textarea name="alamat" value={formData.alamat} onChange={handleChange} required rows={2} className="input-modern resize-none" placeholder="Jl. Nama Jalan No. XX, RT/RW" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* 5. Pas Foto & Pakta Integritas */}
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                        <Camera className="w-5 h-5 text-emerald-600" />
-                        11. Upload Dokumen
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {/* Pas Foto */}
-                        <div className="bg-slate-50 rounded-xl p-4">
-                            <label className="block text-sm font-medium text-slate-700 mb-3">Pas Foto *</label>
+                        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
                             <div className="flex items-start gap-4">
-                                <div className="flex-shrink-0">
-                                    {formData.pasFotoPreview ? (
-                                        <img src={formData.pasFotoPreview} alt="Preview" className="w-24 h-32 object-cover rounded-lg border-2 border-slate-200" />
-                                    ) : (
-                                        <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
-                                            <Camera className="w-6 h-6 text-slate-400" />
-                                        </div>
-                                    )}
-                                </div>
+                                <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">1</div>
                                 <div className="flex-1">
-                                    <input type="file" accept="image/*" onChange={handlePhotoChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-                                    <p className="text-xs text-slate-500 mt-2">Foto bebas, profesional. Format: JPG, PNG.</p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Pakta Integritas */}
-                        <div className="bg-slate-50 rounded-xl p-4">
-                            <label className="block text-sm font-medium text-slate-700 mb-3">Upload Pakta Integritas *</label>
-                            <div className="flex items-start gap-4">
-                                <div className="flex-shrink-0">
-                                    <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
-                                        <FileText className="w-6 h-6 text-slate-400" />
+                                    <h3 className="font-bold text-slate-800 mb-1">Unduh Dokumen</h3>
+                                    <p className="text-slate-600 text-sm mb-3">Download SOP dan Pakta Integritas, kemudian tanda tangani pakta integritas.</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        <a href="/docs/sop-guru.pdf" download>
+                                            <Button variant="outline" size="sm">
+                                                <Download className="w-4 h-4 mr-2" />
+                                                SOP Guru
+                                            </Button>
+                                        </a>
+                                        <a href="/docs/pakta-integritas-guru.docx" download>
+                                            <Button variant="outline" size="sm">
+                                                <Download className="w-4 h-4 mr-2" />
+                                                Pakta Integritas
+                                            </Button>
+                                        </a>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">2</div>
                                 <div className="flex-1">
-                                    <input type="file" accept=".pdf,application/pdf" onChange={handlePaktaChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-                                    <p className="text-xs text-slate-500 mt-2">File PDF pakta integritas yang sudah ditandatangani.</p>
+                                    <h3 className="font-bold text-slate-800 mb-1">Isi Formulir di Bawah</h3>
+                                    <p className="text-slate-600 text-sm">Lengkapi data diri Anda, lalu kirim lamaran. Setelah itu, Konfirmasi via WhatsApp</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
-                <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Mengirim...</>) : (<><FileText className="w-5 h-5 mr-2" />Kirim Lamaran</>)}
-                </Button>
-            </motion.form>
+                {/* Application Form */}
+                <motion.form
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    onSubmit={handleSubmit}
+                    className="bg-white rounded-2xl shadow-xl shadow-slate-100/50 border border-slate-200 p-6 md:p-8"
+                >
+                    <h2 className="text-xl font-bold text-slate-800 mb-6">Formulir Lamaran Guru</h2>
+
+                    {/* 1. Personal Info */}
+                    <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                            <User className="w-5 h-5 text-emerald-600" />
+                            Data Pribadi
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">1. Nama Lengkap *</label>
+                                <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="input-modern" placeholder="Masukkan nama lengkap" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">2. Email *</label>
+                                <input type="email" name="email" value={formData.email} onChange={handleChange} required className="input-modern" placeholder="email@contoh.com" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">3. Nomor WhatsApp *</label>
+                                <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} required className="input-modern" placeholder="08xxxxxxxxxx" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">4. Tanggal Lahir *</label>
+                                <input type="date" name="tanggalLahir" value={formData.tanggalLahir} onChange={handleChange} required className="input-modern" />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-2">5. Jenis Kelamin *</label>
+                                <div className="flex gap-4">
+                                    {['Laki-laki', 'Perempuan'].map(gender => (
+                                        <label key={gender} className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="jenisKelamin"
+                                                value={gender}
+                                                checked={formData.jenisKelamin === gender}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
+                                            />
+                                            <span className="text-sm text-slate-700">{gender}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 2. Education */}
+                    <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                            <GraduationCap className="w-5 h-5 text-emerald-600" />
+                            Pendidikan
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">6. Pendidikan Terakhir *</label>
+                                <select name="pendidikan" value={formData.pendidikan} onChange={handleChange} required className="input-modern">
+                                    <option value="">Pilih pendidikan...</option>
+                                    {pendidikanOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">7. Asal Kampus / Sekolah *</label>
+                                <input type="text" name="asalKampus" value={formData.asalKampus} onChange={handleChange} required className="input-modern" placeholder="Contoh: Universitas Indonesia" />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">8. Jurusan *</label>
+                                <input type="text" name="jurusan" value={formData.jurusan} onChange={handleChange} required className="input-modern" placeholder="Contoh: Pendidikan Matematika" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 3. Spesialisasi */}
+                    <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                            <FileText className="w-5 h-5 text-emerald-600" />
+                            Spesialisasi Pengajaran
+                        </h3>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-slate-700 mb-2">9. Jenjang yang Bisa Diajar * (Pilih lebih dari satu)</label>
+                            <div className="flex flex-wrap gap-2">
+                                {jenjangOptions.map(jenjang => (
+                                    <label key={jenjang} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg px-4 py-2 transition-colors">
+                                        <input type="checkbox" checked={formData.spesialisasiJenjang.includes(jenjang)} onChange={() => handleJenjangChange(jenjang)} className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" />
+                                        <span className="text-sm text-slate-700">{jenjang}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-slate-700 mb-2">10. Mata Pelajaran yang Dikuasai * (Pilih lebih dari satu)</label>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                {mataPelajaranOptions.map(mapel => (
+                                    <label key={mapel} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg p-2 transition-colors">
+                                        <input type="checkbox" checked={formData.spesialisasiMapel.includes(mapel)} onChange={() => handleMapelChange(mapel)} className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" />
+                                        <span className="text-sm text-slate-700">{mapel}</span>
+                                    </label>
+                                ))}
+                            </div>
+                            {formData.spesialisasiMapel.includes('Lainnya') && (
+                                <div className="mt-3">
+                                    <input
+                                        type="text"
+                                        name="mapelLainnya"
+                                        value={formData.mapelLainnya}
+                                        onChange={handleChange}
+                                        placeholder="Tulis mata pelajaran lainnya..."
+                                        className="input-modern"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">11. Mode Mengajar *</label>
+                            <div className="flex flex-wrap gap-3">
+                                {[{ value: 'tatap_muka', label: 'Tatap Muka' }, { value: 'online', label: 'Online' }, { value: 'keduanya', label: 'Keduanya' }].map(mode => (
+                                    <label key={mode.value} className="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="modeMengajar" value={mode.value} checked={formData.modeMengajar === mode.value} onChange={handleChange} className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500" />
+                                        <span className="text-sm text-slate-700">{mode.label}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 4. Domisili */}
+                    <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                            <MapPin className="w-5 h-5 text-emerald-600" />
+                            11. Domisili
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Provinsi *</label>
+                                <div className="relative">
+                                    <select value={formData.provinsiId} onChange={handleProvinceChange} required className="input-modern appearance-none" disabled={loadingRegion.provinces}>
+                                        <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
+                                        {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Kota/Kabupaten *</label>
+                                <div className="relative">
+                                    <select value={formData.kotaId} onChange={handleCityChange} required className="input-modern appearance-none" disabled={!formData.provinsiId || loadingRegion.cities}>
+                                        <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
+                                        {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Kecamatan *</label>
+                                <div className="relative">
+                                    <select value={formData.kecamatanId} onChange={handleDistrictChange} required className="input-modern appearance-none" disabled={!formData.kotaId || loadingRegion.districts}>
+                                        <option value="">{!formData.kotaId ? 'Pilih kota dulu' : loadingRegion.districts ? 'Memuat...' : 'Pilih kecamatan...'}</option>
+                                        {districts.map(d => (<option key={d.id} value={d.id}>{d.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Kelurahan/Desa *</label>
+                                <div className="relative">
+                                    <select value={formData.kelurahanId} onChange={handleVillageChange} required className="input-modern appearance-none" disabled={!formData.kecamatanId || loadingRegion.villages}>
+                                        <option value="">{!formData.kecamatanId ? 'Pilih kecamatan dulu' : loadingRegion.villages ? 'Memuat...' : 'Pilih kelurahan...'}</option>
+                                        {villages.map(v => (<option key={v.id} value={v.id}>{v.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Alamat Lengkap *</label>
+                                <textarea name="alamat" value={formData.alamat} onChange={handleChange} required rows={2} className="input-modern resize-none" placeholder="Jl. Nama Jalan No. XX, RT/RW" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 5. Pas Foto & Pakta Integritas */}
+                    <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                            <Camera className="w-5 h-5 text-emerald-600" />
+                            12. Upload Dokumen
+                        </h3>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {/* Pas Foto */}
+                            <div className="bg-slate-50 rounded-xl p-4">
+                                <label className="block text-sm font-medium text-slate-700 mb-3">Pas Foto *</label>
+                                <div className="flex items-start gap-4">
+                                    <div className="flex-shrink-0">
+                                        {formData.pasFotoPreview ? (
+                                            <img src={formData.pasFotoPreview} alt="Preview" className="w-24 h-32 object-cover rounded-lg border-2 border-slate-200" />
+                                        ) : (
+                                            <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
+                                                <Camera className="w-6 h-6 text-slate-400" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="flex-1">
+                                        <input type="file" accept="image/*" onChange={handlePhotoChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                        <p className="text-xs text-slate-500 mt-2">Foto bebas, profesional. Max 2MB.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Pakta Integritas */}
+                            <div className="bg-slate-50 rounded-xl p-4">
+                                <label className="block text-sm font-medium text-slate-700 mb-3">Upload Pakta Integritas *</label>
+                                <div className="flex items-start gap-4">
+                                    <div className="flex-shrink-0">
+                                        <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
+                                            <FileText className="w-6 h-6 text-slate-400" />
+                                        </div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <input type="file" accept=".pdf,application/pdf" onChange={handlePaktaChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                        <p className="text-xs text-slate-500 mt-2">Format PDF. Max 2MB.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Ijazah Terakhir */}
+                            <div className="bg-slate-50 rounded-xl p-4">
+                                <label className="block text-sm font-medium text-slate-700 mb-3">Upload Ijazah Terakhir *</label>
+                                <div className="flex items-start gap-4">
+                                    <div className="flex-shrink-0">
+                                        <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
+                                            <GraduationCap className="w-6 h-6 text-slate-400" />
+                                        </div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <input type="file" accept=".pdf,application/pdf,image/*" onChange={handleIjazahChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                        <p className="text-xs text-slate-500 mt-2">Format PDF/Gambar. Max 2MB.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Mengirim...</>) : (<><FileText className="w-5 h-5 mr-2" />Kirim Lamaran</>)}
+                    </Button>
+                </motion.form>
+            </div>
         </div>
     );
 };

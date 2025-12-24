@@ -11,7 +11,16 @@ interface KarirData {
     [key: string]: string | number | boolean | string[] | undefined;
 }
 
-export async function submitToGoogleSheets(data: PendaftaranData | KarirData): Promise<{ success: boolean; error?: string }> {
+interface PengaduanData {
+    formType: 'pengaduan';
+    nama: string;
+    whatsapp: string;
+    kategori: string;
+    pesan: string;
+    timestamp?: string;
+}
+
+export async function submitToGoogleSheets(data: PendaftaranData | KarirData | PengaduanData): Promise<{ success: boolean; error?: string }> {
     if (!GOOGLE_SCRIPT_URL) {
         console.warn('Google Script URL not configured');
         return { success: false, error: 'Google Script URL not configured' };

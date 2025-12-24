@@ -41,8 +41,8 @@ export const programOptions: { [key: string]: { label: string; options: string[]
 
 // Mata pelajaran dan layanan lain untuk Les Privat berdasarkan Jenis Peserta
 export const mataPelajaranByPeserta: { [key: string]: string[] } = {
-    'TK / PAUD': ['Calistung', 'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Mengaji', 'Musik', 'Renang'],
-    'SD': ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Mengaji', 'Musik', 'Renang', 'Semua Mapel'],
+    'TK / PAUD': ['Calistung', 'Mengaji', 'Musik', 'Renang'],
+    'SD': ['Calistung', 'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Mengaji', 'Musik', 'Renang', 'Semua Mapel'],
     'SMP': ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Mengaji', 'Musik', 'Renang', 'Semua Mapel'],
     'SMA': ['Matematika', 'Fisika', 'Kimia', 'Biologi', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'Mengaji', 'Musik', 'Renang'],
     'Kuliah': ['Kalkulus', 'Fisika Dasar', 'Kimia Dasar', 'Statistika', 'Pemrograman', 'Akuntansi', 'Manajemen', 'Renang', 'Lainnya']

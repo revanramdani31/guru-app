@@ -38,24 +38,27 @@ const Footer = () => {
                             <Link href="/karir" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
                                 Daftar Jadi Guru
                             </Link>
+                            <Link href="/biaya" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Cek Biaya
+                            </Link>
                         </div>
                     </div>
 
-                    {/* Subjects */}
+                    {/* Program Unggulan */}
                     <div>
-                        <span className="font-semibold text-lg mb-4 block text-white">Mata Pelajaran</span>
+                        <span className="font-semibold text-lg mb-4 block text-white">Program Unggulan</span>
                         <div className="flex flex-col gap-2">
-                            <Link href="/tutors?search=matematika" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
-                                Matematika
+                            <Link href="/program" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Les Privat
                             </Link>
-                            <Link href="/tutors?search=bahasa+inggris" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
-                                Bahasa Inggris
+                            <Link href="/program" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                UTBK / SNBT
                             </Link>
-                            <Link href="/tutors?search=pemrograman" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
-                                Pemrograman
+                            <Link href="/program" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                TOEFL / IELTS
                             </Link>
-                            <Link href="/tutors?search=musik" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
-                                Musik
+                            <Link href="/program" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
+                                Persiapan CPNS
                             </Link>
                         </div>
                     </div>

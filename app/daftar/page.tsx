@@ -12,6 +12,7 @@ import { programs, programOptions, mataPelajaranByPeserta, pricing, isKondisiona
 
 interface FormData {
     namaLengkap: string;
+    jenisKelamin: string;
     whatsapp: string;
     program: string;
     programOption: string;
@@ -46,6 +47,7 @@ const DaftarForm = () => {
 
     const [formData, setFormData] = useState<FormData>({
         namaLengkap: '',
+        jenisKelamin: '',
         whatsapp: '',
         program: '',
         programOption: '',
@@ -276,6 +278,7 @@ const DaftarForm = () => {
         doc.setFontSize(11);
 
         addField('Nama', data.namaLengkap);
+        addField('Jenis Kelamin', data.jenisKelamin);
         addField('WhatsApp', data.whatsapp);
 
         yPos += 5;
@@ -328,6 +331,7 @@ const DaftarForm = () => {
             await submitToGoogleSheets({
                 formType: 'pendaftaran',
                 namaLengkap: formData.namaLengkap,
+                jenisKelamin: formData.jenisKelamin,
                 whatsapp: formData.whatsapp,
                 program: getProgram(formData.program)?.name || formData.program,
                 programOption: formData.programOption,
@@ -361,6 +365,7 @@ const DaftarForm = () => {
     const handleNewRegistration = () => {
         setFormData({
             namaLengkap: '',
+            jenisKelamin: '',
             whatsapp: '',
             program: '',
             programOption: '',
@@ -422,358 +427,419 @@ const DaftarForm = () => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-3">Daftar Les Privat</h1>
-                <p className="text-slate-600 max-w-xl mx-auto">
-                    Isi formulir di bawah untuk mendaftarkan kebutuhan belajar Anda
-                </p>
-            </motion.div>
+        <div className="min-h-screen bg-slate-50">
+            {/* Hero Section */}
+            <section className="relative bg-emerald-600 text-white overflow-hidden pt-20 pb-32 mb-8">
+                {/* Background Effects */}
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3"></div>
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-400/20 rounded-full blur-[100px] -translate-x-1/3 translate-y-1/3"></div>
 
-            {/* SOP Info */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 }}
-                className="mb-8"
-            >
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
-                    <div className="flex items-center gap-3">
-                        <FileText className="w-5 h-5 text-amber-600" />
-                        <p className="text-sm text-amber-800">
-                            <strong>Penting:</strong> Baca SOP terlebih dahulu sebelum mendaftar
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <h1 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-white drop-shadow-sm">Daftar Les Privat</h1>
+                        <p className="text-lg md:text-xl text-emerald-50 max-w-2xl mx-auto font-medium leading-relaxed">
+                            Isi formulir di bawah untuk mendaftarkan kebutuhan belajar Anda.
+                            Kami akan mencarikan guru terbaik sesuai kriteria.
                         </p>
-                    </div>
-                    <a href="/docs/sop-orangtua.pdf" download>
-                        <Button variant="outline" size="sm" className="border-amber-300 text-amber-700 hover:bg-amber-100">
-                            <Download className="w-4 h-4 mr-2" />
-                            Unduh SOP Orang Tua
-                        </Button>
-                    </a>
+                    </motion.div>
                 </div>
-            </motion.div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-                {/* Form */}
-                <motion.form
+                {/* Curved Divider */}
+                <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
+                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(113%+1.3px)] h-[60px] fill-slate-50 opacity-100">
+                        <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"></path>
+                    </svg>
+                </div>
+            </section>
+
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+
+                {/* SOP Info */}
+                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    onSubmit={handleSubmit}
-                    className="lg:col-span-2 bg-white rounded-2xl shadow-xl shadow-slate-100/50 border border-slate-200 p-6 md:p-8 space-y-8"
+                    transition={{ delay: 0.05 }}
+                    className="mb-8"
                 >
-                    {/* Data Pribadi */}
-                    <div>
-                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                            <User className="w-5 h-5 text-emerald-600" />
-                            Data Pribadi
-                        </h2>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Nama Lengkap <span className="text-red-500">*</span></label>
-                                <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" placeholder="Masukkan nama lengkap" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Nomor WhatsApp <span className="text-red-500">*</span></label>
-                                <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" placeholder="08xxxxxxxxxx" />
-                            </div>
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
+                        <div className="flex items-center gap-3">
+                            <FileText className="w-5 h-5 text-amber-600" />
+                            <p className="text-sm text-amber-800">
+                                <strong>Penting:</strong> Baca SOP terlebih dahulu sebelum mendaftar
+                            </p>
                         </div>
-                    </div>
-
-                    {/* Program */}
-                    <div>
-                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                            <BookOpen className="w-5 h-5 text-emerald-600" />
-                            Program
-                        </h2>
-                        <div className="space-y-4">
-                            {/* Pilih Program */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Pilih Program <span className="text-red-500">*</span></label>
-                                <div className="relative">
-                                    <select
-                                        name="program"
-                                        value={formData.program}
-                                        onChange={(e) => {
-                                            setFormData(prev => ({ ...prev, program: e.target.value, programOption: '', mapel: '' }));
-                                        }}
-                                        required
-                                        className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                    >
-                                        <option value="">Pilih program...</option>
-                                        {programs.map(p => (
-                                            <option key={p.id} value={p.id}>{p.icon} {p.name}</option>
-                                        ))}
-                                    </select>
-                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                </div>
-                            </div>
-
-                            {/* Detail Program */}
-                            <AnimatePresence>
-                                {formData.program && (
-                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
-                                        <label className="block text-sm font-semibold text-slate-700">
-                                            {programOptions[formData.program]?.label} <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <select
-                                                name="programOption"
-                                                value={formData.programOption}
-                                                onChange={(e) => {
-                                                    setFormData(prev => ({ ...prev, programOption: e.target.value, mapel: '' }));
-                                                }}
-                                                required
-                                                className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                            >
-                                                <option value="">Pilih {programOptions[formData.program]?.label?.toLowerCase()}...</option>
-                                                {availableOptions.map(opt => (
-                                                    <option key={opt} value={opt}>{opt}</option>
-                                                ))}
-                                            </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
-                            {/* Mata Pelajaran for Les Privat */}
-                            <AnimatePresence>
-                                {formData.program === 'les-privat' && formData.programOption && (
-                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
-                                        <label className="block text-sm font-semibold text-slate-700">Mata Pelajaran</label>
-                                        <div className="relative">
-                                            <select
-                                                name="mapel"
-                                                value={formData.mapel}
-                                                onChange={handleChange}
-                                                className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                            >
-                                                <option value="">Pilih mata pelajaran...</option>
-                                                {availableMapel.map(m => (
-                                                    <option key={m} value={m}>{m}</option>
-                                                ))}
-                                            </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
-                            {/* Metode & Jumlah Pertemuan */}
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-semibold text-slate-700">Metode Pembelajaran</label>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        {['Tatap Muka', 'Online'].map(mode => (
-                                            <button
-                                                key={mode}
-                                                type="button"
-                                                onClick={() => setFormData(prev => ({ ...prev, modeBelajar: mode }))}
-                                                className={`px-3 py-2.5 rounded-xl border-2 font-medium text-sm transition-all ${formData.modeBelajar === mode ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-600 hover:border-emerald-200'}`}
-                                            >
-                                                {mode}
-                                                {mode === 'Online' && <span className="block text-xs text-emerald-600">−Rp10.000</span>}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-semibold text-slate-700">Jumlah Pertemuan</label>
-                                    <div className="grid grid-cols-4 gap-2">
-                                        {['1', '4', '8', '12'].map(num => (
-                                            <button
-                                                key={num}
-                                                type="button"
-                                                onClick={() => setFormData(prev => ({ ...prev, jumlahPertemuan: num }))}
-                                                className={`px-2 py-2.5 rounded-xl border-2 font-medium text-sm transition-all ${formData.jumlahPertemuan === num ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-600 hover:border-emerald-200'}`}
-                                            >
-                                                {num}x
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Jadwal */}
-                    <div>
-                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                            <Clock className="w-5 h-5 text-emerald-600" />
-                            Jadwal Preferensi
-                        </h2>
-                        <div className="space-y-4">
-                            {/* Pilih Hari */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Pilih Hari</label>
-                                <div className="flex flex-wrap gap-2">
-                                    {hariOptions.map(hari => (
-                                        <button
-                                            key={hari}
-                                            type="button"
-                                            onClick={() => {
-                                                setFormData(prev => ({
-                                                    ...prev,
-                                                    jadwalHari: prev.jadwalHari.includes(hari)
-                                                        ? prev.jadwalHari.filter(h => h !== hari)
-                                                        : [...prev.jadwalHari, hari]
-                                                }));
-                                            }}
-                                            className={`px-4 py-2 rounded-xl border-2 font-medium text-sm transition-all ${formData.jadwalHari.includes(hari)
-                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                                                : 'border-slate-200 text-slate-600 hover:border-emerald-200'
-                                                }`}
-                                        >
-                                            {hari}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Pilih Waktu */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Pilih Waktu</label>
-                                <div className="relative">
-                                    <select
-                                        value={formData.jadwalWaktu}
-                                        onChange={(e) => setFormData(prev => ({ ...prev, jadwalWaktu: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                    >
-                                        <option value="">Pilih waktu...</option>
-                                        {waktuOptions.map(w => (
-                                            <option key={w.value} value={w.value}>{w.label}</option>
-                                        ))}
-                                    </select>
-                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Alamat */}
-                    <div>
-                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                            <MapPin className="w-5 h-5 text-emerald-600" />
-                            Alamat
-                        </h2>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Provinsi <span className="text-red-500">*</span></label>
-                                <div className="relative">
-                                    <select value={formData.provinsiId} onChange={handleProvinceChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={loadingRegion.provinces}>
-                                        <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
-                                        {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
-                                    </select>
-                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Kota/Kabupaten <span className="text-red-500">*</span></label>
-                                <div className="relative">
-                                    <select value={formData.kotaId} onChange={handleCityChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.provinsiId || loadingRegion.cities}>
-                                        <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
-                                        {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
-                                    </select>
-                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Kecamatan <span className="text-red-500">*</span></label>
-                                <div className="relative">
-                                    <select value={formData.kecamatanId} onChange={handleDistrictChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.kotaId || loadingRegion.districts}>
-                                        <option value="">{!formData.kotaId ? 'Pilih kota dulu' : loadingRegion.districts ? 'Memuat...' : 'Pilih kecamatan...'}</option>
-                                        {districts.map(d => (<option key={d.id} value={d.id}>{d.name}</option>))}
-                                    </select>
-                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Kelurahan/Desa <span className="text-red-500">*</span></label>
-                                <div className="relative">
-                                    <select value={formData.kelurahanId} onChange={handleVillageChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.kecamatanId || loadingRegion.villages}>
-                                        <option value="">{!formData.kecamatanId ? 'Pilih kecamatan dulu' : loadingRegion.villages ? 'Memuat...' : 'Pilih kelurahan...'}</option>
-                                        {villages.map(v => (<option key={v.id} value={v.id}>{v.name}</option>))}
-                                    </select>
-                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                </div>
-                            </div>
-                            <div className="md:col-span-2 space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700">Alamat Lengkap <span className="text-red-500">*</span></label>
-                                <textarea name="alamat" value={formData.alamat} onChange={handleChange} required rows={2} className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 resize-none" placeholder="Jl. Nama Jalan No. XX, RT/RW, Patokan" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Catatan */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-slate-700">Catatan Tambahan</label>
-                        <textarea name="catatan" value={formData.catatan} onChange={handleChange} rows={3} className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 resize-none" placeholder="Informasi tambahan yang perlu diketahui..." />
-                    </div>
-
-                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Mengirim...</>) : (<><FileText className="w-5 h-5 mr-2" />Daftar & Kirim</>)}
-                    </Button>
-                </motion.form>
-
-                {/* Price Preview Sidebar */}
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="lg:col-span-1">
-                    <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-xl p-6 text-white sticky top-24">
-                        <h3 className="text-lg font-semibold mb-4">Estimasi Biaya</h3>
-
-                        {formData.program && formData.programOption ? (
-                            isKondisional(formData.program) ? (
-                                <div className="text-center py-4">
-                                    <p className="text-2xl font-bold mb-2">Harga Kondisional</p>
-                                    <p className="text-sm opacity-90">Hubungi kami untuk konsultasi</p>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="space-y-3 mb-4">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="opacity-75">Per Sesi</span>
-                                            <span>Rp {formatPrice(estimatedPrice)}</span>
-                                        </div>
-                                        <div className="flex justify-between text-sm">
-                                            <span className="opacity-75">Pertemuan</span>
-                                            <span>{getSessions()}x</span>
-                                        </div>
-                                        {formData.modeBelajar === 'Online' && (
-                                            <div className="flex justify-between text-sm text-emerald-200">
-                                                <span>✅ Diskon Online</span>
-                                                <span>-Rp {formatPrice(10000 * getSessions())}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="pt-4 border-t border-white/20">
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-semibold">Total</span>
-                                            <span className="text-2xl font-bold">Rp {formatPrice(getTotalPrice())}</span>
-                                        </div>
-                                    </div>
-                                    <div className="pt-4 mt-4 border-t border-white/20 text-sm space-y-1 opacity-75">
-                                        <p>📚 {getProgram(formData.program)?.name}</p>
-                                        <p>📖 {formData.programOption}</p>
-                                        {formData.mapel && <p>📝 {formData.mapel}</p>}
-                                    </div>
-                                </>
-                            )
-                        ) : (
-                            <div className="text-center py-6 opacity-75">
-                                <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-50" />
-                                <p className="text-sm">Pilih program untuk melihat estimasi</p>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
-                        <p className="text-sm text-amber-800">
-                            <strong>Catatan:</strong> Harga dapat menyesuaikan dengan kebutuhan. Konsultasi awal gratis.
-                        </p>
+                        <a href="/docs/sop-orangtua.pdf" download>
+                            <Button variant="outline" size="sm" className="border-amber-300 text-amber-700 hover:bg-amber-100">
+                                <Download className="w-4 h-4 mr-2" />
+                                Unduh SOP Orang Tua
+                            </Button>
+                        </a>
                     </div>
                 </motion.div>
+
+                <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Form */}
+                    <motion.form
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        onSubmit={handleSubmit}
+                        className="lg:col-span-2 bg-white rounded-2xl shadow-xl shadow-slate-100/50 border border-slate-200 p-6 md:p-8 space-y-8"
+                    >
+                        {/* Data Pribadi */}
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <User className="w-5 h-5 text-emerald-600" />
+                                Data Pribadi
+                            </h2>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Nama Lengkap <span className="text-red-500">*</span></label>
+                                    <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" placeholder="Masukkan nama lengkap" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Jenis Kelamin <span className="text-red-500">*</span></label>
+                                    <div className="flex gap-4 h-[50px] items-center">
+                                        {['Laki-laki', 'Perempuan'].map(gender => (
+                                            <label key={gender} className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name="jenisKelamin"
+                                                    value={gender}
+                                                    checked={formData.jenisKelamin === gender}
+                                                    onChange={handleChange}
+                                                    required
+                                                    className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
+                                                />
+                                                <span className="text-sm text-slate-700">{gender}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Nomor WhatsApp <span className="text-red-500">*</span></label>
+                                    <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" placeholder="08xxxxxxxxxx" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Program */}
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <BookOpen className="w-5 h-5 text-emerald-600" />
+                                Program
+                            </h2>
+                            <div className="space-y-4">
+                                {/* Pilih Program */}
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Pilih Program <span className="text-red-500">*</span></label>
+                                    <div className="relative">
+                                        <select
+                                            name="program"
+                                            value={formData.program}
+                                            onChange={(e) => {
+                                                setFormData(prev => ({ ...prev, program: e.target.value, programOption: '', mapel: '' }));
+                                            }}
+                                            required
+                                            className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                        >
+                                            <option value="">Pilih program...</option>
+                                            {programs.map(p => (
+                                                <option key={p.id} value={p.id}>{p.name}</option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                </div>
+
+                                {/* Detail Program */}
+                                <AnimatePresence>
+                                    {formData.program && (
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
+                                            <label className="block text-sm font-semibold text-slate-700">
+                                                {programOptions[formData.program]?.label} <span className="text-red-500">*</span>
+                                            </label>
+                                            <div className="relative">
+                                                <select
+                                                    name="programOption"
+                                                    value={formData.programOption}
+                                                    onChange={(e) => {
+                                                        setFormData(prev => ({ ...prev, programOption: e.target.value, mapel: '' }));
+                                                    }}
+                                                    required
+                                                    className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                                >
+                                                    <option value="">Pilih {programOptions[formData.program]?.label?.toLowerCase()}...</option>
+                                                    {availableOptions.map(opt => (
+                                                        <option key={opt} value={opt}>{opt}</option>
+                                                    ))}
+                                                </select>
+                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {/* Mata Pelajaran for Les Privat */}
+                                <AnimatePresence>
+                                    {formData.program === 'les-privat' && formData.programOption && (
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
+                                            <label className="block text-sm font-semibold text-slate-700">Mata Pelajaran</label>
+                                            <div className="relative">
+                                                {formData.programOption === 'SMA' ? (
+                                                    <>
+                                                        <input
+                                                            list="mapel-options"
+                                                            name="mapel"
+                                                            value={formData.mapel}
+                                                            onChange={handleChange}
+                                                            placeholder="Cari atau pilih mata pelajaran..."
+                                                            className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                                        />
+                                                        <datalist id="mapel-options">
+                                                            {availableMapel.map(m => (
+                                                                <option key={m} value={m} />
+                                                            ))}
+                                                        </datalist>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <select
+                                                            name="mapel"
+                                                            value={formData.mapel}
+                                                            onChange={handleChange}
+                                                            className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                                        >
+                                                            <option value="">Pilih mata pelajaran...</option>
+                                                            {availableMapel.map(m => (
+                                                                <option key={m} value={m}>{m}</option>
+                                                            ))}
+                                                        </select>
+                                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                                    </>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {/* Metode & Jumlah Pertemuan */}
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="block text-sm font-semibold text-slate-700">Metode Pembelajaran</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {['Tatap Muka', 'Online'].map(mode => (
+                                                <button
+                                                    key={mode}
+                                                    type="button"
+                                                    onClick={() => setFormData(prev => ({ ...prev, modeBelajar: mode }))}
+                                                    className={`px-3 py-2.5 rounded-xl border-2 font-medium text-sm transition-all ${formData.modeBelajar === mode ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-600 hover:border-emerald-200'}`}
+                                                >
+                                                    {mode}
+                                                    {mode === 'Online'}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="block text-sm font-semibold text-slate-700">Jumlah Pertemuan</label>
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {['1', '4', '8', '12'].map(num => (
+                                                <button
+                                                    key={num}
+                                                    type="button"
+                                                    onClick={() => setFormData(prev => ({ ...prev, jumlahPertemuan: num }))}
+                                                    className={`px-2 py-2.5 rounded-xl border-2 font-medium text-sm transition-all ${formData.jumlahPertemuan === num ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-600 hover:border-emerald-200'}`}
+                                                >
+                                                    {num}x
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Jadwal */}
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <Clock className="w-5 h-5 text-emerald-600" />
+                                Jadwal Preferensi
+                            </h2>
+                            <div className="space-y-4">
+                                {/* Pilih Hari */}
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Pilih Hari</label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {hariOptions.map(hari => (
+                                            <button
+                                                key={hari}
+                                                type="button"
+                                                onClick={() => {
+                                                    setFormData(prev => ({
+                                                        ...prev,
+                                                        jadwalHari: prev.jadwalHari.includes(hari)
+                                                            ? prev.jadwalHari.filter(h => h !== hari)
+                                                            : [...prev.jadwalHari, hari]
+                                                    }));
+                                                }}
+                                                className={`px-4 py-2 rounded-xl border-2 font-medium text-sm transition-all ${formData.jadwalHari.includes(hari)
+                                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                                    : 'border-slate-200 text-slate-600 hover:border-emerald-200'
+                                                    }`}
+                                            >
+                                                {hari}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Pilih Waktu */}
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Pilih Waktu</label>
+                                    <div className="relative">
+                                        <select
+                                            value={formData.jadwalWaktu}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, jadwalWaktu: e.target.value }))}
+                                            className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                        >
+                                            <option value="">Pilih waktu...</option>
+                                            {waktuOptions.map(w => (
+                                                <option key={w.value} value={w.value}>{w.label}</option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Alamat */}
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <MapPin className="w-5 h-5 text-emerald-600" />
+                                Alamat
+                            </h2>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Provinsi <span className="text-red-500">*</span></label>
+                                    <div className="relative">
+                                        <select value={formData.provinsiId} onChange={handleProvinceChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={loadingRegion.provinces}>
+                                            <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
+                                            {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Kota/Kabupaten <span className="text-red-500">*</span></label>
+                                    <div className="relative">
+                                        <select value={formData.kotaId} onChange={handleCityChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.provinsiId || loadingRegion.cities}>
+                                            <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
+                                            {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Kecamatan <span className="text-red-500">*</span></label>
+                                    <div className="relative">
+                                        <select value={formData.kecamatanId} onChange={handleDistrictChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.kotaId || loadingRegion.districts}>
+                                            <option value="">{!formData.kotaId ? 'Pilih kota dulu' : loadingRegion.districts ? 'Memuat...' : 'Pilih kecamatan...'}</option>
+                                            {districts.map(d => (<option key={d.id} value={d.id}>{d.name}</option>))}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Kelurahan/Desa <span className="text-red-500">*</span></label>
+                                    <div className="relative">
+                                        <select value={formData.kelurahanId} onChange={handleVillageChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.kecamatanId || loadingRegion.villages}>
+                                            <option value="">{!formData.kecamatanId ? 'Pilih kecamatan dulu' : loadingRegion.villages ? 'Memuat...' : 'Pilih kelurahan...'}</option>
+                                            {villages.map(v => (<option key={v.id} value={v.id}>{v.name}</option>))}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Alamat Lengkap <span className="text-red-500">*</span></label>
+                                    <textarea name="alamat" value={formData.alamat} onChange={handleChange} required rows={2} className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 resize-none" placeholder="Jl. Nama Jalan No. XX, RT/RW, Patokan" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Catatan */}
+                        <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-slate-700">Catatan Tambahan</label>
+                            <textarea name="catatan" value={formData.catatan} onChange={handleChange} rows={3} className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 resize-none" placeholder="Informasi tambahan yang perlu diketahui..." />
+                        </div>
+
+                        <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                            {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Mengirim...</>) : (<><FileText className="w-5 h-5 mr-2" />Daftar & Kirim</>)}
+                        </Button>
+                    </motion.form>
+
+                    {/* Price Preview Sidebar */}
+                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="lg:col-span-1">
+                        <div className="sticky top-24 space-y-6">
+                            <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-xl p-6 text-white">
+                                <h3 className="text-lg font-semibold mb-4">Estimasi Biaya</h3>
+
+                                {formData.program && formData.programOption ? (
+                                    isKondisional(formData.program) ? (
+                                        <div className="text-center py-4">
+                                            <p className="text-2xl font-bold mb-2">Harga Kondisional</p>
+                                            <p className="text-sm opacity-90">Hubungi kami untuk konsultasi</p>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="space-y-3 mb-4">
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="opacity-75">Per Sesi</span>
+                                                    <span>Rp {formatPrice(estimatedPrice)}</span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="opacity-75">Pertemuan</span>
+                                                    <span>{getSessions()}x</span>
+                                                </div>
+
+                                            </div>
+                                            <div className="pt-4 border-t border-white/20">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="font-semibold">Total</span>
+                                                    <span className="text-2xl font-bold">Rp {formatPrice(getTotalPrice())}</span>
+                                                </div>
+                                            </div>
+                                            <div className="pt-4 mt-4 border-t border-white/20 text-sm space-y-1 opacity-75">
+                                                <p>📚 {getProgram(formData.program)?.name}</p>
+                                                <p>📖 {formData.programOption}</p>
+                                                {formData.mapel && <p>📝 {formData.mapel}</p>}
+                                            </div>
+                                        </>
+                                    )
+                                ) : (
+                                    <div className="text-center py-6 opacity-75">
+                                        <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                                        <p className="text-sm">Pilih program untuk melihat estimasi</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                <p className="text-sm text-amber-800">
+                                    <strong>Catatan:</strong> Harga dapat menyesuaikan dengan kebutuhan. Konsultasi awal gratis.
+                                </p>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
             </div>
         </div>
+
     );
 };
 
