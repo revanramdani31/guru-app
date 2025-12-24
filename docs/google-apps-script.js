@@ -55,6 +55,8 @@ function doPost(e) {
             return ContentService
                 .createTextOutput(JSON.stringify({ success: true, fileUrls: fileUrls }))
                 .setMimeType(ContentService.MimeType.JSON);
+        } else if (data.formType === 'pengaduan') {
+            handlePengaduan(ss, data);
         }
 
         return ContentService
@@ -104,6 +106,29 @@ function handlePendaftaran(ss, data) {
         data.estimasiBiaya
     ]);
     Logger.log("Pendaftaran saved");
+}
+
+function handlePengaduan(ss, data) {
+    Logger.log("Processing Pengaduan");
+    var sheet = ss.getSheetByName('Layanan Pengaduan');
+
+    if (!sheet) {
+        sheet = ss.insertSheet('Layanan Pengaduan');
+        sheet.getRange(1, 1, 1, 5).setValues([[
+            'Timestamp', 'Nama Lengkap', 'WhatsApp/Email', 'Kategori', 'Pesan'
+        ]]);
+        sheet.getRange(1, 1, 1, 5).setFontWeight('bold');
+        sheet.setFrozenRows(1);
+    }
+
+    sheet.appendRow([
+        new Date(),
+        data.nama,
+        data.kontak,
+        data.kategori,
+        data.pesan
+    ]);
+    Logger.log("Pengaduan saved");
 }
 
 function handleKarirWithFiles(ss, data) {
