@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, BookOpen, Clock, MapPin, MessageSquare, FileText, Check, Download, Loader2, ChevronDown, MessageCircle } from 'lucide-react';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { jsPDF } from 'jspdf';
 import { submitToGoogleSheets } from '@/lib/googleSheets';
 import { getProvinces, getCities, getDistricts, getVillages, Region } from '@/lib/regionApi';
-import { programs, programOptions, mataPelajaranByPeserta, pricing, isKondisional, formatPrice, getProgram } from '@/lib/pricing';
+import { programs, programOptions, mataPelajaranByPeserta, pricing, isKondisional, formatPrice, getProgram, calculatePrice } from '@/lib/pricing';
 
 interface FormData {
     namaLengkap: string;
@@ -41,7 +41,7 @@ const waktuOptions = [
     { value: 'fleksibel', label: 'Fleksibel' }
 ];
 
-const DaftarPage = () => {
+const DaftarForm = () => {
     const searchParams = useSearchParams();
 
     const [formData, setFormData] = useState<FormData>({
@@ -774,6 +774,18 @@ const DaftarPage = () => {
                 </motion.div>
             </div>
         </div>
+    );
+};
+
+const DaftarPage = () => {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-slate-50">
+                <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+            </div>
+        }>
+            <DaftarForm />
+        </Suspense>
     );
 };
 
