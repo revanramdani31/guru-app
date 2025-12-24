@@ -44,25 +44,19 @@ const TutorsPage = () => {
                 transition={{ duration: 0.6 }}
                 className="text-center mb-12"
             >
-                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Guru Kami</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">Guru Kami</h1>
+                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 max-w-3xl mx-auto border border-emerald-100 mb-6">
+                    <p className="text-slate-700 leading-relaxed">
+                        <span className="font-semibold text-emerald-600">Datangin Guru</span> didukung oleh pengajar berkualifikasi lulusan <strong>S1 hingga S3</strong>,
+                        sehingga setiap siswa mendapatkan bimbingan dari tenaga pendidik yang kompeten, berpengalaman, dan sesuai bidang keilmuannya.
+                    </p>
+                </div>
                 <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                     Berikut adalah sebagian guru berkualitas yang bergabung bersama kami.
                     Daftar sekarang dan kami akan carikan guru terbaik untuk Anda.
                 </p>
             </motion.div>
 
-            {/* Info Banner */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 mb-10 text-center"
-            >
-                <p className="text-emerald-800">
-                    💡 <strong>Bagaimana cara mendapatkan guru?</strong> Cukup isi formulir pendaftaran,
-                    tim kami akan mencarikan guru yang sesuai dengan kebutuhan Anda.
-                </p>
-            </motion.div>
 
             {/* Tutors Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
@@ -128,6 +122,19 @@ const TutorsPage = () => {
                     </motion.div>
                 ))}
             </div>
+
+            {/* Info Banner */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 mb-10 text-center"
+            >
+                <p className="text-emerald-800">
+                    💡 <strong>Bagaimana cara mendapatkan guru?</strong> Cukup isi formulir pendaftaran,
+                    tim kami akan mencarikan guru yang sesuai dengan kebutuhan Anda.
+                </p>
+            </motion.div>
 
             {/* CTA Section */}
             <motion.div

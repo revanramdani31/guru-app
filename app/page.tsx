@@ -63,7 +63,7 @@ export default function Home() {
       >
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
-            Les Privat Berkualitas,
+            Les Privat Tanpa Ribet,
             <span className="block text-emerald-600">Guru Datang ke Rumah</span>
           </h1>
           <p className="text-slate-600 text-lg md:text-xl max-w-2xl mx-auto mb-10">
@@ -90,6 +90,26 @@ export default function Home() {
                 <ArrowRight className="w-5 h-5 ml-2" />
               </button>
             </Link>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Selayang Pandang */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="py-12 md:py-16"
+      >
+        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-lg shadow-slate-100/50 border border-slate-100">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-6">Selayang Pandang</h2>
+            <p className="text-slate-600 text-base md:text-lg leading-relaxed">
+              <span className="font-semibold text-emerald-600">Datangin Guru</span> adalah lembaga les privat yang menghadirkan guru langsung ke rumah siswa.
+              Kami menyediakan bimbingan belajar untuk semua jenjang—dari SD, SMP, SMA, hingga mahasiswa dan profesional.
+              Dengan jadwal fleksibel, metode personal, dan guru berkualitas, Datangin Guru menghadirkan pengalaman belajar
+              yang lebih fokus, nyaman, dan efektif tanpa harus keluar rumah.
+            </p>
           </div>
         </div>
       </motion.section>

@@ -1,32 +1,14 @@
 // Google Sheets API integration
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_HWAf4o9gXg2qmR3nFo6H2DzyewvlHkIGOUxFGQN79fPRv5tSiOoXMqMfCoceuIxP/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTqa3_8qGheX7a7ySGWDf1jikGvSrM9xmcjG06YwH8kflPE5n46IbjColD8ppiK7k/exec';
 
 interface PendaftaranData {
     formType: 'pendaftaran';
-    namaLengkap: string;
-    email: string;
-    whatsapp: string;
-    subjek: string;
-    tingkat: string;
-    modeBelajar: string;
-    jadwalPreferensi: string;
-    lokasi: string;
-    catatan: string;
+    [key: string]: string | number | undefined;
 }
 
 interface KarirData {
     formType: 'karir';
-    namaLengkap: string;
-    email: string;
-    whatsapp: string;
-    lokasi: string;
-    pendidikan: string;
-    spesialisasi: string;
-    tingkatMengajar: string;
-    modeMengajar: string;
-    pengalaman: string;
-    tarifPerJam: string;
-    motivasi: string;
+    [key: string]: string | number | boolean | string[] | undefined;
 }
 
 export async function submitToGoogleSheets(data: PendaftaranData | KarirData): Promise<{ success: boolean; error?: string }> {

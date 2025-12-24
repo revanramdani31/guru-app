@@ -1,65 +1,251 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, BookOpen, GraduationCap, Clock, FileText, Download, Check, Briefcase, Loader2, MessageCircle } from 'lucide-react';
+import { User, Mail, GraduationCap, Clock, FileText, Download, Check, Briefcase, Loader2, MessageCircle, MapPin, Camera, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { jsPDF } from 'jspdf';
 import Link from 'next/link';
 import { submitToGoogleSheets, formatModeLabel } from '@/lib/googleSheets';
+import { getProvinces, getCities, getDistricts, getVillages, Region } from '@/lib/regionApi';
 
 interface FormData {
     namaLengkap: string;
     email: string;
     whatsapp: string;
+    tanggalLahir: string;
     pendidikan: string;
-    spesialisasi: string;
-    tingkatMengajar: string[];
+    asalKampus: string;
+    jurusan: string;
+    spesialisasiMapel: string[];
+    mapelLainnya: string;
+    spesialisasiJenjang: string[];
     modeMengajar: string;
-    pengalaman: string;
-    lokasi: string;
-    tarifPerJam: string;
-    motivasi: string;
+    provinsiId: string;
+    provinsiName: string;
+    kotaId: string;
+    kotaName: string;
+    kecamatanId: string;
+    kecamatanName: string;
+    kelurahanId: string;
+    kelurahanName: string;
+    alamat: string;
+    pasFoto: File | null;
+    pasFotoPreview: string;
+    pasFotoBase64: string;
+    paktaFile: File | null;
+    paktaBase64: string;
 }
+
+const mataPelajaranOptions = [
+    'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Fisika', 'Kimia', 'Biologi',
+    'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'PKN',
+    'IPA Terpadu', 'IPS Terpadu', 'Calistung', 'Mengaji', 'Bahasa Arab',
+    'UTBK/SNBT', 'TOEFL', 'IELTS', 'Renang', 'Musik', 'Lainnya'
+];
+
+const jenjangOptions = ['TK/PAUD', 'SD', 'SMP', 'SMA', 'Kuliah', 'Umum'];
+
+const pendidikanOptions = ['SMA/SMK', 'On Going S1', 'S1', 'S2', 'S3'];
 
 const KarirPage = () => {
     const [formData, setFormData] = useState<FormData>({
         namaLengkap: '',
         email: '',
         whatsapp: '',
+        tanggalLahir: '',
         pendidikan: '',
-        spesialisasi: '',
-        tingkatMengajar: [],
+        asalKampus: '',
+        jurusan: '',
+        spesialisasiMapel: [],
+        mapelLainnya: '',
+        spesialisasiJenjang: [],
         modeMengajar: 'keduanya',
-        pengalaman: '',
-        lokasi: '',
-        tarifPerJam: '',
-        motivasi: ''
+        provinsiId: '',
+        provinsiName: '',
+        kotaId: '',
+        kotaName: '',
+        kecamatanId: '',
+        kecamatanName: '',
+        kelurahanId: '',
+        kelurahanName: '',
+        alamat: '',
+        pasFoto: null,
+        pasFotoPreview: '',
+        pasFotoBase64: '',
+        paktaFile: null,
+        paktaBase64: ''
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Region states
+    const [provinces, setProvinces] = useState<Region[]>([]);
+    const [cities, setCities] = useState<Region[]>([]);
+    const [districts, setDistricts] = useState<Region[]>([]);
+    const [villages, setVillages] = useState<Region[]>([]);
+    const [loadingRegion, setLoadingRegion] = useState({
+        provinces: false,
+        cities: false,
+        districts: false,
+        villages: false
+    });
+
+    // Load provinces on mount
+    useEffect(() => {
+        const loadProvinces = async () => {
+            setLoadingRegion(prev => ({ ...prev, provinces: true }));
+            const data = await getProvinces();
+            setProvinces(data);
+            setLoadingRegion(prev => ({ ...prev, provinces: false }));
+        };
+        loadProvinces();
+    }, []);
+
+    // Load cities when province changes
+    useEffect(() => {
+        if (formData.provinsiId) {
+            const loadCities = async () => {
+                setLoadingRegion(prev => ({ ...prev, cities: true }));
+                const data = await getCities(formData.provinsiId);
+                setCities(data);
+                setLoadingRegion(prev => ({ ...prev, cities: false }));
+            };
+            loadCities();
+            setFormData(prev => ({
+                ...prev,
+                kotaId: '', kotaName: '',
+                kecamatanId: '', kecamatanName: '',
+                kelurahanId: '', kelurahanName: ''
+            }));
+            setDistricts([]);
+            setVillages([]);
+        }
+    }, [formData.provinsiId]);
+
+    // Load districts when city changes
+    useEffect(() => {
+        if (formData.kotaId) {
+            const loadDistricts = async () => {
+                setLoadingRegion(prev => ({ ...prev, districts: true }));
+                const data = await getDistricts(formData.kotaId);
+                setDistricts(data);
+                setLoadingRegion(prev => ({ ...prev, districts: false }));
+            };
+            loadDistricts();
+            setFormData(prev => ({
+                ...prev,
+                kecamatanId: '', kecamatanName: '',
+                kelurahanId: '', kelurahanName: ''
+            }));
+            setVillages([]);
+        }
+    }, [formData.kotaId]);
+
+    // Load villages when district changes
+    useEffect(() => {
+        if (formData.kecamatanId) {
+            const loadVillages = async () => {
+                setLoadingRegion(prev => ({ ...prev, villages: true }));
+                const data = await getVillages(formData.kecamatanId);
+                setVillages(data);
+                setLoadingRegion(prev => ({ ...prev, villages: false }));
+            };
+            loadVillages();
+            setFormData(prev => ({
+                ...prev,
+                kelurahanId: '', kelurahanName: ''
+            }));
+        }
+    }, [formData.kecamatanId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleCheckboxChange = (value: string) => {
+    const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = provinces.find(p => p.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, provinsiId: id, provinsiName: name }));
+    };
+
+    const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = cities.find(c => c.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, kotaId: id, kotaName: name }));
+    };
+
+    const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = districts.find(d => d.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, kecamatanId: id, kecamatanName: name }));
+    };
+
+    const handleVillageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = villages.find(v => v.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, kelurahanId: id, kelurahanName: name }));
+    };
+
+    const handleMapelChange = (value: string) => {
         setFormData(prev => {
-            const current = prev.tingkatMengajar;
+            const current = prev.spesialisasiMapel;
             if (current.includes(value)) {
-                return { ...prev, tingkatMengajar: current.filter(v => v !== value) };
+                return { ...prev, spesialisasiMapel: current.filter(v => v !== value) };
             } else {
-                return { ...prev, tingkatMengajar: [...current, value] };
+                return { ...prev, spesialisasiMapel: [...current, value] };
             }
         });
+    };
+
+    const handleJenjangChange = (value: string) => {
+        setFormData(prev => {
+            const current = prev.spesialisasiJenjang;
+            if (current.includes(value)) {
+                return { ...prev, spesialisasiJenjang: current.filter(v => v !== value) };
+            } else {
+                return { ...prev, spesialisasiJenjang: [...current, value] };
+            }
+        });
+    };
+
+    const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({
+                    ...prev,
+                    pasFoto: file,
+                    pasFotoPreview: reader.result as string,
+                    pasFotoBase64: reader.result as string
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handlePaktaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({
+                    ...prev,
+                    paktaFile: file,
+                    paktaBase64: reader.result as string
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const generatePDF = (data: FormData) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
 
-        // Header
         doc.setFillColor(16, 185, 129);
         doc.rect(0, 0, pageWidth, 40, 'F');
 
@@ -72,7 +258,6 @@ const KarirPage = () => {
         doc.setFont('helvetica', 'normal');
         doc.text('Lamaran Menjadi Guru', 20, 35);
 
-        // Content
         doc.setTextColor(30, 41, 59);
         let yPos = 55;
 
@@ -88,45 +273,46 @@ const KarirPage = () => {
             doc.setFont('helvetica', 'bold');
             doc.text(`${label}:`, 20, yPos);
             doc.setFont('helvetica', 'normal');
-            doc.text(value || '-', 80, yPos);
+            doc.text(value || '-', 70, yPos);
             yPos += 8;
         };
 
-        addField('Nama Lengkap', data.namaLengkap);
+        addField('Nama', data.namaLengkap);
         addField('Email', data.email);
         addField('WhatsApp', data.whatsapp);
-        addField('Lokasi', data.lokasi);
+        addField('Tgl Lahir', data.tanggalLahir);
+        addField('Pendidikan', data.pendidikan);
+        addField('Kampus', data.asalKampus);
+        addField('Jurusan', data.jurusan);
 
         yPos += 5;
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
-        doc.text('Kualifikasi Mengajar', 20, yPos);
+        doc.text('Spesialisasi Mengajar', 20, yPos);
         yPos += 12;
 
         doc.setFontSize(11);
-        doc.setFont('helvetica', 'normal');
-
         const modeLabel = data.modeMengajar === 'online' ? 'Online' : data.modeMengajar === 'tatap_muka' ? 'Tatap Muka' : 'Online & Tatap Muka';
 
-        addField('Pendidikan', data.pendidikan);
-        addField('Spesialisasi', data.spesialisasi);
-        addField('Tingkat Mengajar', data.tingkatMengajar.join(', ') || 'Tidak dipilih');
-        addField('Mode Mengajar', modeLabel);
-        addField('Pengalaman', data.pengalaman);
-        addField('Tarif/Jam', data.tarifPerJam ? `Rp ${data.tarifPerJam}` : '-');
+        const mapelList = data.spesialisasiMapel.includes('Lainnya') && data.mapelLainnya
+            ? data.spesialisasiMapel.filter(m => m !== 'Lainnya').concat(data.mapelLainnya).join(', ')
+            : data.spesialisasiMapel.join(', ');
+        addField('Mapel', mapelList || '-');
+        addField('Jenjang', data.spesialisasiJenjang.join(', ') || '-');
+        addField('Mode', modeLabel);
 
-        if (data.motivasi) {
-            yPos += 5;
-            doc.setFont('helvetica', 'bold');
-            doc.text('Motivasi Mengajar:', 20, yPos);
-            yPos += 8;
-            doc.setFont('helvetica', 'normal');
+        yPos += 5;
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Domisili', 20, yPos);
+        yPos += 12;
 
-            const splitMotivasi = doc.splitTextToSize(data.motivasi, pageWidth - 40);
-            doc.text(splitMotivasi, 20, yPos);
-        }
+        doc.setFontSize(11);
+        addField('Provinsi', data.provinsiName);
+        addField('Kota', data.kotaName);
+        addField('Kecamatan', data.kecamatanName);
+        addField('Kelurahan', data.kelurahanName);
 
-        // Footer
         const pageHeight = doc.internal.pageSize.getHeight();
         doc.setFillColor(248, 250, 252);
         doc.rect(0, pageHeight - 25, pageWidth, 25, 'F');
@@ -150,49 +336,65 @@ const KarirPage = () => {
 Nama: ${data.namaLengkap}
 Email: ${data.email}
 WhatsApp: ${data.whatsapp}
-Lokasi: ${data.lokasi}
+Tgl Lahir: ${data.tanggalLahir}
 
-🎓 *Kualifikasi:*
+🎓 *Pendidikan:*
 Pendidikan: ${data.pendidikan}
-Spesialisasi: ${data.spesialisasi}
-Tingkat Mengajar: ${data.tingkatMengajar.join(', ') || '-'}
-Mode: ${modeLabel}
-Pengalaman: ${data.pengalaman || '-'}
-Tarif: ${data.tarifPerJam ? `Rp ${data.tarifPerJam}/jam` : '-'}
+Kampus: ${data.asalKampus}
+Jurusan: ${data.jurusan}
 
-${data.motivasi ? `📝 Motivasi:\n${data.motivasi}` : ''}
+📚 *Spesialisasi:*
+Mapel: ${data.spesialisasiMapel.includes('Lainnya') && data.mapelLainnya
+                ? data.spesialisasiMapel.filter(m => m !== 'Lainnya').concat(data.mapelLainnya).join(', ')
+                : data.spesialisasiMapel.join(', ') || '-'}
+Jenjang: ${data.spesialisasiJenjang.join(', ') || '-'}
+Mode: ${modeLabel}
+
+📍 *Domisili:*
+${data.provinsiName}, ${data.kotaName}
+${data.kecamatanName}, ${data.kelurahanName}
+${data.alamat}
 
 ---
 Dikirim dari datanginguru Privat`;
     };
-
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
-            // Submit to Google Sheets
             await submitToGoogleSheets({
                 formType: 'karir',
                 namaLengkap: formData.namaLengkap,
                 email: formData.email,
                 whatsapp: formData.whatsapp,
-                lokasi: formData.lokasi,
+                tanggalLahir: formData.tanggalLahir,
                 pendidikan: formData.pendidikan,
-                spesialisasi: formData.spesialisasi,
-                tingkatMengajar: formData.tingkatMengajar.join(', '),
+                asalKampus: formData.asalKampus,
+                jurusan: formData.jurusan,
+                spesialisasiMapel: formData.spesialisasiMapel.includes('Lainnya') && formData.mapelLainnya
+                    ? formData.spesialisasiMapel.filter(m => m !== 'Lainnya').concat(formData.mapelLainnya).join(', ')
+                    : formData.spesialisasiMapel.join(', '),
+                spesialisasiJenjang: formData.spesialisasiJenjang.join(', '),
                 modeMengajar: formatModeLabel(formData.modeMengajar),
-                pengalaman: formData.pengalaman,
-                tarifPerJam: formData.tarifPerJam,
-                motivasi: formData.motivasi,
+                provinsi: formData.provinsiName,
+                kota: formData.kotaName,
+                kecamatan: formData.kecamatanName,
+                kelurahan: formData.kelurahanName,
+                alamat: formData.alamat,
+                // File Uploads
+                pasFotoName: formData.pasFoto?.name,
+                pasFotoType: formData.pasFoto?.type,
+                pasFotoBase64: formData.pasFotoBase64.split(',')[1],
+                paktaName: formData.paktaFile?.name,
+                paktaType: formData.paktaFile?.type,
+                paktaBase64: formData.paktaBase64.split(',')[1],
             });
 
-            // Open WhatsApp with message
             const message = generateWhatsAppMessage(formData);
-            const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+            // const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+            // window.open(whatsappUrl, '_blank');
 
             setIsSubmitted(true);
         } catch (error) {
@@ -208,25 +410,8 @@ Dikirim dari datanginguru Privat`;
         doc.save(`Lamaran_Guru_${formData.namaLengkap.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
     };
 
-    const handleNewApplication = () => {
-        setFormData({
-            namaLengkap: '',
-            email: '',
-            whatsapp: '',
-            pendidikan: '',
-            spesialisasi: '',
-            tingkatMengajar: [],
-            modeMengajar: 'keduanya',
-            pengalaman: '',
-            lokasi: '',
-            tarifPerJam: '',
-            motivasi: ''
-        });
-        setIsSubmitted(false);
-    };
-
     if (isSubmitted) {
-        const whatsappAgreementUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(`Halo Admin, saya ${formData.namaLengkap} sudah mendaftar sebagai guru dan melampirkan foto perjanjian yang sudah ditandatangani.`)}`;
+        const whatsappConfirmationUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(`Halo Admin, saya ${formData.namaLengkap} sudah mengirim lamaran guru via website (beserta dokumen). Mohon dicek. Terima kasih.`)}`;
 
         return (
             <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -238,21 +423,22 @@ Dikirim dari datanginguru Privat`;
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 rounded-full mb-6">
                         <Check className="w-10 h-10 text-emerald-600" />
                     </div>
-                    <h1 className="text-3xl font-bold text-slate-800 mb-3">Pendaftaran Berhasil!</h1>
+                    <h1 className="text-3xl font-bold text-slate-800 mb-3">Lamaran Terkirim!</h1>
                     <p className="text-slate-600 mb-8">
-                        Silakan kirim foto perjanjian yang sudah ditandatangani ke WhatsApp Admin.
+                        Data dan dokumen Anda telah berhasil kami terima. <br />
+                        Kami akan segera meninjau lamaran Anda.
                     </p>
 
                     <div className="flex flex-col gap-3 max-w-xs mx-auto">
-                        <a href={whatsappAgreementUrl} target="_blank" rel="noopener noreferrer">
+                        <a href={whatsappConfirmationUrl} target="_blank" rel="noopener noreferrer">
                             <Button className="w-full bg-green-500 hover:bg-green-600">
                                 <MessageCircle className="w-5 h-5 mr-2" />
-                                Kirim ke WhatsApp Admin
+                                Konfirmasi ke Admin
                             </Button>
                         </a>
                         <Button onClick={handleDownloadPDF} variant="outline" className="w-full">
                             <Download className="w-4 h-4 mr-2" />
-                            Unduh Rekap Lamaran
+                            Unduh Bukti Lamaran
                         </Button>
                         <Link href="/">
                             <Button variant="ghost" className="w-full">
@@ -304,39 +490,44 @@ Dikirim dari datanginguru Privat`;
                 ))}
             </motion.div>
 
-            {/* 2 Steps Instructions */}
+            {/* Steps */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
                 className="mb-10"
             >
-                <h2 className="text-lg font-bold text-slate-800 text-center mb-6">Langkah Pendaftaran</h2>
+                <h2 className="text-lg font-bold text-slate-800 text-center mb-6">Konfirmasi ke Admin</h2>
                 <div className="grid md:grid-cols-2 gap-4">
-                    {/* Step 1 */}
                     <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
                         <div className="flex items-start gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">1</div>
                             <div className="flex-1">
-                                <h3 className="font-bold text-slate-800 mb-1">Unduh & Tanda Tangani Perjanjian</h3>
-                                <p className="text-slate-600 text-sm mb-3">Download, print, tanda tangani, lalu foto perjanjian.</p>
-                                <a href="/docs/perjanjian-guru.docx" download>
-                                    <Button variant="outline" size="sm">
-                                        <Download className="w-4 h-4 mr-2" />
-                                        Unduh Perjanjian
-                                    </Button>
-                                </a>
+                                <h3 className="font-bold text-slate-800 mb-1">Unduh Dokumen</h3>
+                                <p className="text-slate-600 text-sm mb-3">Download SOP dan Pakta Integritas, kemudian tanda tangani pakta integritas.</p>
+                                <div className="flex flex-wrap gap-2">
+                                    <a href="/docs/sop-guru.pdf" download>
+                                        <Button variant="outline" size="sm">
+                                            <Download className="w-4 h-4 mr-2" />
+                                            SOP Guru
+                                        </Button>
+                                    </a>
+                                    <a href="/docs/pakta-integritas-guru.docx" download>
+                                        <Button variant="outline" size="sm">
+                                            <Download className="w-4 h-4 mr-2" />
+                                            Pakta Integritas
+                                        </Button>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    {/* Step 2 */}
                     <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
                         <div className="flex items-start gap-4">
                             <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">2</div>
                             <div className="flex-1">
                                 <h3 className="font-bold text-slate-800 mb-1">Isi Formulir di Bawah</h3>
-                                <p className="text-slate-600 text-sm">Lengkapi data diri Anda, lalu kirim lamaran. Setelah itu, kirim foto perjanjian ke WhatsApp Admin.</p>
+                                <p className="text-slate-600 text-sm">Lengkapi data diri Anda, lalu kirim lamaran. Setelah itu, Konfirmasi via WhatsApp</p>
                             </div>
                         </div>
                     </div>
@@ -353,7 +544,7 @@ Dikirim dari datanginguru Privat`;
             >
                 <h2 className="text-xl font-bold text-slate-800 mb-6">Formulir Lamaran Guru</h2>
 
-                {/* Personal Info */}
+                {/* 1. Personal Info */}
                 <div className="mb-8">
                     <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                         <User className="w-5 h-5 text-emerald-600" />
@@ -361,166 +552,202 @@ Dikirim dari datanginguru Privat`;
                     </h3>
                     <div className="grid md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap *</label>
-                            <input
-                                type="text"
-                                name="namaLengkap"
-                                value={formData.namaLengkap}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="Masukkan nama lengkap"
-                            />
+                            <label className="block text-sm font-medium text-slate-700 mb-1">1. Nama Lengkap *</label>
+                            <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="input-modern" placeholder="Masukkan nama lengkap" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Email *</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="email@contoh.com"
-                            />
+                            <label className="block text-sm font-medium text-slate-700 mb-1">2. Email *</label>
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} required className="input-modern" placeholder="email@contoh.com" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp *</label>
-                            <input
-                                type="tel"
-                                name="whatsapp"
-                                value={formData.whatsapp}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="08xxxxxxxxxx"
-                            />
+                            <label className="block text-sm font-medium text-slate-700 mb-1">3. Nomor WhatsApp *</label>
+                            <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} required className="input-modern" placeholder="08xxxxxxxxxx" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Lokasi *</label>
-                            <input
-                                type="text"
-                                name="lokasi"
-                                value={formData.lokasi}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="Contoh: Jakarta Selatan"
-                            />
+                            <label className="block text-sm font-medium text-slate-700 mb-1">4. Tanggal Lahir *</label>
+                            <input type="date" name="tanggalLahir" value={formData.tanggalLahir} onChange={handleChange} required className="input-modern" />
                         </div>
                     </div>
                 </div>
 
-                {/* Qualifications */}
+                {/* 2. Education */}
                 <div className="mb-8">
                     <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                         <GraduationCap className="w-5 h-5 text-emerald-600" />
-                        Kualifikasi
+                        Pendidikan
                     </h3>
                     <div className="grid md:grid-cols-2 gap-4">
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Pendidikan Terakhir *</label>
-                            <input
-                                type="text"
-                                name="pendidikan"
-                                value={formData.pendidikan}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="Contoh: S1 Matematika ITB"
-                            />
-                        </div>
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Spesialisasi / Mata Pelajaran *</label>
-                            <input
-                                type="text"
-                                name="spesialisasi"
-                                value={formData.spesialisasi}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="Contoh: Matematika, Fisika, Kalkulus"
-                            />
-                        </div>
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Tingkat yang Bisa Diajar</label>
-                            <div className="flex flex-wrap gap-3">
-                                {['SD', 'SMP', 'SMA', 'Kuliah'].map(level => (
-                                    <label key={level} className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={formData.tingkatMengajar.includes(level)}
-                                            onChange={() => handleCheckboxChange(level)}
-                                            className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500"
-                                        />
-                                        <span className="text-sm text-slate-700">{level}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Mode Mengajar</label>
-                            <select
-                                name="modeMengajar"
-                                value={formData.modeMengajar}
-                                onChange={handleChange}
-                                className="input-modern"
-                            >
-                                <option value="tatap_muka">Tatap Muka</option>
-                                <option value="online">Online</option>
-                                <option value="keduanya">Keduanya</option>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">5. Pendidikan Terakhir *</label>
+                            <select name="pendidikan" value={formData.pendidikan} onChange={handleChange} required className="input-modern">
+                                <option value="">Pilih pendidikan...</option>
+                                {pendidikanOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Pengalaman Mengajar</label>
-                            <input
-                                type="text"
-                                name="pengalaman"
-                                value={formData.pengalaman}
-                                onChange={handleChange}
-                                className="input-modern"
-                                placeholder="Contoh: 3 tahun"
-                            />
+                            <label className="block text-sm font-medium text-slate-700 mb-1">6. Asal Kampus / Sekolah *</label>
+                            <input type="text" name="asalKampus" value={formData.asalKampus} onChange={handleChange} required className="input-modern" placeholder="Contoh: Universitas Indonesia" />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Ekspektasi Tarif per Jam (Rp)</label>
-                            <input
-                                type="text"
-                                name="tarifPerJam"
-                                value={formData.tarifPerJam}
-                                onChange={handleChange}
-                                className="input-modern"
-                                placeholder="Contoh: 150000"
-                            />
+                            <label className="block text-sm font-medium text-slate-700 mb-1">7. Jurusan *</label>
+                            <input type="text" name="jurusan" value={formData.jurusan} onChange={handleChange} required className="input-modern" placeholder="Contoh: Pendidikan Matematika" />
                         </div>
                     </div>
                 </div>
 
-                {/* Motivation */}
+                {/* 3. Spesialisasi */}
                 <div className="mb-8">
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Motivasi Mengajar</label>
-                    <textarea
-                        name="motivasi"
-                        value={formData.motivasi}
-                        onChange={handleChange}
-                        rows={4}
-                        className="input-modern resize-none"
-                        placeholder="Ceritakan mengapa Anda ingin menjadi guru..."
-                    />
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-emerald-600" />
+                        Spesialisasi Pengajaran
+                    </h3>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-slate-700 mb-2">8. Mata Pelajaran yang Dikuasai * (Pilih lebih dari satu)</label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            {mataPelajaranOptions.map(mapel => (
+                                <label key={mapel} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg p-2 transition-colors">
+                                    <input type="checkbox" checked={formData.spesialisasiMapel.includes(mapel)} onChange={() => handleMapelChange(mapel)} className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" />
+                                    <span className="text-sm text-slate-700">{mapel}</span>
+                                </label>
+                            ))}
+                        </div>
+                        {formData.spesialisasiMapel.includes('Lainnya') && (
+                            <div className="mt-3">
+                                <input
+                                    type="text"
+                                    name="mapelLainnya"
+                                    value={formData.mapelLainnya}
+                                    onChange={handleChange}
+                                    placeholder="Tulis mata pelajaran lainnya..."
+                                    className="input-modern"
+                                />
+                            </div>
+                        )}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Jenjang yang Bisa Diajar * (Pilih lebih dari satu)</label>
+                        <div className="flex flex-wrap gap-2">
+                            {jenjangOptions.map(jenjang => (
+                                <label key={jenjang} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg px-4 py-2 transition-colors">
+                                    <input type="checkbox" checked={formData.spesialisasiJenjang.includes(jenjang)} onChange={() => handleJenjangChange(jenjang)} className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" />
+                                    <span className="text-sm text-slate-700">{jenjang}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">9. Mode Mengajar *</label>
+                        <div className="flex flex-wrap gap-3">
+                            {[{ value: 'tatap_muka', label: 'Tatap Muka' }, { value: 'online', label: 'Online' }, { value: 'keduanya', label: 'Keduanya' }].map(mode => (
+                                <label key={mode.value} className="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="modeMengajar" value={mode.value} checked={formData.modeMengajar === mode.value} onChange={handleChange} className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500" />
+                                    <span className="text-sm text-slate-700">{mode.label}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* 4. Domisili */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-emerald-600" />
+                        10. Domisili
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Provinsi *</label>
+                            <div className="relative">
+                                <select value={formData.provinsiId} onChange={handleProvinceChange} required className="input-modern appearance-none" disabled={loadingRegion.provinces}>
+                                    <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
+                                    {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Kota/Kabupaten *</label>
+                            <div className="relative">
+                                <select value={formData.kotaId} onChange={handleCityChange} required className="input-modern appearance-none" disabled={!formData.provinsiId || loadingRegion.cities}>
+                                    <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
+                                    {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Kecamatan *</label>
+                            <div className="relative">
+                                <select value={formData.kecamatanId} onChange={handleDistrictChange} required className="input-modern appearance-none" disabled={!formData.kotaId || loadingRegion.districts}>
+                                    <option value="">{!formData.kotaId ? 'Pilih kota dulu' : loadingRegion.districts ? 'Memuat...' : 'Pilih kecamatan...'}</option>
+                                    {districts.map(d => (<option key={d.id} value={d.id}>{d.name}</option>))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Kelurahan/Desa *</label>
+                            <div className="relative">
+                                <select value={formData.kelurahanId} onChange={handleVillageChange} required className="input-modern appearance-none" disabled={!formData.kecamatanId || loadingRegion.villages}>
+                                    <option value="">{!formData.kecamatanId ? 'Pilih kecamatan dulu' : loadingRegion.villages ? 'Memuat...' : 'Pilih kelurahan...'}</option>
+                                    {villages.map(v => (<option key={v.id} value={v.id}>{v.name}</option>))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                            </div>
+                        </div>
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Alamat Lengkap *</label>
+                            <textarea name="alamat" value={formData.alamat} onChange={handleChange} required rows={2} className="input-modern resize-none" placeholder="Jl. Nama Jalan No. XX, RT/RW" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* 5. Pas Foto & Pakta Integritas */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                        <Camera className="w-5 h-5 text-emerald-600" />
+                        11. Upload Dokumen
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {/* Pas Foto */}
+                        <div className="bg-slate-50 rounded-xl p-4">
+                            <label className="block text-sm font-medium text-slate-700 mb-3">Pas Foto *</label>
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0">
+                                    {formData.pasFotoPreview ? (
+                                        <img src={formData.pasFotoPreview} alt="Preview" className="w-24 h-32 object-cover rounded-lg border-2 border-slate-200" />
+                                    ) : (
+                                        <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
+                                            <Camera className="w-6 h-6 text-slate-400" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex-1">
+                                    <input type="file" accept="image/*" onChange={handlePhotoChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                    <p className="text-xs text-slate-500 mt-2">Foto bebas, profesional. Format: JPG, PNG.</p>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Pakta Integritas */}
+                        <div className="bg-slate-50 rounded-xl p-4">
+                            <label className="block text-sm font-medium text-slate-700 mb-3">Upload Pakta Integritas *</label>
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
+                                        <FileText className="w-6 h-6 text-slate-400" />
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <input type="file" accept=".pdf,application/pdf" onChange={handlePaktaChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                    <p className="text-xs text-slate-500 mt-2">File PDF pakta integritas yang sudah ditandatangani.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                        <>
-                            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                            Mengirim...
-                        </>
-                    ) : (
-                        <>
-                            <FileText className="w-5 h-5 mr-2" />
-                            Kirim Lamaran
-                        </>
-                    )}
+                    {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Mengirim...</>) : (<><FileText className="w-5 h-5 mr-2" />Kirim Lamaran</>)}
                 </Button>
             </motion.form>
         </div>

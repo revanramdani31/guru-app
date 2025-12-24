@@ -1,157 +1,366 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Check, Clock, MapPin, Monitor } from 'lucide-react';
+import { Calculator, ChevronDown, Info, MessageCircle, ArrowRight, BookOpen } from 'lucide-react';
+import { programs, programOptions, mataPelajaranByPeserta, pricing, isKondisional, formatPrice, getProgram, calculatePrice } from '@/lib/pricing';
 
 const BiayaPage = () => {
-    const pricingPlans = [
-        {
-            level: 'SD',
-            description: 'Kelas 1-6 Sekolah Dasar',
-            priceRange: '75.000 - 100.000',
-            features: [
-                'Semua mata pelajaran SD',
-                'Persiapan ujian sekolah',
-                'Bantuan PR harian',
-                'Laporan perkembangan'
-            ]
-        },
-        {
-            level: 'SMP',
-            description: 'Kelas 7-9 Sekolah Menengah Pertama',
-            priceRange: '100.000 - 150.000',
-            features: [
-                'Semua mata pelajaran SMP',
-                'Persiapan ujian nasional',
-                'Bimbingan OSN',
-                'Konsultasi jurusan SMA'
-            ],
-            popular: true
-        },
-        {
-            level: 'SMA',
-            description: 'Kelas 10-12 Sekolah Menengah Atas',
-            priceRange: '125.000 - 200.000',
-            features: [
-                'IPA / IPS / Bahasa',
-                'Persiapan UTBK-SNBT',
-                'Persiapan ujian masuk PTN',
-                'Konsultasi jurusan kuliah'
-            ]
-        }
-    ];
+    // Form state
+    const [selectedProgram, setSelectedProgram] = useState('');
+    const [selectedOption, setSelectedOption] = useState('');
+    const [selectedMapel, setSelectedMapel] = useState('');
+    const [metodePembelajaran, setMetodePembelajaran] = useState('Tatap Muka');
+    const [jumlahPertemuan, setJumlahPertemuan] = useState('4');
+    const [customPertemuan, setCustomPertemuan] = useState('');
 
-    const additionalInfo = [
-        { icon: <Clock className="w-5 h-5" />, text: 'Durasi per sesi: 90 menit' },
-        { icon: <MapPin className="w-5 h-5" />, text: 'Guru datang ke rumah Anda' },
-        { icon: <Monitor className="w-5 h-5" />, text: 'Tersedia juga mode online' }
-    ];
+    // Calculated values
+    const [pricePerSession, setPricePerSession] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [availableOptions, setAvailableOptions] = useState<string[]>([]);
+    const [availableMapel, setAvailableMapel] = useState<string[]>([]);
+
+    // Update available options when program changes
+    useEffect(() => {
+        if (selectedProgram) {
+            const opts = programOptions[selectedProgram]?.options || [];
+            setAvailableOptions(opts);
+            setSelectedOption('');
+            setSelectedMapel('');
+        }
+    }, [selectedProgram]);
+
+    // Update available mapel when option changes (for Les Privat)
+    useEffect(() => {
+        if (selectedProgram === 'les-privat' && selectedOption) {
+            const mapel = mataPelajaranByPeserta[selectedOption] || [];
+            setAvailableMapel(mapel);
+            setSelectedMapel('');
+        }
+    }, [selectedProgram, selectedOption]);
+
+    // Calculate price
+    useEffect(() => {
+        if (!selectedProgram || !selectedOption) {
+            setPricePerSession(0);
+            setTotalPrice(0);
+            return;
+        }
+
+        // Calculate sessions
+        const sessions = jumlahPertemuan === 'Custom'
+            ? (parseInt(customPertemuan) || 1)
+            : parseInt(jumlahPertemuan);
+
+        // Calculate price using centralized function
+        const calculatedPricePerSession = calculatePrice(selectedProgram, selectedOption, metodePembelajaran, 1, selectedMapel);
+
+        setPricePerSession(calculatedPricePerSession);
+        setTotalPrice(calculatedPricePerSession * sessions);
+    }, [selectedProgram, selectedOption, metodePembelajaran, jumlahPertemuan, customPertemuan, selectedMapel]);
+
+    const getSessions = () => {
+        return jumlahPertemuan === 'Custom' ? (parseInt(customPertemuan) || 1) : parseInt(jumlahPertemuan);
+    };
+
+    const getDaftarUrl = () => {
+        const params = new URLSearchParams({
+            program: selectedProgram,
+            option: selectedOption,
+            mapel: selectedMapel,
+            mode: metodePembelajaran,
+            sessions: getSessions().toString()
+        });
+        return `/daftar?${params.toString()}`;
+    };
 
     return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             {/* Header */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-12"
+                className="text-center mb-10"
             >
-                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Biaya Les Privat</h1>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                    Investasi terbaik untuk pendidikan anak Anda. Harga terjangkau dengan kualitas terjamin.
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-2xl mb-4">
+                    <Calculator className="w-8 h-8 text-emerald-600" />
+                </div>
+                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-3">Simulasi Biaya</h1>
+                <p className="text-slate-600 max-w-xl mx-auto">
+                    Pilih program dan lihat estimasi biaya belajar Anda
                 </p>
             </motion.div>
 
-            {/* Pricing Cards */}
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-                {pricingPlans.map((plan, index) => (
-                    <motion.div
-                        key={plan.level}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className={`relative bg-white rounded-2xl p-6 border-2 transition-all ${plan.popular
-                                ? 'border-emerald-500 shadow-xl shadow-emerald-100'
-                                : 'border-slate-200 shadow-lg hover:border-emerald-200'
-                            }`}
-                    >
-                        {plan.popular && (
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-4 py-1 rounded-full">
-                                Populer
+            <div className="grid lg:grid-cols-5 gap-8">
+                {/* Form Section - 3 columns */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="lg:col-span-3 space-y-6"
+                >
+                    {/* 1. Pilih Program */}
+                    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+                        <h2 className="text-lg font-bold text-slate-800 mb-4">1. Pilih Program</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {programs.map((prog) => (
+                                <button
+                                    key={prog.id}
+                                    onClick={() => setSelectedProgram(prog.id)}
+                                    className={`p-4 rounded-xl border-2 text-left transition-all ${selectedProgram === prog.id
+                                        ? 'border-emerald-500 bg-emerald-50'
+                                        : 'border-slate-200 hover:border-emerald-200'
+                                        }`}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <span className="text-2xl">{prog.icon}</span>
+                                        <div>
+                                            <p className={`font-semibold ${selectedProgram === prog.id ? 'text-emerald-700' : 'text-slate-800'}`}>
+                                                {prog.name}
+                                            </p>
+                                            <p className="text-xs text-slate-500 mt-0.5">{prog.description}</p>
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 2. Detail Program */}
+                    <AnimatePresence>
+                        {selectedProgram && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6"
+                            >
+                                <h2 className="text-lg font-bold text-slate-800 mb-4">
+                                    2. {programOptions[selectedProgram]?.label || 'Detail'}
+                                </h2>
+                                <div className="space-y-2">
+                                    <div className="relative">
+                                        <select
+                                            value={selectedOption}
+                                            onChange={(e) => setSelectedOption(e.target.value)}
+                                            className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all text-slate-700"
+                                        >
+                                            <option value="">Pilih {programOptions[selectedProgram]?.label?.toLowerCase()}...</option>
+                                            {availableOptions.map((opt) => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                </div>
+
+                                {/* Mata Pelajaran for Les Privat */}
+                                {selectedProgram === 'les-privat' && selectedOption && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="mt-4 space-y-2"
+                                    >
+                                        <label className="block text-sm font-semibold text-slate-700">
+                                            Mata Pelajaran
+                                        </label>
+                                        <div className="relative">
+                                            <select
+                                                value={selectedMapel}
+                                                onChange={(e) => setSelectedMapel(e.target.value)}
+                                                className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all text-slate-700"
+                                            >
+                                                <option value="">Pilih mata pelajaran...</option>
+                                                {availableMapel.map((m) => (
+                                                    <option key={m} value={m}>{m}</option>
+                                                ))}
+                                            </select>
+                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* 3. Metode & Jumlah Pertemuan */}
+                    <AnimatePresence>
+                        {selectedOption && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6"
+                            >
+                                <h2 className="text-lg font-bold text-slate-800 mb-4">3. Metode & Jumlah Pertemuan</h2>
+
+                                {/* Metode Pembelajaran */}
+                                <div className="mb-4">
+                                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                                        Metode Pembelajaran
+                                    </label>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <button
+                                            onClick={() => setMetodePembelajaran('Tatap Muka')}
+                                            className={`px-4 py-3 rounded-xl border-2 font-medium transition-all ${metodePembelajaran === 'Tatap Muka'
+                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                                : 'border-slate-200 text-slate-600 hover:border-emerald-200'
+                                                }`}
+                                        >
+                                            Tatap Muka
+                                        </button>
+                                        <button
+                                            onClick={() => setMetodePembelajaran('Online')}
+                                            className={`px-4 py-3 rounded-xl border-2 font-medium transition-all ${metodePembelajaran === 'Online'
+                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                                : 'border-slate-200 text-slate-600 hover:border-emerald-200'
+                                                }`}
+                                        >
+                                            Online
+                                            <span className="block text-xs text-emerald-600 mt-0.5">− Rp 10.000</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Jumlah Pertemuan */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                                        Jumlah Pertemuan
+                                    </label>
+                                    <div className="grid grid-cols-5 gap-2">
+                                        {['1', '4', '8', '12', 'Custom'].map((num) => (
+                                            <button
+                                                key={num}
+                                                onClick={() => setJumlahPertemuan(num)}
+                                                className={`px-3 py-2.5 rounded-xl border-2 font-medium text-sm transition-all ${jumlahPertemuan === num
+                                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                                    : 'border-slate-200 text-slate-600 hover:border-emerald-200'
+                                                    }`}
+                                            >
+                                                {num === 'Custom' ? 'Lain' : `${num}x`}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {jumlahPertemuan === 'Custom' && (
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            placeholder="Masukkan jumlah..."
+                                            value={customPertemuan}
+                                            onChange={(e) => setCustomPertemuan(e.target.value)}
+                                            className="mt-3 w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                        />
+                                    )}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+
+                {/* Price Sidebar - 2 columns */}
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="lg:col-span-2"
+                >
+                    <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-xl p-6 text-white sticky top-24">
+                        <h3 className="text-lg font-semibold mb-4">Estimasi Biaya</h3>
+
+                        {selectedProgram && selectedOption ? (
+                            isKondisional(selectedProgram, selectedMapel) ? (
+                                <div className="text-center py-4">
+                                    <p className="text-2xl font-bold mb-2">Harga Kondisional</p>
+                                    <p className="text-sm opacity-90 mb-4">
+                                        Untuk {getProgram(selectedProgram)?.name}, harga disesuaikan dengan kebutuhan Anda
+                                    </p>
+                                    <div className="pt-4 border-t border-white/20 text-sm space-y-2 text-left">
+                                        <p>📚 {getProgram(selectedProgram)?.name}</p>
+                                        <p>📖 {selectedOption}</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="space-y-3 mb-4">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="opacity-75">Per Sesi</span>
+                                            <span>Rp {formatPrice(pricePerSession)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="opacity-75">Jumlah Pertemuan</span>
+                                            <span>{getSessions()}x</span>
+                                        </div>
+                                        {metodePembelajaran === 'Online' && (
+                                            <div className="flex justify-between text-sm text-emerald-200">
+                                                <span>✅ Diskon Online</span>
+                                                <span>-Rp {formatPrice(10000 * getSessions())}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="pt-4 border-t border-white/20">
+                                        <div className="flex justify-between items-center">
+                                            <span className="font-semibold">Total</span>
+                                            <span className="text-2xl font-bold">
+                                                Rp {formatPrice(totalPrice)}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 mt-4 border-t border-white/20 text-sm space-y-1">
+                                        <p className="opacity-75">📚 {getProgram(selectedProgram)?.name}</p>
+                                        <p className="opacity-75">📖 {selectedOption}</p>
+                                        {selectedMapel && <p className="opacity-75">📝 {selectedMapel}</p>}
+                                        <p className="opacity-75">💻 {metodePembelajaran}</p>
+                                    </div>
+                                </>
+                            )
+                        ) : (
+                            <div className="text-center py-6 opacity-75">
+                                <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                                <p className="text-sm">Pilih program untuk melihat estimasi biaya</p>
                             </div>
                         )}
 
-                        <div className="text-center mb-6">
-                            <h2 className="text-2xl font-bold text-slate-800 mb-1">{plan.level}</h2>
-                            <p className="text-slate-500 text-sm">{plan.description}</p>
-                        </div>
-
-                        <div className="text-center mb-6">
-                            <div className="text-emerald-600 font-bold">
-                                <span className="text-sm">Rp</span>
-                                <span className="text-3xl">{plan.priceRange.split(' - ')[0]}</span>
-                                <span className="text-slate-400 text-sm font-normal"> - </span>
-                                <span className="text-2xl">{plan.priceRange.split(' - ')[1]}</span>
+                        {/* Buttons */}
+                        {selectedProgram && selectedOption && (
+                            <div className="mt-6 space-y-3">
+                                <Link href={getDaftarUrl()}>
+                                    <button className="w-full bg-white text-emerald-600 py-3 rounded-xl font-semibold hover:bg-emerald-50 transition-all flex items-center justify-center gap-2">
+                                        Daftar Sekarang
+                                        <ArrowRight className="w-4 h-4" />
+                                    </button>
+                                </Link>
+                                <a
+                                    href={`https://wa.me/6283823245965?text=${encodeURIComponent(`Halo, saya tertarik dengan program ${getProgram(selectedProgram)?.name} - ${selectedOption}. Mohon info lebih lanjut.`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full border-2 border-white/30 text-white py-3 rounded-xl font-semibold hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                                >
+                                    <MessageCircle className="w-4 h-4" />
+                                    Konsultasi Gratis
+                                </a>
                             </div>
-                            <p className="text-slate-500 text-sm">per sesi</p>
+                        )}
+                    </div>
+
+                    {/* Notes */}
+                    <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                        <div className="flex items-start gap-2">
+                            <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                            <div className="text-sm text-amber-800">
+                                <p className="font-semibold mb-2">Catatan:</p>
+                                <ul className="space-y-1 text-amber-700">
+                                    <li>• Harga dapat menyesuaikan dengan kebutuhan</li>
+                                    <li>• Durasi per sesi: 90 menit</li>
+                                    <li>• Konsultasi awal gratis</li>
+                                </ul>
+                            </div>
                         </div>
-
-                        <ul className="space-y-3 mb-6">
-                            {plan.features.map((feature, i) => (
-                                <li key={i} className="flex items-start gap-2 text-slate-600 text-sm">
-                                    <Check className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                                    <span>{feature}</span>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <Link href="/daftar">
-                            <button className={`w-full py-3 rounded-xl font-semibold transition-all ${plan.popular
-                                    ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
-                                    : 'bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-600'
-                                }`}>
-                                Daftar Sekarang
-                            </button>
-                        </Link>
-                    </motion.div>
-                ))}
+                    </div>
+                </motion.div>
             </div>
-
-            {/* Additional Info */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-emerald-50 rounded-2xl p-6 md:p-8"
-            >
-                <div className="flex flex-wrap justify-center gap-6 md:gap-12">
-                    {additionalInfo.map((info, index) => (
-                        <div key={index} className="flex items-center gap-3 text-slate-700">
-                            <div className="text-emerald-600">{info.icon}</div>
-                            <span className="text-sm font-medium">{info.text}</span>
-                        </div>
-                    ))}
-                </div>
-            </motion.div>
-
-            {/* Note */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-center mt-10"
-            >
-                <p className="text-slate-500 text-sm mb-6">
-                    * Harga dapat bervariasi tergantung lokasi, mata pelajaran khusus, dan kualifikasi guru.
-                    <br />Hubungi kami untuk konsultasi gratis.
-                </p>
-                <Link href="/daftar">
-                    <button className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40">
-                        Daftar Les Privat
-                        <ArrowRight className="w-5 h-5" />
-                    </button>
-                </Link>
-            </motion.div>
         </div>
     );
 };

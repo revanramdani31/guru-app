@@ -1,70 +1,251 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { User, Mail, Phone, BookOpen, Clock, MapPin, MessageSquare, FileText, Copy, Check, Download, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, BookOpen, Clock, MapPin, MessageSquare, FileText, Check, Download, Loader2, ChevronDown, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { jsPDF } from 'jspdf';
-import { submitToGoogleSheets, formatModeLabel } from '@/lib/googleSheets';
+import { submitToGoogleSheets } from '@/lib/googleSheets';
+import { getProvinces, getCities, getDistricts, getVillages, Region } from '@/lib/regionApi';
+import { programs, programOptions, mataPelajaranByPeserta, pricing, isKondisional, formatPrice, getProgram } from '@/lib/pricing';
 
 interface FormData {
     namaLengkap: string;
-    email: string;
     whatsapp: string;
-    subjek: string;
-    tingkat: string;
+    program: string;
+    programOption: string;
+    mapel: string;
     modeBelajar: string;
-    jadwalPreferensi: string;
-    lokasi: string;
+    jumlahPertemuan: string;
+    jadwalHari: string[];
+    jadwalWaktu: string;
+    provinsiId: string;
+    provinsiName: string;
+    kotaId: string;
+    kotaName: string;
+    kecamatanId: string;
+    kecamatanName: string;
+    kelurahanId: string;
+    kelurahanName: string;
+    alamat: string;
     catatan: string;
 }
 
+const hariOptions = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+const waktuOptions = [
+    { value: 'pagi', label: 'Pagi (08.00 - 12.00)' },
+    { value: 'siang', label: 'Siang (12.00 - 15.00)' },
+    { value: 'sore', label: 'Sore (15.00 - 18.00)' },
+    { value: 'malam', label: 'Malam (18.00 - 21.00)' },
+    { value: 'fleksibel', label: 'Fleksibel' }
+];
+
 const DaftarPage = () => {
+    const searchParams = useSearchParams();
+
     const [formData, setFormData] = useState<FormData>({
         namaLengkap: '',
-        email: '',
         whatsapp: '',
-        subjek: '',
-        tingkat: 'SMA',
-        modeBelajar: 'tatap_muka',
-        jadwalPreferensi: '',
-        lokasi: '',
+        program: '',
+        programOption: '',
+        mapel: '',
+        modeBelajar: 'Tatap Muka',
+        jumlahPertemuan: '4',
+        jadwalHari: [],
+        jadwalWaktu: '',
+        provinsiId: '',
+        provinsiName: '',
+        kotaId: '',
+        kotaName: '',
+        kecamatanId: '',
+        kecamatanName: '',
+        kelurahanId: '',
+        kelurahanName: '',
+        alamat: '',
         catatan: ''
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [jobPoster, setJobPoster] = useState('');
-    const [copied, setCopied] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [availableOptions, setAvailableOptions] = useState<string[]>([]);
+    const [availableMapel, setAvailableMapel] = useState<string[]>([]);
+    const [estimatedPrice, setEstimatedPrice] = useState(0);
+
+    // Region states
+    const [provinces, setProvinces] = useState<Region[]>([]);
+    const [cities, setCities] = useState<Region[]>([]);
+    const [districts, setDistricts] = useState<Region[]>([]);
+    const [villages, setVillages] = useState<Region[]>([]);
+    const [loadingRegion, setLoadingRegion] = useState({
+        provinces: false,
+        cities: false,
+        districts: false,
+        villages: false
+    });
+
+    // Load provinces on mount and read URL params
+    useEffect(() => {
+        const loadProvinces = async () => {
+            setLoadingRegion(prev => ({ ...prev, provinces: true }));
+            const data = await getProvinces();
+            setProvinces(data);
+            setLoadingRegion(prev => ({ ...prev, provinces: false }));
+        };
+        loadProvinces();
+
+        // Read URL params from biaya page
+        const programParam = searchParams.get('program');
+        const optionParam = searchParams.get('option');
+        const mapelParam = searchParams.get('mapel');
+        const modeParam = searchParams.get('mode');
+        const sessionsParam = searchParams.get('sessions');
+
+        if (programParam) {
+            setFormData(prev => ({ ...prev, program: programParam }));
+            const opts = programOptions[programParam]?.options || [];
+            setAvailableOptions(opts);
+        }
+        if (optionParam) {
+            setFormData(prev => ({ ...prev, programOption: optionParam }));
+            if (programParam === 'les-privat') {
+                const mapel = mataPelajaranByPeserta[optionParam] || [];
+                setAvailableMapel(mapel);
+            }
+        }
+        if (mapelParam) {
+            setFormData(prev => ({ ...prev, mapel: mapelParam }));
+        }
+        if (modeParam) {
+            setFormData(prev => ({ ...prev, modeBelajar: modeParam }));
+        }
+        if (sessionsParam) {
+            setFormData(prev => ({ ...prev, jumlahPertemuan: sessionsParam }));
+        }
+    }, [searchParams]);
+
+    // Update available options when program changes
+    useEffect(() => {
+        if (formData.program) {
+            const opts = programOptions[formData.program]?.options || [];
+            setAvailableOptions(opts);
+        }
+    }, [formData.program]);
+
+    // Update available mapel when option changes (for Les Privat)
+    useEffect(() => {
+        if (formData.program === 'les-privat' && formData.programOption) {
+            const mapel = mataPelajaranByPeserta[formData.programOption] || [];
+            setAvailableMapel(mapel);
+        }
+    }, [formData.program, formData.programOption]);
+
+    // Calculate price
+    useEffect(() => {
+        if (!formData.program || !formData.programOption) {
+            setEstimatedPrice(0);
+            return;
+        }
+        let basePrice = pricing[formData.program]?.[formData.programOption] || 0;
+        if (formData.modeBelajar === 'Online' && basePrice > 0) {
+            basePrice -= 10000;
+        }
+        setEstimatedPrice(basePrice);
+    }, [formData.program, formData.programOption, formData.modeBelajar]);
+
+    // Load cities when province changes
+    useEffect(() => {
+        if (formData.provinsiId) {
+            const loadCities = async () => {
+                setLoadingRegion(prev => ({ ...prev, cities: true }));
+                const data = await getCities(formData.provinsiId);
+                setCities(data);
+                setLoadingRegion(prev => ({ ...prev, cities: false }));
+            };
+            loadCities();
+            setFormData(prev => ({
+                ...prev,
+                kotaId: '', kotaName: '',
+                kecamatanId: '', kecamatanName: '',
+                kelurahanId: '', kelurahanName: ''
+            }));
+            setDistricts([]);
+            setVillages([]);
+        }
+    }, [formData.provinsiId]);
+
+    // Load districts when city changes
+    useEffect(() => {
+        if (formData.kotaId) {
+            const loadDistricts = async () => {
+                setLoadingRegion(prev => ({ ...prev, districts: true }));
+                const data = await getDistricts(formData.kotaId);
+                setDistricts(data);
+                setLoadingRegion(prev => ({ ...prev, districts: false }));
+            };
+            loadDistricts();
+            setFormData(prev => ({
+                ...prev,
+                kecamatanId: '', kecamatanName: '',
+                kelurahanId: '', kelurahanName: ''
+            }));
+            setVillages([]);
+        }
+    }, [formData.kotaId]);
+
+    // Load villages when district changes
+    useEffect(() => {
+        if (formData.kecamatanId) {
+            const loadVillages = async () => {
+                setLoadingRegion(prev => ({ ...prev, villages: true }));
+                const data = await getVillages(formData.kecamatanId);
+                setVillages(data);
+                setLoadingRegion(prev => ({ ...prev, villages: false }));
+            };
+            loadVillages();
+            setFormData(prev => ({
+                ...prev,
+                kelurahanId: '', kelurahanName: ''
+            }));
+        }
+    }, [formData.kecamatanId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const generateJobPoster = (data: FormData): string => {
-        const modeLabel = data.modeBelajar === 'online' ? 'Online' : data.modeBelajar === 'tatap_muka' ? 'Tatap Muka' : 'Online/Tatap Muka';
-
-        return `🎓 *LOWONGAN GURU LES PRIVAT*
-
-📚 Mata Pelajaran: ${data.subjek}
-📊 Tingkat: ${data.tingkat}
-🏠 Mode: ${modeLabel}
-📍 Lokasi: ${data.lokasi || 'Sesuai perjanjian'}
-⏰ Jadwal: ${data.jadwalPreferensi || 'Fleksibel'}
-
-${data.catatan ? `📝 Catatan: ${data.catatan}` : ''}
-
-💬 Minat? Hubungi Admin untuk info lebih lanjut.
-
----
-datanginguru Privat`;
+    const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = provinces.find(p => p.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, provinsiId: id, provinsiName: name }));
     };
+
+    const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = cities.find(c => c.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, kotaId: id, kotaName: name }));
+    };
+
+    const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = districts.find(d => d.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, kecamatanId: id, kecamatanName: name }));
+    };
+
+    const handleVillageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = e.target.value;
+        const name = villages.find(v => v.id === id)?.name || '';
+        setFormData(prev => ({ ...prev, kelurahanId: id, kelurahanName: name }));
+    };
+
+    const getSessions = () => parseInt(formData.jumlahPertemuan) || 1;
+    const getTotalPrice = () => estimatedPrice * getSessions();
 
     const generatePDF = (data: FormData) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
 
-        // Header
         doc.setFillColor(16, 185, 129);
         doc.rect(0, 0, pageWidth, 40, 'F');
 
@@ -75,61 +256,53 @@ datanginguru Privat`;
 
         doc.setFontSize(12);
         doc.setFont('helvetica', 'normal');
-        doc.text('Formulir Pendaftaran Siswa', 20, 35);
+        doc.text('Formulir Pendaftaran', 20, 35);
 
-        // Content
         doc.setTextColor(30, 41, 59);
         let yPos = 55;
-
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Data Pendaftar', 20, yPos);
-        yPos += 12;
-
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'normal');
 
         const addField = (label: string, value: string) => {
             doc.setFont('helvetica', 'bold');
             doc.text(`${label}:`, 20, yPos);
             doc.setFont('helvetica', 'normal');
-            doc.text(value || '-', 80, yPos);
+            doc.text(value || '-', 70, yPos);
             yPos += 8;
         };
 
-        addField('Nama Lengkap', data.namaLengkap);
-        addField('Email', data.email);
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Data Pendaftar', 20, yPos);
+        yPos += 12;
+        doc.setFontSize(11);
+
+        addField('Nama', data.namaLengkap);
         addField('WhatsApp', data.whatsapp);
 
         yPos += 5;
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
-        doc.text('Detail Kebutuhan Belajar', 20, yPos);
+        doc.text('Program', 20, yPos);
         yPos += 12;
-
         doc.setFontSize(11);
-        doc.setFont('helvetica', 'normal');
 
-        const modeLabel = data.modeBelajar === 'online' ? 'Online' : data.modeBelajar === 'tatap_muka' ? 'Tatap Muka' : 'Online/Tatap Muka';
+        addField('Program', getProgram(data.program)?.name || data.program);
+        addField('Detail', data.programOption);
+        if (data.mapel) addField('Mapel', data.mapel);
+        addField('Metode', data.modeBelajar);
+        addField('Pertemuan', `${data.jumlahPertemuan}x`);
 
-        addField('Mata Pelajaran', data.subjek);
-        addField('Tingkat', data.tingkat);
-        addField('Mode Belajar', modeLabel);
-        addField('Jadwal Preferensi', data.jadwalPreferensi);
-        addField('Lokasi', data.lokasi);
+        yPos += 5;
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Alamat', 20, yPos);
+        yPos += 12;
+        doc.setFontSize(11);
 
-        if (data.catatan) {
-            yPos += 5;
-            doc.setFont('helvetica', 'bold');
-            doc.text('Catatan Tambahan:', 20, yPos);
-            yPos += 8;
-            doc.setFont('helvetica', 'normal');
+        addField('Provinsi', data.provinsiName);
+        addField('Kota', data.kotaName);
+        addField('Kecamatan', data.kecamatanName);
+        addField('Kelurahan', data.kelurahanName);
 
-            const splitCatatan = doc.splitTextToSize(data.catatan, pageWidth - 40);
-            doc.text(splitCatatan, 20, yPos);
-        }
-
-        // Footer
         const pageHeight = doc.internal.pageSize.getHeight();
         doc.setFillColor(248, 250, 252);
         doc.rect(0, pageHeight - 25, pageWidth, 25, 'F');
@@ -137,7 +310,6 @@ datanginguru Privat`;
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
         doc.text(`Tanggal: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, 20, pageHeight - 12);
-        doc.text('© datanginguru Privat', pageWidth - 50, pageHeight - 12);
 
         return doc;
     };
@@ -145,62 +317,36 @@ datanginguru Privat`;
     const ADMIN_WHATSAPP = "6283823245965";
 
     const generateWhatsAppMessage = (data: FormData): string => {
-        const modeLabel = data.modeBelajar === 'online' ? 'Online' : data.modeBelajar === 'tatap_muka' ? 'Tatap Muka' : 'Online/Tatap Muka';
-
-        return `🎓 *PENDAFTARAN LES PRIVAT BARU*
-
-👤 *Data Siswa:*
-Nama: ${data.namaLengkap}
-Email: ${data.email}
-WhatsApp: ${data.whatsapp}
-
-📚 *Kebutuhan Belajar:*
-Mata Pelajaran: ${data.subjek}
-Tingkat: ${data.tingkat}
-Mode: ${modeLabel}
-Jadwal: ${data.jadwalPreferensi || 'Fleksibel'}
-Lokasi: ${data.lokasi || '-'}
-
-${data.catatan ? `📝 Catatan: ${data.catatan}` : ''}
-
----
-Dikirim dari datanginguru Privat`;
+        return `Halo Admin, saya *${data.namaLengkap}* ingin mengkonfirmasi pendaftaran les privat yang sudah saya kirim melalui website. Mohon informasi lebih lanjut. Terima kasih.`;
     };
-
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
-            // Submit to Google Sheets
             await submitToGoogleSheets({
                 formType: 'pendaftaran',
                 namaLengkap: formData.namaLengkap,
-                email: formData.email,
                 whatsapp: formData.whatsapp,
-                subjek: formData.subjek,
-                tingkat: formData.tingkat,
-                modeBelajar: formatModeLabel(formData.modeBelajar),
-                jadwalPreferensi: formData.jadwalPreferensi,
-                lokasi: formData.lokasi,
+                program: getProgram(formData.program)?.name || formData.program,
+                programOption: formData.programOption,
+                mapel: formData.mapel,
+                modeBelajar: formData.modeBelajar,
+                jumlahPertemuan: formData.jumlahPertemuan,
+                jadwal: `${formData.jadwalHari.join(', ')} - ${waktuOptions.find(w => w.value === formData.jadwalWaktu)?.label || ''}`,
+                provinsi: formData.provinsiName,
+                kota: formData.kotaName,
+                kecamatan: formData.kecamatanName,
+                kelurahan: formData.kelurahanName,
+                alamat: formData.alamat,
                 catatan: formData.catatan,
+                estimasiBiaya: `Rp ${formatPrice(getTotalPrice())}`,
             });
-
-            // Generate job poster
-            const poster = generateJobPoster(formData);
-            setJobPoster(poster);
-
-            // Open WhatsApp with message
-            const message = generateWhatsAppMessage(formData);
-            const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
 
             setIsSubmitted(true);
         } catch (error) {
             console.error('Error submitting form:', error);
-            // Still show success even if Google Sheets fails
             setIsSubmitted(true);
         } finally {
             setIsSubmitting(false);
@@ -212,250 +358,421 @@ Dikirim dari datanginguru Privat`;
         doc.save(`Pendaftaran_${formData.namaLengkap.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
     };
 
-    const handleCopyPoster = async () => {
-        try {
-            await navigator.clipboard.writeText(jobPoster);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Failed to copy:', err);
-        }
-    };
-
     const handleNewRegistration = () => {
         setFormData({
             namaLengkap: '',
-            email: '',
             whatsapp: '',
-            subjek: '',
-            tingkat: 'SMA',
-            modeBelajar: 'tatap_muka',
-            jadwalPreferensi: '',
-            lokasi: '',
+            program: '',
+            programOption: '',
+            mapel: '',
+            modeBelajar: 'Tatap Muka',
+            jumlahPertemuan: '4',
+            jadwalHari: [],
+            jadwalWaktu: '',
+            provinsiId: '',
+            provinsiName: '',
+            kotaId: '',
+            kotaName: '',
+            kecamatanId: '',
+            kecamatanName: '',
+            kelurahanId: '',
+            kelurahanName: '',
+            alamat: '',
             catatan: ''
         });
         setIsSubmitted(false);
-        setJobPoster('');
+        setAvailableOptions([]);
+        setAvailableMapel([]);
+        setCities([]);
+        setDistricts([]);
+        setVillages([]);
     };
 
     if (isSubmitted) {
-        const whatsappConfirmUrl = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(`Halo Admin, saya ${formData.namaLengkap} sudah mendaftar les privat untuk ${formData.subjek}. Mohon konfirmasinya. Terima kasih!`)}`;
-
         return (
             <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center"
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 rounded-full mb-6">
                         <Check className="w-10 h-10 text-emerald-600" />
                     </div>
                     <h1 className="text-3xl font-bold text-slate-800 mb-3">Pendaftaran Berhasil!</h1>
                     <p className="text-slate-600 mb-8">Data Anda telah tersimpan. Silakan unduh PDF dan hubungi Admin untuk konfirmasi.</p>
-
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 mb-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <FileText className="w-6 h-6 text-emerald-600" />
-                            <h2 className="text-lg font-bold text-slate-800">Unduh Bukti Pendaftaran</h2>
-                        </div>
-                        <p className="text-slate-600 text-sm mb-4">
-                            Simpan PDF sebagai bukti pendaftaran Anda.
-                        </p>
-                        <Button onClick={handleDownloadPDF} className="w-full mb-3">
+                    <div className="flex flex-col gap-3 max-w-xs mx-auto">
+                        <a
+                            href={`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(generateWhatsAppMessage(formData))}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Button className="w-full bg-green-500 hover:bg-green-600">
+                                <MessageCircle className="w-4 h-4 mr-2" />
+                                Konfirmasi ke Admin
+                            </Button>
+                        </a>
+                        <Button onClick={handleDownloadPDF} variant="outline" className="w-full">
                             <Download className="w-4 h-4 mr-2" />
                             Unduh PDF
                         </Button>
-                        <a href={whatsappConfirmUrl} target="_blank" rel="noopener noreferrer" className="block">
-                            <Button variant="outline" className="w-full">
-                                <MessageSquare className="w-4 h-4 mr-2" />
-                                Konfirmasi via WhatsApp
-                            </Button>
-                        </a>
+                        <Button onClick={handleNewRegistration} variant="ghost" className="w-full">
+                            Daftar Lagi
+                        </Button>
                     </div>
-
-                    <Button onClick={handleNewRegistration} variant="ghost">
-                        Daftar Lagi
-                    </Button>
                 </motion.div>
             </div>
         );
     }
 
     return (
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-10"
-            >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
                 <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-3">Daftar Les Privat</h1>
                 <p className="text-slate-600 max-w-xl mx-auto">
-                    Isi formulir di bawah untuk mendaftarkan kebutuhan belajar Anda. Kami akan mencarikan guru terbaik.
+                    Isi formulir di bawah untuk mendaftarkan kebutuhan belajar Anda
                 </p>
             </motion.div>
 
-            <motion.form
+            {/* SOP Info */}
+            <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                onSubmit={handleSubmit}
-                className="bg-white rounded-2xl shadow-xl shadow-slate-100/50 border border-slate-200 p-6 md:p-8"
+                transition={{ delay: 0.05 }}
+                className="mb-8"
             >
-                {/* Personal Info Section */}
-                <div className="mb-8">
-                    <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <User className="w-5 h-5 text-emerald-600" />
-                        Data Pribadi
-                    </h2>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap *</label>
-                            <input
-                                type="text"
-                                name="namaLengkap"
-                                value={formData.namaLengkap}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="Masukkan nama lengkap"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Email *</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="email@contoh.com"
-                            />
-                        </div>
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp *</label>
-                            <input
-                                type="tel"
-                                name="whatsapp"
-                                value={formData.whatsapp}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="08xxxxxxxxxx"
-                            />
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
+                    <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-amber-600" />
+                        <p className="text-sm text-amber-800">
+                            <strong>Penting:</strong> Baca SOP terlebih dahulu sebelum mendaftar
+                        </p>
+                    </div>
+                    <a href="/docs/sop-orangtua.pdf" download>
+                        <Button variant="outline" size="sm" className="border-amber-300 text-amber-700 hover:bg-amber-100">
+                            <Download className="w-4 h-4 mr-2" />
+                            Unduh SOP Orang Tua
+                        </Button>
+                    </a>
+                </div>
+            </motion.div>
+
+            <div className="grid lg:grid-cols-3 gap-8">
+                {/* Form */}
+                <motion.form
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    onSubmit={handleSubmit}
+                    className="lg:col-span-2 bg-white rounded-2xl shadow-xl shadow-slate-100/50 border border-slate-200 p-6 md:p-8 space-y-8"
+                >
+                    {/* Data Pribadi */}
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <User className="w-5 h-5 text-emerald-600" />
+                            Data Pribadi
+                        </h2>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Nama Lengkap <span className="text-red-500">*</span></label>
+                                <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" placeholder="Masukkan nama lengkap" />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Nomor WhatsApp <span className="text-red-500">*</span></label>
+                                <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" placeholder="08xxxxxxxxxx" />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Learning Needs Section */}
-                <div className="mb-8">
-                    <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <BookOpen className="w-5 h-5 text-emerald-600" />
-                        Kebutuhan Belajar
-                    </h2>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Mata Pelajaran *</label>
-                            <input
-                                type="text"
-                                name="subjek"
-                                value={formData.subjek}
-                                onChange={handleChange}
-                                required
-                                className="input-modern"
-                                placeholder="Contoh: Matematika, Bahasa Inggris"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Tingkat Pendidikan</label>
-                            <select
-                                name="tingkat"
-                                value={formData.tingkat}
-                                onChange={handleChange}
-                                className="input-modern"
-                            >
-                                <option value="SD">SD</option>
-                                <option value="SMP">SMP</option>
-                                <option value="SMA">SMA</option>
-                                <option value="Kuliah">Kuliah / Umum</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Mode Belajar</label>
-                            <select
-                                name="modeBelajar"
-                                value={formData.modeBelajar}
-                                onChange={handleChange}
-                                className="input-modern"
-                            >
-                                <option value="tatap_muka">Tatap Muka (Guru Datang)</option>
-                                <option value="online">Online</option>
-                                <option value="keduanya">Fleksibel (Keduanya)</option>
-                            </select>
+                    {/* Program */}
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <BookOpen className="w-5 h-5 text-emerald-600" />
+                            Program
+                        </h2>
+                        <div className="space-y-4">
+                            {/* Pilih Program */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Pilih Program <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <select
+                                        name="program"
+                                        value={formData.program}
+                                        onChange={(e) => {
+                                            setFormData(prev => ({ ...prev, program: e.target.value, programOption: '', mapel: '' }));
+                                        }}
+                                        required
+                                        className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                    >
+                                        <option value="">Pilih program...</option>
+                                        {programs.map(p => (
+                                            <option key={p.id} value={p.id}>{p.icon} {p.name}</option>
+                                        ))}
+                                    </select>
+                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+
+                            {/* Detail Program */}
+                            <AnimatePresence>
+                                {formData.program && (
+                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
+                                        <label className="block text-sm font-semibold text-slate-700">
+                                            {programOptions[formData.program]?.label} <span className="text-red-500">*</span>
+                                        </label>
+                                        <div className="relative">
+                                            <select
+                                                name="programOption"
+                                                value={formData.programOption}
+                                                onChange={(e) => {
+                                                    setFormData(prev => ({ ...prev, programOption: e.target.value, mapel: '' }));
+                                                }}
+                                                required
+                                                className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                            >
+                                                <option value="">Pilih {programOptions[formData.program]?.label?.toLowerCase()}...</option>
+                                                {availableOptions.map(opt => (
+                                                    <option key={opt} value={opt}>{opt}</option>
+                                                ))}
+                                            </select>
+                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            {/* Mata Pelajaran for Les Privat */}
+                            <AnimatePresence>
+                                {formData.program === 'les-privat' && formData.programOption && (
+                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
+                                        <label className="block text-sm font-semibold text-slate-700">Mata Pelajaran</label>
+                                        <div className="relative">
+                                            <select
+                                                name="mapel"
+                                                value={formData.mapel}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                            >
+                                                <option value="">Pilih mata pelajaran...</option>
+                                                {availableMapel.map(m => (
+                                                    <option key={m} value={m}>{m}</option>
+                                                ))}
+                                            </select>
+                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            {/* Metode & Jumlah Pertemuan */}
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Metode Pembelajaran</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {['Tatap Muka', 'Online'].map(mode => (
+                                            <button
+                                                key={mode}
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, modeBelajar: mode }))}
+                                                className={`px-3 py-2.5 rounded-xl border-2 font-medium text-sm transition-all ${formData.modeBelajar === mode ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-600 hover:border-emerald-200'}`}
+                                            >
+                                                {mode}
+                                                {mode === 'Online' && <span className="block text-xs text-emerald-600">−Rp10.000</span>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-semibold text-slate-700">Jumlah Pertemuan</label>
+                                    <div className="grid grid-cols-4 gap-2">
+                                        {['1', '4', '8', '12'].map(num => (
+                                            <button
+                                                key={num}
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, jumlahPertemuan: num }))}
+                                                className={`px-2 py-2.5 rounded-xl border-2 font-medium text-sm transition-all ${formData.jumlahPertemuan === num ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-600 hover:border-emerald-200'}`}
+                                            >
+                                                {num}x
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Schedule & Location Section */}
-                <div className="mb-8">
-                    <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <Clock className="w-5 h-5 text-emerald-600" />
-                        Jadwal & Lokasi
-                    </h2>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Jadwal Preferensi</label>
-                            <input
-                                type="text"
-                                name="jadwalPreferensi"
-                                value={formData.jadwalPreferensi}
-                                onChange={handleChange}
-                                className="input-modern"
-                                placeholder="Contoh: Senin-Rabu, sore hari"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Lokasi / Alamat</label>
-                            <input
-                                type="text"
-                                name="lokasi"
-                                value={formData.lokasi}
-                                onChange={handleChange}
-                                className="input-modern"
-                                placeholder="Contoh: Jakarta Selatan"
-                            />
+                    {/* Jadwal */}
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <Clock className="w-5 h-5 text-emerald-600" />
+                            Jadwal Preferensi
+                        </h2>
+                        <div className="space-y-4">
+                            {/* Pilih Hari */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Pilih Hari</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {hariOptions.map(hari => (
+                                        <button
+                                            key={hari}
+                                            type="button"
+                                            onClick={() => {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    jadwalHari: prev.jadwalHari.includes(hari)
+                                                        ? prev.jadwalHari.filter(h => h !== hari)
+                                                        : [...prev.jadwalHari, hari]
+                                                }));
+                                            }}
+                                            className={`px-4 py-2 rounded-xl border-2 font-medium text-sm transition-all ${formData.jadwalHari.includes(hari)
+                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                                : 'border-slate-200 text-slate-600 hover:border-emerald-200'
+                                                }`}
+                                        >
+                                            {hari}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Pilih Waktu */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Pilih Waktu</label>
+                                <div className="relative">
+                                    <select
+                                        value={formData.jadwalWaktu}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, jadwalWaktu: e.target.value }))}
+                                        className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                    >
+                                        <option value="">Pilih waktu...</option>
+                                        {waktuOptions.map(w => (
+                                            <option key={w.value} value={w.value}>{w.label}</option>
+                                        ))}
+                                    </select>
+                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Additional Notes */}
-                <div className="mb-8">
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Catatan Tambahan</label>
-                    <textarea
-                        name="catatan"
-                        value={formData.catatan}
-                        onChange={handleChange}
-                        rows={3}
-                        className="input-modern resize-none"
-                        placeholder="Informasi tambahan yang perlu diketahui guru..."
-                    />
-                </div>
+                    {/* Alamat */}
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <MapPin className="w-5 h-5 text-emerald-600" />
+                            Alamat
+                        </h2>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Provinsi <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <select value={formData.provinsiId} onChange={handleProvinceChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={loadingRegion.provinces}>
+                                        <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
+                                        {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Kota/Kabupaten <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <select value={formData.kotaId} onChange={handleCityChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.provinsiId || loadingRegion.cities}>
+                                        <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
+                                        {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Kecamatan <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <select value={formData.kecamatanId} onChange={handleDistrictChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.kotaId || loadingRegion.districts}>
+                                        <option value="">{!formData.kotaId ? 'Pilih kota dulu' : loadingRegion.districts ? 'Memuat...' : 'Pilih kecamatan...'}</option>
+                                        {districts.map(d => (<option key={d.id} value={d.id}>{d.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Kelurahan/Desa <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <select value={formData.kelurahanId} onChange={handleVillageChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.kecamatanId || loadingRegion.villages}>
+                                        <option value="">{!formData.kecamatanId ? 'Pilih kecamatan dulu' : loadingRegion.villages ? 'Memuat...' : 'Pilih kelurahan...'}</option>
+                                        {villages.map(v => (<option key={v.id} value={v.id}>{v.name}</option>))}
+                                    </select>
+                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div className="md:col-span-2 space-y-2">
+                                <label className="block text-sm font-semibold text-slate-700">Alamat Lengkap <span className="text-red-500">*</span></label>
+                                <textarea name="alamat" value={formData.alamat} onChange={handleChange} required rows={2} className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 resize-none" placeholder="Jl. Nama Jalan No. XX, RT/RW, Patokan" />
+                            </div>
+                        </div>
+                    </div>
 
-                <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                        <>
-                            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                            Mengirim...
-                        </>
-                    ) : (
-                        <>
-                            <FileText className="w-5 h-5 mr-2" />
-                            Daftar & Kirim
-                        </>
-                    )}
-                </Button>
-            </motion.form>
+                    {/* Catatan */}
+                    <div className="space-y-2">
+                        <label className="block text-sm font-semibold text-slate-700">Catatan Tambahan</label>
+                        <textarea name="catatan" value={formData.catatan} onChange={handleChange} rows={3} className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 resize-none" placeholder="Informasi tambahan yang perlu diketahui..." />
+                    </div>
+
+                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Mengirim...</>) : (<><FileText className="w-5 h-5 mr-2" />Daftar & Kirim</>)}
+                    </Button>
+                </motion.form>
+
+                {/* Price Preview Sidebar */}
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="lg:col-span-1">
+                    <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-xl p-6 text-white sticky top-24">
+                        <h3 className="text-lg font-semibold mb-4">Estimasi Biaya</h3>
+
+                        {formData.program && formData.programOption ? (
+                            isKondisional(formData.program) ? (
+                                <div className="text-center py-4">
+                                    <p className="text-2xl font-bold mb-2">Harga Kondisional</p>
+                                    <p className="text-sm opacity-90">Hubungi kami untuk konsultasi</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="space-y-3 mb-4">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="opacity-75">Per Sesi</span>
+                                            <span>Rp {formatPrice(estimatedPrice)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="opacity-75">Pertemuan</span>
+                                            <span>{getSessions()}x</span>
+                                        </div>
+                                        {formData.modeBelajar === 'Online' && (
+                                            <div className="flex justify-between text-sm text-emerald-200">
+                                                <span>✅ Diskon Online</span>
+                                                <span>-Rp {formatPrice(10000 * getSessions())}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="pt-4 border-t border-white/20">
+                                        <div className="flex justify-between items-center">
+                                            <span className="font-semibold">Total</span>
+                                            <span className="text-2xl font-bold">Rp {formatPrice(getTotalPrice())}</span>
+                                        </div>
+                                    </div>
+                                    <div className="pt-4 mt-4 border-t border-white/20 text-sm space-y-1 opacity-75">
+                                        <p>📚 {getProgram(formData.program)?.name}</p>
+                                        <p>📖 {formData.programOption}</p>
+                                        {formData.mapel && <p>📝 {formData.mapel}</p>}
+                                    </div>
+                                </>
+                            )
+                        ) : (
+                            <div className="text-center py-6 opacity-75">
+                                <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                                <p className="text-sm">Pilih program untuk melihat estimasi</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                        <p className="text-sm text-amber-800">
+                            <strong>Catatan:</strong> Harga dapat menyesuaikan dengan kebutuhan. Konsultasi awal gratis.
+                        </p>
+                    </div>
+                </motion.div>
+            </div>
         </div>
     );
 };

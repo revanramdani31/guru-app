@@ -13,6 +13,8 @@ const Header = () => {
     const navLinks = [
         { path: '/', label: 'Beranda' },
         { path: '/tutors', label: 'Guru Kami' },
+        { path: '/artikel', label: 'Artikel' },
+        { path: '/program', label: 'Program' },
         { path: '/biaya', label: 'Biaya' },
         { path: '/daftar', label: 'Daftar Siswa', icon: UserPlus },
         { path: '/karir', label: 'Daftar Jadi Guru', icon: Briefcase },
