@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { GraduationCap, Mail, Phone, MessageCircle, MapPin } from 'lucide-react';
+import { Mail, Phone, MessageCircle, MapPin } from 'lucide-react';
+import Image from 'next/image';
+
 
 const Footer = () => {
     const whatsappNumber = "6283823245965"; // Admin WhatsApp
@@ -12,9 +14,13 @@ const Footer = () => {
                     {/* Brand Section */}
                     <div className="md:col-span-1">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="bg-emerald-500 p-2 rounded-xl">
-                                <GraduationCap className="w-6 h-6 text-white" />
-                            </div>
+                            <Image
+                                src="/favicon.ico"
+                                alt="Datangin Guru Logo"
+                                width={32}
+                                height={32}
+                                className="w-8 h-8 object-contain"
+                            />
                             <div className="flex flex-col">
                                 <span className="text-lg font-bold leading-tight">datanginguru</span>
                                 <span className="text-xs text-emerald-400 font-medium -mt-1">Privat</span>

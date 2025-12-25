@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GraduationCap, Menu, X, UserPlus, Briefcase, AlignJustify } from 'lucide-react';
+import { Menu, X, UserPlus, Briefcase, AlignJustify } from 'lucide-react';
+import Image from 'next/image';
+
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,8 +31,14 @@ const Header = () => {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 group">
-                        <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-2 rounded-xl group-hover:scale-105 transition-transform shadow-lg shadow-emerald-500/20">
-                            <GraduationCap className="w-6 h-6 text-white" />
+                        <div className="group-hover:scale-105 transition-transform">
+                            <Image
+                                src="/favicon.ico"
+                                alt="Datangin Guru Logo"
+                                width={40}
+                                height={40}
+                                className="w-auto h-10 object-contain"
+                            />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-lg font-bold text-slate-800 leading-tight">datanginguru</span>
@@ -80,7 +88,6 @@ const Header = () => {
                                         className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 overflow-hidden"
                                     >
                                         {[
-                                            { label: 'Layanan', href: '#' },
                                             { label: 'Pengaduan', href: '/pengaduan' },
                                             { label: 'Tentang', href: '/tentang' },
                                             { label: 'Hubungi Kami', href: 'https://wa.me/6281234567890' },
@@ -135,7 +142,6 @@ const Header = () => {
                         {/* More Menu Items for Mobile */}
                         <div className="mt-4 pt-4 border-t border-emerald-50 grid grid-cols-2 gap-2">
                             {[
-                                { label: 'Layanan', href: '#' },
                                 { label: 'Pengaduan', href: '/pengaduan' },
                                 { label: 'Tentang', href: '/tentang' },
                                 { label: 'Hubungi Kami', href: 'https://wa.me/6281234567890' },

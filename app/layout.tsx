@@ -20,13 +20,13 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "datanginguru Privat - Guru Les Privat Terbaik di Indonesia",
-  description: "Temukan guru les privat profesional untuk berbagai mata pelajaran. Matematika, Bahasa Inggris, Musik, Pemrograman, dan banyak lagi. Belajar dengan nyaman di rumah atau online.",
-  keywords: "guru privat, les privat, tutor, bimbel, matematika, bahasa inggris, online, tatap muka",
-  authors: [{ name: "datanginguru Privat" }],
+  title: "Datangin Guru - Jasa Les Privat Datang ke Rumah & Online Terbaik",
+  description: "Layanan jasa guru les privat datang ke rumah dan online profesional di Indonesia. Bimbel privat TK, SD, SMP, SMA, SNBT, Mahasiswa & Umum untuk semua mata pelajaran dengan tutor berpengalaman.",
+  keywords: "guru les privat, les privat datang ke rumah, guru privat, bimbel privat, les privat matematika, les privat terdekat, les privat online, datangin guru",
+  authors: [{ name: "Datangin Guru" }],
   openGraph: {
-    title: "datanginguru Privat - Guru Les Privat Terbaik",
-    description: "Temukan guru les privat profesional untuk berbagai mata pelajaran.",
+    title: "Datangin Guru - Jasa Les Privat Datang ke Rumah",
+    description: "Temukan guru les privat profesional untuk semua mata pelajaran dan jenjang.",
     type: "website",
     locale: "id_ID",
   },
