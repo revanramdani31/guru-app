@@ -829,13 +829,24 @@ Dikirim dari datanginguru Privat`;
                                 <label className="block text-sm font-medium text-slate-700 mb-3">Upload Pakta Integritas *</label>
                                 <div className="flex items-start gap-4">
                                     <div className="flex-shrink-0">
-                                        <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
-                                            <FileText className="w-6 h-6 text-slate-400" />
-                                        </div>
+                                        {formData.paktaFile ? (
+                                            <div className="w-24 h-32 bg-emerald-100 rounded-lg border-2 border-emerald-200 flex flex-col items-center justify-center text-emerald-600">
+                                                <Check className="w-8 h-8 mb-2" />
+                                                <span className="text-[10px] font-bold">TERUPLOAD</span>
+                                            </div>
+                                        ) : (
+                                            <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
+                                                <FileText className="w-6 h-6 text-slate-400" />
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex-1">
                                         <input type="file" accept=".pdf,application/pdf" onChange={handlePaktaChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-                                        <p className="text-xs text-slate-500 mt-2">Format PDF. Max 2MB.</p>
+                                        {formData.paktaFile ? (
+                                            <p className="text-xs text-emerald-600 font-medium mt-2 truncate max-w-[150px]">{formData.paktaFile.name}</p>
+                                        ) : (
+                                            <p className="text-xs text-slate-500 mt-2">Format PDF. Max 2MB.</p>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -844,13 +855,24 @@ Dikirim dari datanginguru Privat`;
                                 <label className="block text-sm font-medium text-slate-700 mb-3">Upload Ijazah Terakhir *</label>
                                 <div className="flex items-start gap-4">
                                     <div className="flex-shrink-0">
-                                        <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
-                                            <GraduationCap className="w-6 h-6 text-slate-400" />
-                                        </div>
+                                        {formData.ijazahFile ? (
+                                            <div className="w-24 h-32 bg-emerald-100 rounded-lg border-2 border-emerald-200 flex flex-col items-center justify-center text-emerald-600">
+                                                <Check className="w-8 h-8 mb-2" />
+                                                <span className="text-[10px] font-bold">TERUPLOAD</span>
+                                            </div>
+                                        ) : (
+                                            <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
+                                                <GraduationCap className="w-6 h-6 text-slate-400" />
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex-1">
                                         <input type="file" accept=".pdf,application/pdf,image/*" onChange={handleIjazahChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-                                        <p className="text-xs text-slate-500 mt-2">Format PDF/Gambar. Max 2MB.</p>
+                                        {formData.ijazahFile ? (
+                                            <p className="text-xs text-emerald-600 font-medium mt-2 truncate max-w-[150px]">{formData.ijazahFile.name}</p>
+                                        ) : (
+                                            <p className="text-xs text-slate-500 mt-2">Format PDF/Gambar. Max 2MB.</p>
+                                        )}
                                     </div>
                                 </div>
                             </div>

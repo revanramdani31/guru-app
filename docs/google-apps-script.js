@@ -77,19 +77,20 @@ function handlePendaftaran(ss, data) {
 
     if (!sheet) {
         sheet = ss.insertSheet('Pendaftaran Siswa');
-        sheet.getRange(1, 1, 1, 16).setValues([[
-            'Timestamp', 'Nama Lengkap', 'WhatsApp', 'Program', 'Detail Program',
+        sheet.getRange(1, 1, 1, 17).setValues([[
+            'Timestamp', 'Nama Lengkap', 'Jenis Kelamin', 'WhatsApp', 'Program', 'Detail Program',
             'Mata Pelajaran', 'Mode Belajar', 'Jumlah Pertemuan', 'Jadwal',
             'Provinsi', 'Kota', 'Kecamatan', 'Kelurahan', 'Alamat',
             'Catatan', 'Estimasi Biaya'
         ]]);
-        sheet.getRange(1, 1, 1, 16).setFontWeight('bold');
+        sheet.getRange(1, 1, 1, 17).setFontWeight('bold');
         sheet.setFrozenRows(1);
     }
 
     sheet.appendRow([
         new Date(),
         data.namaLengkap,
+        data.jenisKelamin,
         data.whatsapp,
         data.program,
         data.programOption,
@@ -138,14 +139,14 @@ function handleKarirWithFiles(ss, data) {
     if (!sheet) {
         Logger.log("Creating new sheet: Lamaran Guru");
         sheet = ss.insertSheet('Lamaran Guru');
-        sheet.getRange(1, 1, 1, 18).setValues([[
-            'Timestamp', 'Nama Lengkap', 'Email', 'WhatsApp', 'Tanggal Lahir',
+        sheet.getRange(1, 1, 1, 20).setValues([[
+            'Timestamp', 'Nama Lengkap', 'Email', 'WhatsApp', 'Jenis Kelamin', 'Tanggal Lahir',
             'Pendidikan', 'Asal Kampus', 'Jurusan',
             'Spesialisasi Mapel', 'Spesialisasi Jenjang', 'Mode Mengajar',
             'Provinsi', 'Kota', 'Kecamatan', 'Kelurahan', 'Alamat',
-            'Link Pas Foto', 'Link Pakta Integritas'
+            'Link Pas Foto', 'Link Pakta Integritas', 'Link Ijazah'
         ]]);
-        sheet.getRange(1, 1, 1, 18).setFontWeight('bold');
+        sheet.getRange(1, 1, 1, 20).setFontWeight('bold'); // Update columns to 20
         sheet.setFrozenRows(1);
     }
 
@@ -156,6 +157,7 @@ function handleKarirWithFiles(ss, data) {
         data.namaLengkap,
         data.email,
         data.whatsapp,
+        data.jenisKelamin,
         data.tanggalLahir,
         data.pendidikan,
         data.asalKampus,
@@ -169,7 +171,8 @@ function handleKarirWithFiles(ss, data) {
         data.kelurahan,
         data.alamat,
         '-', // Placeholder Pas Foto
-        '-'  // Placeholder Pakta
+        '-', // Placeholder Pakta
+        '-'  // Placeholder Ijazah
     ];
 
     sheet.appendRow(rowData);
@@ -208,6 +211,19 @@ function handleKarirWithFiles(ss, data) {
             }
         } else {
             Logger.log("No Pakta Base64 provided");
+        }
+
+        if (data.ijazahBase64) {
+            Logger.log("Uploading Ijazah...");
+            var ijazahUrl = saveFileToDrive(folder, data.ijazahBase64, data.ijazahName || 'ijazah.pdf', data.ijazahType || 'application/pdf');
+            if (ijazahUrl) {
+                fileUrls.ijazah = ijazahUrl;
+                // Update cell Ijazah (kolom 19)
+                sheet.getRange(lastRow, 19).setValue(ijazahUrl);
+                Logger.log("Ijazah uploaded: " + ijazahUrl);
+            }
+        } else {
+            Logger.log("No Ijazah Base64 provided");
         }
     } catch (e) {
         // Jika upload gagal, catat error di log tapi jangan throw error ke user
@@ -275,7 +291,10 @@ function testDoPost() {
                 pasFotoType: 'image/jpeg',
                 paktaBase64: dummyBase64,
                 paktaName: 'test_pakta.pdf',
-                paktaType: 'application/pdf'
+                paktaType: 'application/pdf',
+                ijazahBase64: dummyBase64,
+                ijazahName: 'test_ijazah.pdf',
+                ijazahType: 'application/pdf'
             })
         }
     };
