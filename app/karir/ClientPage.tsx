@@ -44,7 +44,7 @@ const mataPelajaranOptions = [
     'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Fisika', 'Kimia', 'Biologi',
     'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'PKN',
     'IPA Terpadu', 'IPS Terpadu', 'Calistung', 'Mengaji', 'Bahasa Arab',
-    'UTBK/SNBT', 'TOEFL', 'IELTS', 'Metodologi Penelitian', 'Renang', 'Musik', 'Lainnya'
+    'UTBK/SNBT', 'TOEFL', 'IELTS', 'Metodologi Penelitian', 'Renang', 'Musik', 'bimbingan tesis', 'pendampingan publikasi', 'Lainnya'
 ];
 
 const jenjangOptions = ['TK/PAUD', 'SD', 'SMP', 'SMA', 'Kuliah', 'Umum'];
