@@ -20,7 +20,7 @@ const Hero = () => {
             >
                 <div className="text-center max-w-4xl mx-auto">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight drop-shadow-md">
-                        Jasa Les Privat Terbaik,
+                        Jasa Les Privat Tanpa Ribet
                         <span className="block text-emerald-100 text-shadow-sm mt-2">Guru Datang ke Rumah</span>
                     </h1>
                     <p className="text-emerald-50 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-medium leading-relaxed drop-shadow-sm">
