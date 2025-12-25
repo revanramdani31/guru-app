@@ -42,8 +42,8 @@ interface FormData {
 
 const mataPelajaranOptions = [
     'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Fisika', 'Kimia', 'Biologi',
-    'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'PKN',
-    'IPA Terpadu', 'IPS Terpadu', 'Calistung', 'Mengaji', 'Bahasa Arab',
+    'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'PKN', 'Karya Tulis Ilmiah',
+    'IPA Terpadu', 'IPS Terpadu', 'Calistung', 'Mengaji', 'Bahasa Arab', 'Informatika',
     'UTBK/SNBT', 'TOEFL', 'IELTS', 'Metodologi Penelitian', 'Renang', 'Musik', 'bimbingan tesis', 'pendampingan publikasi', 'Lainnya'
 ];
 
