@@ -192,8 +192,8 @@ function handleKarirWithFiles(ss, data) {
             var pasFotoUrl = saveFileToDrive(folder, data.pasFotoBase64, data.pasFotoName || 'pas_foto.jpg', data.pasFotoType || 'image/jpeg');
             if (pasFotoUrl) {
                 fileUrls.pasFoto = pasFotoUrl;
-                // Update cell Pas Foto (kolom 17)
-                sheet.getRange(lastRow, 17).setValue(pasFotoUrl);
+                // Update cell Pas Foto (kolom 18)
+                sheet.getRange(lastRow, 18).setValue(pasFotoUrl);
                 Logger.log("Pas Foto uploaded: " + pasFotoUrl);
             }
         } else {
@@ -205,8 +205,8 @@ function handleKarirWithFiles(ss, data) {
             var paktaUrl = saveFileToDrive(folder, data.paktaBase64, data.paktaName || 'pakta_integritas.pdf', data.paktaType || 'application/pdf');
             if (paktaUrl) {
                 fileUrls.pakta = paktaUrl;
-                // Update cell Pakta (kolom 18)
-                sheet.getRange(lastRow, 18).setValue(paktaUrl);
+                // Update cell Pakta (kolom 19)
+                sheet.getRange(lastRow, 19).setValue(paktaUrl);
                 Logger.log("Pakta uploaded: " + paktaUrl);
             }
         } else {
@@ -218,8 +218,8 @@ function handleKarirWithFiles(ss, data) {
             var ijazahUrl = saveFileToDrive(folder, data.ijazahBase64, data.ijazahName || 'ijazah.pdf', data.ijazahType || 'application/pdf');
             if (ijazahUrl) {
                 fileUrls.ijazah = ijazahUrl;
-                // Update cell Ijazah (kolom 19)
-                sheet.getRange(lastRow, 19).setValue(ijazahUrl);
+                // Update cell Ijazah (kolom 20)
+                sheet.getRange(lastRow, 20).setValue(ijazahUrl);
                 Logger.log("Ijazah uploaded: " + ijazahUrl);
             }
         } else {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, GraduationCap, Clock, FileText, Download, Check, Briefcase, Loader2, MessageCircle, MapPin, Camera, ChevronDown } from 'lucide-react';
+import { User, Mail, GraduationCap, Clock, FileText, Download, Check, Briefcase, Loader2, MessageCircle, MapPin, Camera, ChevronDown, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { jsPDF } from 'jspdf';
 import Link from 'next/link';
@@ -36,8 +36,10 @@ interface FormData {
     pasFotoBase64: string;
     paktaFile: File | null;
     paktaBase64: string;
+    paktaPreview: string;
     ijazahFile: File | null;
     ijazahBase64: string;
+    ijazahPreview: string;
 }
 
 const mataPelajaranOptions = [
@@ -79,8 +81,10 @@ const KarirPage = () => {
         pasFotoBase64: '',
         paktaFile: null,
         paktaBase64: '',
+        paktaPreview: '',
         ijazahFile: null,
-        ijazahBase64: ''
+        ijazahBase64: '',
+        ijazahPreview: ''
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -268,10 +272,12 @@ const KarirPage = () => {
             }
             const reader = new FileReader();
             reader.onloadend = () => {
+                const result = reader.result as string;
                 setFormData(prev => ({
                     ...prev,
                     paktaFile: file,
-                    paktaBase64: reader.result as string
+                    paktaBase64: result,
+                    paktaPreview: file.type.startsWith('image/') ? result : ''
                 }));
             };
             reader.readAsDataURL(file);
@@ -288,14 +294,43 @@ const KarirPage = () => {
             }
             const reader = new FileReader();
             reader.onloadend = () => {
+                const result = reader.result as string;
                 setFormData(prev => ({
                     ...prev,
                     ijazahFile: file,
-                    ijazahBase64: reader.result as string
+                    ijazahBase64: result,
+                    ijazahPreview: file.type.startsWith('image/') ? result : ''
                 }));
             };
             reader.readAsDataURL(file);
         }
+    };
+
+    const clearPasFoto = () => {
+        setFormData(prev => ({
+            ...prev,
+            pasFoto: null,
+            pasFotoPreview: '',
+            pasFotoBase64: ''
+        }));
+    };
+
+    const clearPakta = () => {
+        setFormData(prev => ({
+            ...prev,
+            paktaFile: null,
+            paktaPreview: '',
+            paktaBase64: ''
+        }));
+    };
+
+    const clearIjazah = () => {
+        setFormData(prev => ({
+            ...prev,
+            ijazahFile: null,
+            ijazahPreview: '',
+            ijazahBase64: ''
+        }));
     };
 
     const generatePDF = (data: FormData) => {
@@ -806,72 +841,113 @@ Dikirim dari datanginguru Privat`;
                         </h3>
                         <div className="grid md:grid-cols-3 gap-6">
                             {/* Pas Foto */}
-                            <div className="bg-slate-50 rounded-xl p-4">
+                            <div className="bg-slate-50 rounded-xl p-4 overflow-hidden">
                                 <label className="block text-sm font-medium text-slate-700 mb-3">Pas Foto *</label>
-                                <div className="flex items-start gap-4">
-                                    <div className="flex-shrink-0">
+                                <div className="flex items-start gap-3">
+                                    <div className="flex-shrink-0 relative">
                                         {formData.pasFotoPreview ? (
-                                            <img src={formData.pasFotoPreview} alt="Preview" className="w-24 h-32 object-cover rounded-lg border-2 border-slate-200" />
+                                            <>
+                                                <img src={formData.pasFotoPreview} alt="Preview" className="w-24 h-32 object-cover rounded-lg border-2 border-emerald-200" />
+                                                <button
+                                                    type="button"
+                                                    onClick={clearPasFoto}
+                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </>
                                         ) : (
                                             <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
                                                 <Camera className="w-6 h-6 text-slate-400" />
                                             </div>
                                         )}
                                     </div>
-                                    <div className="flex-1">
-                                        <input type="file" accept="image/*" onChange={handlePhotoChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-                                        <p className="text-xs text-slate-500 mt-2">Foto bebas, profesional. Max 2MB.</p>
+                                    <div className="flex-1 min-w-0">
+                                        {!formData.pasFoto && (
+                                            <input type="file" accept="image/*" onChange={handlePhotoChange} required className="block w-full text-sm text-slate-500 file:mr-2 file:py-2 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                        )}
+                                        {formData.pasFoto ? (
+                                            <p className="text-xs text-emerald-600 font-medium mt-2 truncate" title={formData.pasFoto.name}>{formData.pasFoto.name}</p>
+                                        ) : (
+                                            <p className="text-xs text-slate-500 mt-2">Max 2MB.</p>
+                                        )}
                                     </div>
                                 </div>
                             </div>
                             {/* Pakta Integritas */}
-                            <div className="bg-slate-50 rounded-xl p-4">
+                            <div className="bg-slate-50 rounded-xl p-4 overflow-hidden">
                                 <label className="block text-sm font-medium text-slate-700 mb-3">Upload Pakta Integritas *</label>
-                                <div className="flex items-start gap-4">
-                                    <div className="flex-shrink-0">
+                                <div className="flex items-start gap-3">
+                                    <div className="flex-shrink-0 relative">
                                         {formData.paktaFile ? (
-                                            <div className="w-24 h-32 bg-emerald-100 rounded-lg border-2 border-emerald-200 flex flex-col items-center justify-center text-emerald-600">
-                                                <Check className="w-8 h-8 mb-2" />
-                                                <span className="text-[10px] font-bold">TERUPLOAD</span>
-                                            </div>
+                                            <>
+                                                <div className="w-24 h-32 bg-emerald-100 rounded-lg border-2 border-emerald-200 flex flex-col items-center justify-center text-emerald-600">
+                                                    <Check className="w-8 h-8 mb-2" />
+                                                    <span className="text-[10px] font-bold">PDF</span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={clearPakta}
+                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </>
                                         ) : (
                                             <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
                                                 <FileText className="w-6 h-6 text-slate-400" />
                                             </div>
                                         )}
                                     </div>
-                                    <div className="flex-1">
-                                        <input type="file" accept=".pdf,application/pdf" onChange={handlePaktaChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                    <div className="flex-1 min-w-0">
+                                        {!formData.paktaFile && (
+                                            <input type="file" accept=".pdf,application/pdf" onChange={handlePaktaChange} required className="block w-full text-sm text-slate-500 file:mr-2 file:py-2 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                        )}
                                         {formData.paktaFile ? (
-                                            <p className="text-xs text-emerald-600 font-medium mt-2 truncate max-w-[150px]">{formData.paktaFile.name}</p>
+                                            <p className="text-xs text-emerald-600 font-medium mt-2 truncate" title={formData.paktaFile.name}>{formData.paktaFile.name}</p>
                                         ) : (
-                                            <p className="text-xs text-slate-500 mt-2">Format PDF. Max 2MB.</p>
+                                            <p className="text-xs text-slate-500 mt-2">PDF. Max 2MB.</p>
                                         )}
                                     </div>
                                 </div>
                             </div>
                             {/* Ijazah Terakhir */}
-                            <div className="bg-slate-50 rounded-xl p-4">
+                            <div className="bg-slate-50 rounded-xl p-4 overflow-hidden">
                                 <label className="block text-sm font-medium text-slate-700 mb-3">Upload Ijazah Terakhir *</label>
-                                <div className="flex items-start gap-4">
-                                    <div className="flex-shrink-0">
+                                <div className="flex items-start gap-3">
+                                    <div className="flex-shrink-0 relative">
                                         {formData.ijazahFile ? (
-                                            <div className="w-24 h-32 bg-emerald-100 rounded-lg border-2 border-emerald-200 flex flex-col items-center justify-center text-emerald-600">
-                                                <Check className="w-8 h-8 mb-2" />
-                                                <span className="text-[10px] font-bold">TERUPLOAD</span>
-                                            </div>
+                                            <>
+                                                {formData.ijazahPreview ? (
+                                                    <img src={formData.ijazahPreview} alt="Preview" className="w-24 h-32 object-cover rounded-lg border-2 border-emerald-200" />
+                                                ) : (
+                                                    <div className="w-24 h-32 bg-emerald-100 rounded-lg border-2 border-emerald-200 flex flex-col items-center justify-center text-emerald-600">
+                                                        <Check className="w-8 h-8 mb-2" />
+                                                        <span className="text-[10px] font-bold">PDF</span>
+                                                    </div>
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={clearIjazah}
+                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </>
                                         ) : (
                                             <div className="w-24 h-32 bg-white rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center">
                                                 <GraduationCap className="w-6 h-6 text-slate-400" />
                                             </div>
                                         )}
                                     </div>
-                                    <div className="flex-1">
-                                        <input type="file" accept=".pdf,application/pdf,image/*" onChange={handleIjazahChange} required className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                    <div className="flex-1 min-w-0">
+                                        {!formData.ijazahFile && (
+                                            <input type="file" accept=".pdf,application/pdf,image/*" onChange={handleIjazahChange} required className="block w-full text-sm text-slate-500 file:mr-2 file:py-2 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
+                                        )}
                                         {formData.ijazahFile ? (
-                                            <p className="text-xs text-emerald-600 font-medium mt-2 truncate max-w-[150px]">{formData.ijazahFile.name}</p>
+                                            <p className="text-xs text-emerald-600 font-medium mt-2 truncate" title={formData.ijazahFile.name}>{formData.ijazahFile.name}</p>
                                         ) : (
-                                            <p className="text-xs text-slate-500 mt-2">Format PDF/Gambar. Max 2MB.</p>
+                                            <p className="text-xs text-slate-500 mt-2">PDF/Gambar. Max 2MB.</p>
                                         )}
                                     </div>
                                 </div>
