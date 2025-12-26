@@ -115,7 +115,7 @@ const BiayaPage = () => {
                     >
                         {/* 1. Pilih Program */}
                         <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-                            <h2 className="text-lg font-bold text-slate-800 mb-4">1. Pilih Program</h2>
+                            <h2 className="text-lg font-bold text-slate-800 mb-4">Pilih Program</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {programs.map((prog) => (
                                     <button
@@ -150,7 +150,7 @@ const BiayaPage = () => {
                                     className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6"
                                 >
                                     <h2 className="text-lg font-bold text-slate-800 mb-4">
-                                        2. {programOptions[selectedProgram]?.label || 'Detail'}
+                                        {programOptions[selectedProgram]?.label || 'Detail'}
                                     </h2>
                                     <div className="space-y-2">
                                         <div className="relative">
@@ -206,7 +206,7 @@ const BiayaPage = () => {
                                     exit={{ opacity: 0, height: 0 }}
                                     className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6"
                                 >
-                                    <h2 className="text-lg font-bold text-slate-800 mb-4">3. Metode & Jumlah Pertemuan</h2>
+                                    <h2 className="text-lg font-bold text-slate-800 mb-4">Metode & Jumlah Pertemuan</h2>
 
                                     {/* Metode Pembelajaran */}
                                     <div className="mb-4">

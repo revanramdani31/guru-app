@@ -629,23 +629,23 @@ Dikirim dari datanginguru Privat`;
                         </h3>
                         <div className="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">1. Nama Lengkap *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap *</label>
                                 <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="input-modern" placeholder="Masukkan nama lengkap" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">2. Email *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Email *</label>
                                 <input type="email" name="email" value={formData.email} onChange={handleChange} required className="input-modern" placeholder="email@contoh.com" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">3. Nomor WhatsApp *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp *</label>
                                 <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} required className="input-modern" placeholder="08xxxxxxxxxx" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">4. Tanggal Lahir *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Tanggal Lahir *</label>
                                 <input type="date" name="tanggalLahir" value={formData.tanggalLahir} onChange={handleChange} required className="input-modern" />
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-2">5. Jenis Kelamin *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">Jenis Kelamin *</label>
                                 <div className="flex gap-4">
                                     {['Laki-laki', 'Perempuan'].map(gender => (
                                         <label key={gender} className="flex items-center gap-2 cursor-pointer">
@@ -674,18 +674,18 @@ Dikirim dari datanginguru Privat`;
                         </h3>
                         <div className="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">6. Pendidikan Terakhir *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Pendidikan Terakhir *</label>
                                 <select name="pendidikan" value={formData.pendidikan} onChange={handleChange} required className="input-modern">
                                     <option value="">Pilih pendidikan...</option>
                                     {pendidikanOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">7. Asal Kampus / Sekolah *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Asal Kampus / Sekolah *</label>
                                 <input type="text" name="asalKampus" value={formData.asalKampus} onChange={handleChange} required className="input-modern" placeholder="Contoh: Universitas Indonesia" />
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1">8. Jurusan *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Jurusan *</label>
                                 <input type="text" name="jurusan" value={formData.jurusan} onChange={handleChange} required className="input-modern" placeholder="Contoh: Pendidikan Matematika" />
                             </div>
                         </div>
@@ -698,7 +698,7 @@ Dikirim dari datanginguru Privat`;
                             Spesialisasi Pengajaran
                         </h3>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-slate-700 mb-2">9. Jenjang yang Bisa Diajar * (Pilih lebih dari satu)</label>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">Jenjang yang Bisa Diajar * (Pilih lebih dari satu)</label>
                             <div className="flex flex-wrap gap-2">
                                 {jenjangOptions.map(jenjang => (
                                     <label key={jenjang} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg px-4 py-2 transition-colors">
@@ -709,7 +709,7 @@ Dikirim dari datanginguru Privat`;
                             </div>
                         </div>
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-slate-700 mb-2">10. Mata Pelajaran yang Dikuasai * (Pilih lebih dari satu)</label>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">Mata Pelajaran yang Dikuasai * (Pilih lebih dari satu)</label>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                                 {mataPelajaranOptions.map(mapel => (
                                     <label key={mapel} className="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 rounded-lg p-2 transition-colors">
@@ -732,7 +732,7 @@ Dikirim dari datanginguru Privat`;
                             )}
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">11. Mode Mengajar *</label>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Mode Mengajar *</label>
                             <div className="flex flex-wrap gap-3">
                                 {[{ value: 'tatap_muka', label: 'Tatap Muka' }, { value: 'online', label: 'Online' }, { value: 'keduanya', label: 'Keduanya' }].map(mode => (
                                     <label key={mode.value} className="flex items-center gap-2 cursor-pointer">
@@ -748,7 +748,7 @@ Dikirim dari datanginguru Privat`;
                     <div className="mb-8">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                             <MapPin className="w-5 h-5 text-emerald-600" />
-                            11. Domisili
+                            Domisili
                         </h3>
                         <div className="grid md:grid-cols-2 gap-4">
                             <div>
@@ -802,7 +802,7 @@ Dikirim dari datanginguru Privat`;
                     <div className="mb-8">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                             <Camera className="w-5 h-5 text-emerald-600" />
-                            12. Upload Dokumen
+                            Upload Dokumen
                         </h3>
                         <div className="grid md:grid-cols-3 gap-6">
                             {/* Pas Foto */}

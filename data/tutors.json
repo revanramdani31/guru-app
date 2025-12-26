@@ -79,24 +79,30 @@
         "slug": "dikdik-japar",
         "nama": "Dikdik Japar Sidik, M.Pd., Gr.",
         "mapel": [
-            "ahli semuanya"
+            "Akuntansi",
+            "Pendampingan Publikasi",
+            "Bimbingan Tesis",
+            "Mengaji",
+            "Karya Tulis Ilmiah",
+            "Metodologi Penelitian"
         ],
-        "lokasi": "Bandung",
-        "tipe": "tatap_muka",
+        "lokasi": "Cigadung, Bandung",
+        "tipe": "keduanya",
         "tingkat": [
-            "SD",
-            "SMP",
             "SMA",
-            "Kuliah"
+            "Kuliah",
+            "Umum"
         ],
         "foto": "/images/tutor-4.jpg",
-        "deskripsi": "Guru berpengalaman dengan metode pembelajaran interaktif. Fokus pada pemahaman konsep dasar dan aplikasi praktis dalam kehidupan sehari-hari.",
-        "pendidikan": "S1 Pendidikan Matemtika UNPAS",
+        "deskripsi": "Lulusan S2 Pendidikan Ekonomi Universitas Pendidikan Indonesia. Berpengalaman dalam bimbingan Akuntansi, pendampingan publikasi ilmiah, bimbingan tesis, mengaji, karya tulis ilmiah, dan metodologi penelitian. Siap membimbing siswa SMA, mahasiswa, dan umum baik secara online maupun tatap muka.",
+        "pendidikan": "S2 Pendidikan Ekonomi Universitas Pendidikan Indonesia",
         "kategori": [
-            "matematika"
+            "ekonomi",
+            "akuntansi",
+            "akademik"
         ],
-        "whatsapp": "6281234567004",
-        "email": "didik@email.com"
+        "whatsapp": "6285797121730",
+        "email": "dikdikjaparsidik@gmail.com"
     },
     {
         "id": 5,
@@ -166,26 +172,23 @@
     },
     {
         "id": 8,
-        "slug": "maya-kusuma",
-        "nama": "Maya Kusuma",
+        "slug": "ana-muslimah",
+        "nama": "Ana Muslimah",
         "mapel": [
-            "Desain Grafis",
-            "Adobe Photoshop",
-            "Illustrator"
+            "Ekonomi"
         ],
-        "lokasi": "Bali",
-        "tipe": "online",
+        "lokasi": "Bandung Wetan",
+        "tipe": "keduanya",
         "tingkat": [
-            "SMA",
-            "Kuliah"
+            "SMA"
         ],
         "foto": "/images/tutor-8.jpg",
-        "deskripsi": "Desainer grafis profesional dengan portfolio di berbagai brand internasional. Mengajar dari basic hingga advanced design techniques.",
-        "pendidikan": "S1 Desain Komunikasi Visual ITS",
+        "deskripsi": "Lulusan S1 Pendidikan Ekonomi Universitas Pasundan. Berpengalaman mengajar Ekonomi untuk jenjang SMA. Siap membimbing siswa dengan metode yang mudah dipahami, baik secara online maupun tatap muka.",
+        "pendidikan": "S1 Pendidikan Ekonomi Universitas Pasundan",
         "kategori": [
-            "desain"
+            "ekonomi"
         ],
-        "whatsapp": "6281234567008",
-        "email": "maya.kusuma@email.com"
+        "whatsapp": "6285723446047",
+        "email": "anaanamuslimah@gmail.com"
     }
 ]
