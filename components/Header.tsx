@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, UserPlus, Briefcase, AlignJustify } from 'lucide-react';
+import { Menu, X, UserPlus, Briefcase, Home, Users, GraduationCap, Calculator, Newspaper, AlignJustify } from 'lucide-react';
 import Image from 'next/image';
 
 
@@ -14,13 +14,13 @@ const Header = () => {
     const pathname = usePathname();
 
     const navLinks = [
-        { path: '/', label: 'Beranda' },
-        { path: '/tutors', label: 'Guru Kami' },
-        { path: '/program', label: 'Program' },
-        { path: '/biaya', label: 'Biaya' },
+        { path: '/', label: 'Beranda', icon: Home },
+        { path: '/tutors', label: 'Guru Kami', icon: Users },
+        { path: '/program', label: 'Program Kami', icon: GraduationCap },
+        { path: '/biaya', label: 'Simulasi Biaya', icon: Calculator },
         { path: '/daftar', label: 'Daftar Siswa', icon: UserPlus },
         { path: '/karir', label: 'Daftar Jadi Guru', icon: Briefcase },
-        { path: '/artikel', label: 'Artikel' },
+        { path: '/artikel', label: 'Artikel Kami', icon: Newspaper },
     ];
 
     const isActive = (path: string) => pathname === path;
