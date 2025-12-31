@@ -20,11 +20,11 @@ interface Tutor {
 }
 
 interface Props {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const slug = params.slug;
+    const { slug } = await params;
     const tutor = (tutorsData as Tutor[]).find(t => t.slug === slug);
 
     if (!tutor) {
@@ -44,6 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export default function TutorDetailPage({ params }: Props) {
-    return <TutorDetailClient slug={params.slug} />;
+export default async function TutorDetailPage({ params }: Props) {
+    const { slug } = await params;
+    return <TutorDetailClient slug={slug} />;
 }

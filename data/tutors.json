@@ -28,51 +28,53 @@
     },
     {
         "id": 2,
-        "slug": "siti-nurhaliza",
-        "nama": "Siti Nurhaliza",
+        "slug": "irham-rasya",
+        "nama": "Irham Rasya Gustiawan",
         "mapel": [
-            "Bahasa Inggris",
-            "TOEFL",
-            "IELTS"
+            "Renang",
+            "Olahraga"
         ],
-        "lokasi": "Jakarta Pusat",
+        "lokasi": "Bandung Barat",
         "tipe": "keduanya",
         "tingkat": [
+            "SD",
             "SMA",
-            "Kuliah"
+            "SMP",
+            "Umum"
         ],
         "foto": "/images/tutor-2.jpg",
-        "deskripsi": "Native speaker dengan sertifikasi TESOL. Berpengalaman mengajar di lembaga internasional dan membantu siswa mencapai skor TOEFL dan IELTS yang tinggi.",
-        "pendidikan": "S2 English Literature, University of Melbourne",
+        "deskripsi": "Mahasiswa S1 Pendidikan Guru SD dengan spesialisasi mengajar Renang dan Olahraga. Berpengalaman melatih siswa dari tingkat SD, SMP, SMA hingga umum dengan metode yang aman dan menyenangkan. Siap mengajar secara online maupun tatap muka di wilayah Bandung Barat.",
+        "pendidikan": "S1 Pendidikan Guru SD",
         "kategori": [
-            "bahasa-inggris"
+            "olahraga"
         ],
-        "whatsapp": "6281234567002",
-        "email": "siti.nurhaliza@email.com"
+        "whatsapp": "6289674192150",
+        "email": "-"
     },
     {
         "id": 3,
-        "slug": "ahmad-rizki",
-        "nama": "Ahmad Rizki",
+        "slug": "muhamad-ikhsan",
+        "nama": "Muhamad Ikhsan",
         "mapel": [
-            "Pemrograman",
-            "Python",
-            "JavaScript"
+            "Pendidikan Bahasa Indonesia",
+            "Calistung"
         ],
-        "lokasi": "Bandung",
-        "tipe": "online",
+        "lokasi": "Bandung Barat",
+        "tipe": "keduanya",
         "tingkat": [
             "SMA",
-            "Kuliah"
+            "SD",
+            "SMP",
+            "Umum"
         ],
         "foto": "/images/tutor-3.jpg",
-        "deskripsi": "Software Engineer dengan 5 tahun pengalaman di startup teknologi. Mengajar pemrograman dari dasar hingga advanced. Cocok untuk pemula maupun yang ingin meningkatkan skill.",
-        "pendidikan": "S1 Teknik Informatika UI",
+        "deskripsi": "Mahasiswa S1 Pendidikan Bahasa Sastra Indonesia UPI dengan keahlian mengajar Bahasa Indonesia dan Calistung (Baca, Tulis, Hitung). Berpengalaman membimbing siswa dari tingkat SD, SMP, SMA hingga umum dengan metode pembelajaran yang komunikatif dan menyenangkan. Siap mengajar secara online maupun tatap muka di wilayah Bandung Barat.",
+        "pendidikan": "S1 Pendidikan Bahasa Sastra Indonesia UPI",
         "kategori": [
-            "pemrograman"
+            "bahasa-indonesia"
         ],
-        "whatsapp": "6281234567003",
-        "email": "ahmad.rizki@email.com"
+        "whatsapp": "6295412973791",
+        "email": "icanpratam657@gmail.com"
     },
     {
         "id": 4,
