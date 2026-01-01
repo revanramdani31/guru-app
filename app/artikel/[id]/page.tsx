@@ -3,11 +3,12 @@ import { Metadata } from 'next';
 import ArticleDetailClient from '@/components/article/ArticleDetailClient';
 
 interface Props {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const id = Number(params.id);
+    const resolvedParams = await params;
+    const id = Number(resolvedParams.id);
     const blog = blogs.find((b) => b.id === id);
 
     if (!blog) {
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export default function ArticleDetailPage({ params }: Props) {
-    return <ArticleDetailClient id={Number(params.id)} />;
+export default async function ArticleDetailPage({ params }: Props) {
+    const resolvedParams = await params;
+    return <ArticleDetailClient id={Number(resolvedParams.id)} />;
 }
