@@ -113,9 +113,9 @@ function handlePendaftaran(ss, data) {
 }
 
 // Konfigurasi Email
-var ADMIN_EMAIL = 'datanginguru@gmail.com';
+var ADMIN_EMAIL = 'info@datanginguru.com';
 var SENDER_NAME = 'Datangin Guru';
-// Untuk mengirim dari info@datanginguru.com, setup alias di Gmail Settings > Accounts > Send mail as
+// Email dikirim dari datanginguru@gmail.com (pemilik script) ke info@datanginguru.com
 
 function sendAdminNotification(data) {
     try {
@@ -150,7 +150,6 @@ function sendAdminNotification(data) {
             subject: subject,
             body: body,
             name: SENDER_NAME
-            // Jika sudah setup alias, tambahkan: replyTo: 'info@datanginguru.com'
         });
 
         Logger.log("Admin notification email sent to " + ADMIN_EMAIL);
@@ -180,6 +179,37 @@ function handlePengaduan(ss, data) {
         data.pesan
     ]);
     Logger.log("Pengaduan saved");
+
+    // Kirim notifikasi email pengaduan ke Admin
+    sendPengaduanNotification(data);
+}
+
+function sendPengaduanNotification(data) {
+    try {
+        var subject = '⚠️ Pengaduan Baru: ' + data.kategori;
+        var body = 'Ada pengaduan baru masuk!\n\n' +
+            '📋 DATA PENGADU\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Nama: ' + data.nama + '\n' +
+            'Kontak: ' + data.kontak + '\n\n' +
+            '📁 KATEGORI: ' + data.kategori + '\n\n' +
+            '📝 ISI PENGADUAN:\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            data.pesan + '\n\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Segera tindak lanjuti pengaduan ini!';
+
+        MailApp.sendEmail({
+            to: ADMIN_EMAIL,
+            subject: subject,
+            body: body,
+            name: SENDER_NAME
+        });
+
+        Logger.log("Pengaduan notification email sent");
+    } catch (e) {
+        Logger.log("Error sending pengaduan email: " + e.toString());
+    }
 }
 
 function handleKarirWithFiles(ss, data) {
