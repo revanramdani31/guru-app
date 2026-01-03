@@ -312,7 +312,58 @@ function handleKarirWithFiles(ss, data) {
         sheet.getRange(lastRow, 16).setNote("Upload Error: " + e.toString());
     }
 
+    // Kirim notifikasi email lamaran guru ke Admin
+    sendKarirNotification(data, fileUrls);
+
     return fileUrls;
+}
+
+function sendKarirNotification(data, fileUrls) {
+    try {
+        var subject = '👨‍🏫 Lamaran Guru Baru: ' + data.namaLengkap;
+        var body = 'Ada lamaran guru baru masuk!\n\n' +
+            '📋 DATA PELAMAR\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Nama: ' + data.namaLengkap + '\n' +
+            'Email: ' + data.email + '\n' +
+            'WhatsApp: ' + data.whatsapp + '\n' +
+            'Jenis Kelamin: ' + data.jenisKelamin + '\n' +
+            'Tanggal Lahir: ' + data.tanggalLahir + '\n\n' +
+            '🎓 PENDIDIKAN\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Jenjang: ' + data.pendidikan + '\n' +
+            'Kampus: ' + data.asalKampus + '\n' +
+            'Jurusan: ' + data.jurusan + '\n\n' +
+            '📚 SPESIALISASI\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Mapel: ' + data.spesialisasiMapel + '\n' +
+            'Jenjang: ' + data.spesialisasiJenjang + '\n' +
+            'Mode: ' + data.modeMengajar + '\n\n' +
+            '📍 LOKASI\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            data.provinsi + ', ' + data.kota + '\n' +
+            data.kecamatan + ', ' + data.kelurahan + '\n' +
+            data.alamat + '\n\n' +
+            '📎 DOKUMEN\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Pas Foto: ' + (fileUrls.pasFoto || '-') + '\n' +
+            'Pakta Integritas: ' + (fileUrls.pakta || '-') + '\n' +
+            'Ijazah: ' + (fileUrls.ijazah || '-') + '\n\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Segera review lamaran ini!\n' +
+            'WhatsApp: https://wa.me/' + data.whatsapp.replace(/^0/, '62');
+
+        MailApp.sendEmail({
+            to: ADMIN_EMAIL,
+            subject: subject,
+            body: body,
+            name: SENDER_NAME
+        });
+
+        Logger.log("Karir notification email sent");
+    } catch (e) {
+        Logger.log("Error sending karir email: " + e.toString());
+    }
 }
 
 function getOrCreateApplicantFolder(applicantName) {
