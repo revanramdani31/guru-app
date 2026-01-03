@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 
 const Footer = () => {
-    const whatsappNumber = "6283823245965"; // Admin WhatsApp
+    const whatsappNumber = "6285163215119"; // Admin WhatsApp
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat`;
 
     return (
@@ -82,10 +82,13 @@ const Footer = () => {
                                 <MessageCircle className="w-4 h-4" />
                                 <span>WhatsApp Admin</span>
                             </a>
-                            <div className="flex items-center gap-2 text-slate-400 text-sm">
+                            <a
+                                href="mailto:info@datanginguru.com"
+                                className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition-colors text-sm"
+                            >
                                 <Mail className="w-4 h-4" />
                                 <span>info@datanginguru.com</span>
-                            </div>
+                            </a>
                             <div className="flex items-center gap-2 text-slate-400 text-sm">
                                 <MapPin className="w-4 h-4" />
                                 <span>Indonesia</span>
@@ -94,18 +97,10 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="border-t border-slate-800 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="border-t border-slate-800 mt-10 pt-8 text-center">
                     <p className="text-slate-400 text-sm">
                         © 2025 datanginguru Privat. Hak Cipta Dilindungi.
                     </p>
-                    <div className="flex gap-6">
-                        <Link href="/privacy" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
-                            Kebijakan Privasi
-                        </Link>
-                        <Link href="/terms" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
-                            Syarat & Ketentuan
-                        </Link>
-                    </div>
                 </div>
             </div>
         </footer>

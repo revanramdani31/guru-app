@@ -90,7 +90,7 @@ const Header = () => {
                                         {[
                                             { label: 'Pengaduan', href: '/pengaduan' },
                                             { label: 'Tentang', href: '/tentang' },
-                                            { label: 'Hubungi Kami', href: 'https://wa.me/6281234567890' },
+                                            { label: 'Hubungi Kami', href: 'https://wa.me/6285163215119?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat' },
                                         ].map((item, idx) => (
                                             <Link
                                                 key={idx}
@@ -144,7 +144,7 @@ const Header = () => {
                             {[
                                 { label: 'Pengaduan', href: '/pengaduan' },
                                 { label: 'Tentang', href: '/tentang' },
-                                { label: 'Hubungi Kami', href: 'https://wa.me/6281234567890' },
+                                { label: 'Hubungi Kami', href: 'https://wa.me/6285163215119?text=Halo,%20saya%20ingin%20bertanya%20tentang%20les%20privat' },
                             ].map((item, idx) => (
                                 <Link
                                     key={idx}

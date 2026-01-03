@@ -7,7 +7,8 @@ import tutorsData from '@/data/tutors.json';
 import TutorCard, { Tutor } from '@/components/cards/TutorCard';
 
 const TutorsPage = () => {
-    const tutors = tutorsData as Tutor[];
+    // Filter hanya tutor yang active
+    const tutors = (tutorsData as Tutor[]).filter(tutor => tutor.active !== false);
 
     return (
         <div className="min-h-screen bg-slate-50">

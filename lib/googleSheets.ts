@@ -1,5 +1,5 @@
 // Google Sheets API integration
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTqa3_8qGheX7a7ySGWDf1jikGvSrM9xmcjG06YwH8kflPE5n46IbjColD8ppiK7k/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyffQvO-st3m1qV1_EXWLGzZzlAZTyYN7P14fFlZG31_JHVEwKIbsXtZiav1LHPPJBx/exec';
 
 interface PendaftaranData {
     formType: 'pendaftaran';

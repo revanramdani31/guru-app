@@ -3,6 +3,7 @@
         "id": 1,
         "slug": "rivaldi-permana",
         "nama": "Rivaldi Permana",
+        "active": false,
         "mapel": [
             "Matematika",
             "IPA",
@@ -30,6 +31,7 @@
         "id": 2,
         "slug": "irham-rasya",
         "nama": "Irham Rasya Gustiawan",
+        "active": true,
         "mapel": [
             "Renang",
             "Olahraga"
@@ -55,6 +57,7 @@
         "id": 3,
         "slug": "muhamad-ikhsan",
         "nama": "Muhamad Ikhsan",
+        "active": false,
         "mapel": [
             "Pendidikan Bahasa Indonesia"
         ],
@@ -79,6 +82,7 @@
         "id": 4,
         "slug": "dikdik-japar",
         "nama": "Dikdik Japar Sidik, M.Pd., Gr.",
+        "active": true,
         "mapel": [
             "Akuntansi",
             "Pendampingan Publikasi",
@@ -109,6 +113,7 @@
         "id": 5,
         "slug": "mohamad-yusril-huda",
         "nama": "Mohamad Yusril Huda, M.Pd",
+        "active": true,
         "mapel": [
             "Matematika"
         ],
@@ -131,6 +136,7 @@
         "id": 6,
         "slug": "ihkam-ismayadi",
         "nama": "Ihkam Ismayadi, S.Pd.",
+        "active": true,
         "mapel": [
             "Matematika"
         ],
@@ -153,6 +159,7 @@
         "id": 7,
         "slug": "yola-yolanda",
         "nama": "Yola Yolanda, M.Pd",
+        "active": true,
         "mapel": [
             "Ekonomi"
         ],
@@ -175,6 +182,7 @@
         "id": 8,
         "slug": "ana-muslimah",
         "nama": "Ana Muslimah",
+        "active": true,
         "mapel": [
             "Ekonomi"
         ],
@@ -191,5 +199,57 @@
         ],
         "whatsapp": "6285723446047",
         "email": "anaanamuslimah@gmail.com"
+    },
+    {
+        "id": 9,
+        "slug": "dinda-kharisma-yandi",
+        "nama": "Dinda Kharisma Yandi",
+        "active": true,
+        "mapel": [
+            "Kimia",
+            "Biologi",
+            "Fisika",
+            "Akuntansi",
+            "Ekonomi"
+        ],
+        "lokasi": "Cimenyan, Kabupaten Bandung",
+        "tipe": "keduanya",
+        "tingkat": [
+            "SMA"
+        ],
+        "foto": "/images/tutor-9.jpg",
+        "deskripsi": "Lulusan S1 Akuntansi Institut Teknologi Harapan Bangsa. Berpengalaman mengajar Kimia, Biologi, Fisika, Akuntansi, dan Ekonomi untuk jenjang SMA. Siap membimbing siswa dengan metode yang mudah dipahami, baik secara online maupun tatap muka di wilayah Kabupaten Bandung.",
+        "pendidikan": "S1 Akuntansi Institut Teknologi Harapan Bangsa",
+        "kategori": [
+            "kimia",
+            "biologi",
+            "fisika",
+            "ekonomi",
+            "akuntansi"
+        ],
+        "whatsapp": "6282231430071",
+        "email": "dindakharismay@gmail.com"
+    },
+    {
+        "id": 10,
+        "slug": "muhamad-setyaji",
+        "nama": "Muhamad Setyaji, M.Pd.",
+        "active": true,
+        "mapel": [
+            "Matematika"
+        ],
+        "lokasi": "Dawuan, Kabupaten Majalengka",
+        "tipe": "online",
+        "tingkat": [
+            "SMA"
+        ],
+        "foto": "/images/tutor-10.jpg",
+        "deskripsi": "Lulusan S2 Pendidikan Matematika Universitas Pasundan. Berpengalaman mengajar Matematika untuk jenjang SMA. Siap membimbing siswa dengan metode yang mudah dipahami secara online.",
+        "pendidikan": "S2 Pendidikan Matematika Universitas Pasundan",
+        "kategori": [
+            "matematika"
+        ],
+        "whatsapp": "6283806970127",
+        "email": "muhamadsetyaji4@gmail.com"
     }
 ]

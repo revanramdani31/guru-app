@@ -8,6 +8,7 @@ export interface Tutor {
     id: number;
     slug: string;
     nama: string;
+    active?: boolean;
     mapel: string[];
     lokasi: string;
     tipe: string;

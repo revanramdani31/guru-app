@@ -51,7 +51,7 @@ export const programs = [
             'Literasi Bahasa Indonesia & Inggris',
             'Penalaran Matematika'
         ],
-        priceStart: '150.000',
+        priceStart: '130.000',
         targetAudience: 'Siswa SMA kelas 12 dan Gap Year yang ingin lolos SBMPTN / SNBT.'
     },
     {
@@ -77,7 +77,7 @@ export const programs = [
             'Full Simulation Tests',
             'Personal Feedback Session'
         ],
-        priceStart: '200.000',
+        priceStart: '150.000',
         targetAudience: 'Mahasiswa, Umum, dan Profesional yang mengejar skor target TOEFL/IELTS.'
     },
     {
@@ -127,7 +127,7 @@ export const programs = [
             'Reference Management',
             'Journal Selection Strategy'
         ],
-        priceStart: '500.000',
+        priceStart: 'Kondisional',
         targetAudience: 'Mahasiswa S2/S3 dan Dosen yang membutuhkan publikasi ilmiah.'
     },
     {
@@ -153,7 +153,7 @@ export const programs = [
             'Penulisan Hasil & Pembahasan',
             'Revisi & Finalisasi'
         ],
-        priceStart: '300.000',
+        priceStart: 'Kondisional',
         targetAudience: 'Mahasiswa tingkat akhir (S1/S2/S3) yang sedang menyusun Tugas Akhir.'
     }
 ];

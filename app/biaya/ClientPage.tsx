@@ -11,6 +11,7 @@ const BiayaPage = () => {
     const [selectedProgram, setSelectedProgram] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedMapel, setSelectedMapel] = useState('');
+    const [customMapel, setCustomMapel] = useState('');
     const [metodePembelajaran, setMetodePembelajaran] = useState('Tatap Muka');
     const [jumlahPertemuan, setJumlahPertemuan] = useState('4');
     const [customPertemuan, setCustomPertemuan] = useState('');
@@ -191,6 +192,15 @@ const BiayaPage = () => {
                                                 </select>
                                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
                                             </div>
+                                            {selectedMapel === 'Lainnya' && (
+                                                <input
+                                                    type="text"
+                                                    placeholder="Ketik mata pelajaran yang diinginkan..."
+                                                    value={customMapel}
+                                                    onChange={(e) => setCustomMapel(e.target.value)}
+                                                    className="mt-3 w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                                />
+                                            )}
                                         </motion.div>
                                     )}
                                 </motion.div>
@@ -283,7 +293,7 @@ const BiayaPage = () => {
                                 <h3 className="text-lg font-semibold mb-4">Estimasi Biaya</h3>
 
                                 {selectedProgram && selectedOption ? (
-                                    isKondisional(selectedProgram, selectedMapel) ? (
+                                    isKondisional(selectedProgram, selectedOption, selectedMapel) ? (
                                         <div className="text-center py-4">
                                             <p className="text-2xl font-bold mb-2">Harga Kondisional</p>
                                             <p className="text-sm opacity-90 mb-4">
@@ -342,7 +352,7 @@ const BiayaPage = () => {
                                             </button>
                                         </Link>
                                         <a
-                                            href={`https://wa.me/6283823245965?text=${encodeURIComponent(`Halo, saya tertarik dengan program ${getProgram(selectedProgram)?.name} - ${selectedOption}. Mohon info lebih lanjut.`)}`}
+                                            href={`https://wa.me/6285163215119?text=${encodeURIComponent(`Halo, saya tertarik dengan program ${getProgram(selectedProgram)?.name} - ${selectedOption}${selectedMapel ? ` (${selectedMapel === 'Lainnya' ? customMapel : selectedMapel})` : ''}. Mohon info lebih lanjut.`)}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="w-full border-2 border-white/30 text-white py-3 rounded-xl font-semibold hover:bg-white/10 transition-all flex items-center justify-center gap-2"
@@ -363,7 +373,6 @@ const BiayaPage = () => {
                                         <ul className="space-y-1 text-amber-700">
                                             <li>• Harga dapat menyesuaikan dengan kebutuhan</li>
                                             <li>• Durasi per sesi: 90 menit</li>
-                                            <li>• Konsultasi awal gratis</li>
                                         </ul>
                                     </div>
                                 </div>

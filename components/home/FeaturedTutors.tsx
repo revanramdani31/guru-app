@@ -6,7 +6,8 @@ import tutorsData from '@/data/tutors.json';
 import TutorCard, { Tutor } from '@/components/cards/TutorCard';
 
 const FeaturedTutors = () => {
-    const featuredTutors = (tutorsData as Tutor[]).slice(0, 4);
+    // Filter hanya tutor aktif, ambil 4 pertama
+    const featuredTutors = (tutorsData as Tutor[]).filter(tutor => tutor.active !== false).slice(0, 4);
 
     return (
         <section className="py-12 md:py-16 bg-slate-50">

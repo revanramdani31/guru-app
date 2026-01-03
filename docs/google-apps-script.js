@@ -17,9 +17,9 @@
 // =====================================================
 
 // Google Drive Folder ID untuk menyimpan file
-var DRIVE_FOLDER_ID = '1RT4RxEKh1ZUo6R3aKHdXdIPGD7Yb_jtr';
+var DRIVE_FOLDER_ID = '1oiCoz-hCo3CaZPqpnjZllhnLYzyTOeiB';
 // Google Spreadsheet ID (HARDCODED untuk menghindari error binding)
-var SPREADSHEET_ID = '1tHuaIwOwChYVhB7SrCkIOe_sUF-DtnhFsllyOfnQ2x0';
+var SPREADSHEET_ID = '1uYkTgZJWyYD4v8_nms8W7pdGAfdgzJrseoeir0DfEOY';
 
 // Handle GET requests (for testing in browser)
 function doGet(e) {
@@ -107,6 +107,56 @@ function handlePendaftaran(ss, data) {
         data.estimasiBiaya
     ]);
     Logger.log("Pendaftaran saved");
+
+    // Kirim notifikasi email ke Admin
+    sendAdminNotification(data);
+}
+
+// Konfigurasi Email
+var ADMIN_EMAIL = 'datanginguru@gmail.com';
+var SENDER_NAME = 'Datangin Guru';
+// Untuk mengirim dari info@datanginguru.com, setup alias di Gmail Settings > Accounts > Send mail as
+
+function sendAdminNotification(data) {
+    try {
+        var subject = '🎓 Pendaftaran Baru: ' + data.namaLengkap;
+        var body = 'Ada pendaftaran les privat baru!\n\n' +
+            '📋 DATA PENDAFTAR\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Nama: ' + data.namaLengkap + '\n' +
+            'Jenis Kelamin: ' + data.jenisKelamin + '\n' +
+            'WhatsApp: ' + data.whatsapp + '\n\n' +
+            '📚 PROGRAM\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Program: ' + data.program + '\n' +
+            'Detail: ' + data.programOption + '\n' +
+            'Mapel: ' + (data.mapel || '-') + '\n' +
+            'Mode: ' + data.modeBelajar + '\n' +
+            'Pertemuan: ' + data.jumlahPertemuan + 'x\n' +
+            'Jadwal: ' + data.jadwal + '\n\n' +
+            '📍 LOKASI\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            data.provinsi + ', ' + data.kota + '\n' +
+            data.kecamatan + ', ' + data.kelurahan + '\n' +
+            data.alamat + '\n\n' +
+            '💰 ESTIMASI: ' + data.estimasiBiaya + '\n\n' +
+            '📝 Catatan: ' + (data.catatan || '-') + '\n\n' +
+            '━━━━━━━━━━━━━━━━━━━━\n' +
+            'Segera hubungi calon siswa untuk konfirmasi!\n' +
+            'WhatsApp: https://wa.me/' + data.whatsapp.replace(/^0/, '62');
+
+        MailApp.sendEmail({
+            to: ADMIN_EMAIL,
+            subject: subject,
+            body: body,
+            name: SENDER_NAME
+            // Jika sudah setup alias, tambahkan: replyTo: 'info@datanginguru.com'
+        });
+
+        Logger.log("Admin notification email sent to " + ADMIN_EMAIL);
+    } catch (e) {
+        Logger.log("Error sending admin email: " + e.toString());
+    }
 }
 
 function handlePengaduan(ss, data) {
@@ -263,7 +313,38 @@ function saveFileToDrive(folder, base64Data, fileName, mimeType) {
     }
 }
 
-// Test function - run this to test the script and trigger Authorization
+// Test function untuk PENDAFTARAN SISWA
+function testPendaftaranSiswa() {
+    var testData = {
+        postData: {
+            contents: JSON.stringify({
+                formType: 'pendaftaran',
+                namaLengkap: 'Test Siswa Baru',
+                jenisKelamin: 'Laki-laki',
+                whatsapp: '08123456789',
+                program: 'Les Privat',
+                programOption: 'SMA',
+                mapel: 'Matematika',
+                modeBelajar: 'Tatap Muka',
+                jumlahPertemuan: '4',
+                jadwal: 'Senin, Rabu - Sore (15.00 - 18.00)',
+                provinsi: 'Jawa Barat',
+                kota: 'Bandung',
+                kecamatan: 'Coblong',
+                kelurahan: 'Dago',
+                alamat: 'Jl. Test Siswa No. 123',
+                catatan: 'Test pendaftaran siswa',
+                estimasiBiaya: 'Rp 400.000'
+            })
+        }
+    };
+
+    Logger.log("Testing Pendaftaran Siswa...");
+    doPost(testData);
+    Logger.log("Test Pendaftaran Siswa selesai! Cek sheet 'Pendaftaran Siswa'");
+}
+
+// Test function untuk LAMARAN GURU - run this to test the script and trigger Authorization
 function testDoPost() {
     var dummyBase64 = "U2ltcGxlIFBERiBGaWxl"; // "Simple PDF File" in base64
 

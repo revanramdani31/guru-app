@@ -16,7 +16,9 @@ interface FormData {
     whatsapp: string;
     program: string;
     programOption: string;
+    customOption: string;
     mapel: string;
+    customMapel: string;
     modeBelajar: string;
     jumlahPertemuan: string;
     jadwalHari: string[];
@@ -51,7 +53,9 @@ const DaftarForm = () => {
         whatsapp: '',
         program: '',
         programOption: '',
+        customOption: '',
         mapel: '',
+        customMapel: '',
         modeBelajar: 'Tatap Muka',
         jumlahPertemuan: '4',
         jadwalHari: [],
@@ -343,7 +347,7 @@ const DaftarForm = () => {
         return doc;
     };
 
-    const ADMIN_WHATSAPP = "6283823245965";
+    const ADMIN_WHATSAPP = "6285163215119";
 
     const generateWhatsAppMessage = (data: FormData): string => {
         return `Halo Admin, saya *${data.namaLengkap}* ingin mengkonfirmasi pendaftaran les privat yang sudah saya kirim melalui website. Mohon informasi lebih lanjut. Terima kasih.`;
@@ -360,8 +364,12 @@ const DaftarForm = () => {
                 jenisKelamin: formData.jenisKelamin,
                 whatsapp: formData.whatsapp,
                 program: getProgram(formData.program)?.name || formData.program,
-                programOption: formData.programOption,
-                mapel: formData.mapel,
+                programOption: formData.programOption === 'Lainnya'
+                    ? `Lainnya: ${formData.customOption}`
+                    : formData.programOption,
+                mapel: formData.mapel === 'Lainnya'
+                    ? `Lainnya: ${formData.customMapel}`
+                    : formData.mapel,
                 modeBelajar: formData.modeBelajar,
                 jumlahPertemuan: formData.jumlahPertemuan,
                 jadwal: `${formData.jadwalHari.join(', ')} - ${waktuOptions.find(w => w.value === formData.jadwalWaktu)?.label || ''}`,
@@ -371,7 +379,9 @@ const DaftarForm = () => {
                 kelurahan: formData.kelurahanName,
                 alamat: formData.alamat,
                 catatan: formData.catatan,
-                estimasiBiaya: `Rp ${formatPrice(getTotalPrice())}`,
+                estimasiBiaya: formData.programOption === 'Lainnya' || formData.mapel === 'Lainnya' || formData.mapel === 'Renang'
+                    ? 'Kondisional'
+                    : `Rp ${formatPrice(getTotalPrice())}`,
             });
 
             setIsSubmitted(true);
@@ -395,7 +405,9 @@ const DaftarForm = () => {
             whatsapp: '',
             program: '',
             programOption: '',
+            customOption: '',
             mapel: '',
+            customMapel: '',
             modeBelajar: 'Tatap Muka',
             jumlahPertemuan: '4',
             jadwalHari: [],
@@ -594,7 +606,7 @@ const DaftarForm = () => {
                                                     name="programOption"
                                                     value={formData.programOption}
                                                     onChange={(e) => {
-                                                        setFormData(prev => ({ ...prev, programOption: e.target.value, mapel: '' }));
+                                                        setFormData(prev => ({ ...prev, programOption: e.target.value, mapel: '', customOption: '' }));
                                                     }}
                                                     required
                                                     className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -606,6 +618,18 @@ const DaftarForm = () => {
                                                 </select>
                                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
                                             </div>
+
+                                            {/* Input custom jika pilih Lainnya */}
+                                            {formData.programOption === 'Lainnya' && (
+                                                <input
+                                                    type="text"
+                                                    name="customOption"
+                                                    value={formData.customOption}
+                                                    onChange={handleChange}
+                                                    placeholder="Ketik kebutuhan Anda..."
+                                                    className="mt-3 w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                                />
+                                            )}
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -649,6 +673,17 @@ const DaftarForm = () => {
                                                     </>
                                                 )}
                                             </div>
+                                            {/* Input custom jika pilih mapel Lainnya */}
+                                            {formData.mapel === 'Lainnya' && (
+                                                <input
+                                                    type="text"
+                                                    name="customMapel"
+                                                    value={formData.customMapel}
+                                                    onChange={handleChange}
+                                                    placeholder="Ketik mata pelajaran yang diinginkan..."
+                                                    className="mt-3 w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                                />
+                                            )}
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -816,10 +851,19 @@ const DaftarForm = () => {
                                 <h3 className="text-lg font-semibold mb-4">Estimasi Biaya</h3>
 
                                 {formData.program && formData.programOption ? (
-                                    isKondisional(formData.program) ? (
+                                    isKondisional(formData.program, formData.programOption, formData.mapel) ? (
                                         <div className="text-center py-4">
                                             <p className="text-2xl font-bold mb-2">Harga Kondisional</p>
-                                            <p className="text-sm opacity-90">Hubungi kami untuk konsultasi</p>
+                                            <p className="text-sm opacity-90 mb-4">Hubungi kami untuk konsultasi</p>
+                                            <a
+                                                href={`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(`Halo Admin, saya ingin konsultasi untuk program ${getProgram(formData.program)?.name || formData.program}${formData.customOption ? ` dengan kebutuhan: ${formData.customOption}` : ''}`)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 bg-white text-emerald-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-50 transition-colors"
+                                            >
+                                                <MessageCircle className="w-4 h-4" />
+                                                Hubungi Admin
+                                            </a>
                                         </div>
                                     ) : (
                                         <>
@@ -857,7 +901,7 @@ const DaftarForm = () => {
 
                             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                                 <p className="text-sm text-amber-800">
-                                    <strong>Catatan:</strong> Harga dapat menyesuaikan dengan kebutuhan. Konsultasi awal gratis.
+                                    <strong>Catatan:</strong> Harga dapat menyesuaikan dengan kebutuhan.
                                 </p>
                             </div>
                         </div>

@@ -15,47 +15,49 @@ export const programs = [
 export const programOptions: { [key: string]: { label: string; options: string[] } } = {
     'les-privat': {
         label: 'Jenis Peserta',
-        options: ['TK / PAUD', 'SD', 'SMP', 'SMA', 'Kuliah']
+        options: ['TK / PAUD', 'SD', 'SMP', 'SMA', 'Kuliah', 'Umum']
     },
     'utbk': {
         label: 'Fokus Persiapan',
-        options: ['TPS (Tes Potensi Skolastik)', 'TKA Saintek', 'TKA Soshum', 'Paket Lengkap']
+        options: ['TPS (Tes Potensi Skolastik)', 'TKA Saintek', 'TKA Soshum', 'Paket Lengkap', 'Lainnya']
     },
     'toefl-ielts': {
         label: 'Jenis Tes',
-        options: ['TOEFL ITP', 'TOEFL iBT', 'IELTS Academic', 'IELTS General']
+        options: ['TOEFL ITP', 'TOEFL iBT', 'IELTS Academic', 'IELTS General', 'Lainnya']
     },
     'cpns': {
         label: 'Paket',
-        options: ['Persiapan CPNS']
+        options: ['Persiapan CPNS', 'Lainnya']
     },
     'skripsi': {
         label: 'Jenjang',
-        options: ['Skripsi (S1)', 'Tesis (S2)', 'Disertasi (S3)']
+        options: ['Skripsi (S1)', 'Tesis (S2)', 'Disertasi (S3)', 'Lainnya']
     },
     'jurnal': {
         label: 'Jenis Publikasi',
-        options: ['Jurnal Nasional Terakreditasi', 'Jurnal Internasional']
+        options: ['Jurnal Nasional Terakreditasi', 'Jurnal Internasional', 'Lainnya']
     }
 };
 
 // Mata pelajaran dan layanan lain untuk Les Privat berdasarkan Jenis Peserta
 export const mataPelajaranByPeserta: { [key: string]: string[] } = {
-    'TK / PAUD': ['Calistung', 'Mengaji', 'Musik', 'Renang'],
-    'SD': ['Calistung', 'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Mengaji', 'Musik', 'Renang', 'Semua Mapel'],
-    'SMP': ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Mengaji', 'Musik', 'Renang', 'Semua Mapel'],
-    'SMA': ['Matematika', 'Fisika', 'Kimia', 'Biologi', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'Mengaji', 'Musik', 'Renang'],
-    'Kuliah': ['Kalkulus', 'Fisika Dasar', 'Kimia Dasar', 'Statistika', 'Pemrograman', 'Akuntansi', 'Manajemen', 'Renang', 'Lainnya']
+    'TK / PAUD': ['Calistung', 'Mengaji', 'Musik', 'Renang', 'Lainnya'],
+    'SD': ['Calistung', 'Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Mengaji', 'Musik', 'Renang', 'Lainnya'],
+    'SMP': ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'IPA', 'IPS', 'Mengaji', 'Musik', 'Renang', 'Lainnya'],
+    'SMA': ['Matematika', 'Fisika', 'Kimia', 'Biologi', 'Bahasa Indonesia', 'Bahasa Inggris', 'Ekonomi', 'Akuntansi', 'Geografi', 'Sejarah', 'Sosiologi', 'Mengaji', 'Musik', 'Renang', 'Lainnya'],
+    'Kuliah': ['Kalkulus', 'Fisika Dasar', 'Kimia Dasar', 'Statistika', 'Pemrograman', 'Akuntansi', 'Manajemen', 'Renang', 'Lainnya'],
+    'Umum': ['Bahasa Inggris', 'Bahasa Asing', 'Musik', 'Renang', 'Komputer', 'Mengaji', 'Lainnya']
 };
 
 // Pricing structure (0 = kondisional / hubungi WA)
 export const pricing: { [program: string]: { [option: string]: number } } = {
     'les-privat': {
-        'TK / PAUD': 85000, // Assuming same as SD based on user request usually implied, or keep old? User said SD 85k. I'll bump this to 85k to be safe or keep 65? Let's match SD.
+        'TK / PAUD': 75000,
         'SD': 85000,
         'SMP': 95000,
         'SMA': 100000,
-        'Kuliah': 150000
+        'Kuliah': 150000,
+        'Umum': 150000
     },
     'utbk': {
         'TPS (Tes Potensi Skolastik)': 130000,
@@ -66,8 +68,8 @@ export const pricing: { [program: string]: { [option: string]: number } } = {
     'toefl-ielts': {
         'TOEFL ITP': 150000,
         'TOEFL iBT': 150000,
-        'IELTS Academic': 160000,
-        'IELTS General': 160000
+        'IELTS Academic': 150000,
+        'IELTS General': 150000
     },
     'cpns': {
         'Persiapan CPNS': 150000
@@ -87,9 +89,11 @@ export const pricing: { [program: string]: { [option: string]: number } } = {
 export const kondisionalPrograms = ['skripsi', 'jurnal', 'renang'];
 
 // Check if program has conditional pricing
-export function isKondisional(programId: string, mapel?: string): boolean {
+export function isKondisional(programId: string, option?: string, mapel?: string): boolean {
     if (kondisionalPrograms.includes(programId)) return true;
+    if (option === 'Lainnya') return true;
     if (programId === 'les-privat' && mapel === 'Renang') return true;
+    if (programId === 'les-privat' && mapel === 'Lainnya') return true;
     return false;
 }
 
@@ -128,4 +132,4 @@ export function getProgram(id: string) {
 export const basePrices = pricing;
 export const layananByPeserta = mataPelajaranByPeserta;
 export const kondisionalServices = ['Skripsi (S1)', 'Tesis (S2)', 'Disertasi (S3)', 'Jurnal Nasional Terakreditasi', 'Jurnal Internasional'];
-export const pesertaOptions = ['TK / PAUD', 'SD', 'SMP', 'SMA', 'Kuliah'];
+export const pesertaOptions = ['TK / PAUD', 'SD', 'SMP', 'SMA', 'Kuliah', 'Umum'];
