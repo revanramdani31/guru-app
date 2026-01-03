@@ -477,3 +477,28 @@ function authorizeScript() {
 
     Logger.log("Izin TULIS berhasil diberikan! Sekarang coba testDoPost lagi.");
 }
+
+// ------------------------------------------------------------------
+// TEST KIRIM EMAIL SAJA (tanpa save data)
+// Jalankan ini untuk test apakah email sampai ke info@datanginguru.com
+// ------------------------------------------------------------------
+function testEmailOnly() {
+    Logger.log("Testing email to: " + ADMIN_EMAIL);
+
+    try {
+        MailApp.sendEmail({
+            to: ADMIN_EMAIL,
+            subject: '✅ Test Email dari Datangin Guru',
+            body: 'Ini adalah email test untuk memastikan notifikasi berjalan dengan baik.\n\n' +
+                'Jika Anda menerima email ini, berarti konfigurasi email sudah benar!\n\n' +
+                'Waktu: ' + new Date().toLocaleString('id-ID') + '\n\n' +
+                '--- Datangin Guru System ---',
+            name: SENDER_NAME
+        });
+
+        Logger.log("Email test berhasil dikirim ke " + ADMIN_EMAIL);
+        Logger.log("Cek inbox info@datanginguru.com!");
+    } catch (e) {
+        Logger.log("ERROR: " + e.toString());
+    }
+}
