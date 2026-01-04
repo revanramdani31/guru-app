@@ -113,9 +113,10 @@ function handlePendaftaran(ss, data) {
 }
 
 // Konfigurasi Email
-var ADMIN_EMAIL = 'info@datanginguru.com';
+var ADMIN_EMAIL = 'datanginguru@gmail.com';
 var SENDER_NAME = 'Datangin Guru';
-// Email dikirim dari datanginguru@gmail.com (pemilik script) ke info@datanginguru.com
+var SENDER_EMAIL = 'info@datanginguru.com';
+// Email dikirim dari info@datanginguru.com ke datanginguru@gmail.com
 
 function sendAdminNotification(data) {
     try {
@@ -149,7 +150,8 @@ function sendAdminNotification(data) {
             to: ADMIN_EMAIL,
             subject: subject,
             body: body,
-            name: SENDER_NAME
+            name: SENDER_NAME,
+            from: SENDER_EMAIL
         });
 
         Logger.log("Admin notification email sent to " + ADMIN_EMAIL);
@@ -203,7 +205,8 @@ function sendPengaduanNotification(data) {
             to: ADMIN_EMAIL,
             subject: subject,
             body: body,
-            name: SENDER_NAME
+            name: SENDER_NAME,
+            from: SENDER_EMAIL
         });
 
         Logger.log("Pengaduan notification email sent");
@@ -357,7 +360,8 @@ function sendKarirNotification(data, fileUrls) {
             to: ADMIN_EMAIL,
             subject: subject,
             body: body,
-            name: SENDER_NAME
+            name: SENDER_NAME,
+            from: SENDER_EMAIL
         });
 
         Logger.log("Karir notification email sent");
@@ -493,11 +497,12 @@ function testEmailOnly() {
                 'Jika Anda menerima email ini, berarti konfigurasi email sudah benar!\n\n' +
                 'Waktu: ' + new Date().toLocaleString('id-ID') + '\n\n' +
                 '--- Datangin Guru System ---',
-            name: SENDER_NAME
+            name: SENDER_NAME,
+            from: SENDER_EMAIL
         });
 
         Logger.log("Email test berhasil dikirim ke " + ADMIN_EMAIL);
-        Logger.log("Cek inbox info@datanginguru.com!");
+        Logger.log("Cek inbox datanginguru@gmail.com!");
     } catch (e) {
         Logger.log("ERROR: " + e.toString());
     }
