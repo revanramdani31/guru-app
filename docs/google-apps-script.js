@@ -113,10 +113,10 @@ function handlePendaftaran(ss, data) {
 }
 
 // Konfigurasi Email
-var ADMIN_EMAIL = 'datanginguru@gmail.com';
+var ADMIN_EMAIL = 'datanginguru@gmail.com, info@datanginguru.com';
 var SENDER_NAME = 'Datangin Guru';
 var SENDER_EMAIL = 'info@datanginguru.com';
-// Email dikirim dari info@datanginguru.com ke datanginguru@gmail.com
+// Email dikirim ke KEDUA alamat: datanginguru@gmail.com DAN info@datanginguru.com
 
 function sendAdminNotification(data) {
     try {

@@ -1,4 +1,4 @@
-import { FileText, MessageCircle, Users, CheckCircle } from 'lucide-react';
+import { FileText, MessageCircle, Users, CheckCircle, Send } from 'lucide-react';
 
 const Steps = () => {
     const steps = [
@@ -13,14 +13,14 @@ const Steps = () => {
             description: 'Tim kami akan menghubungi via WhatsApp untuk konfirmasi dan diskusi jadwal.'
         },
         {
+            icon: <CheckCircle className="w-8 h-8" />,
+            title: 'Bayar Aman',
+            description: 'Lakukan pembayaran dan konfirmasi ke admin'
+        },
+        {
             icon: <Users className="w-8 h-8" />,
             title: 'Mulai Belajar',
             description: 'Guru terpilih datang ke rumah Anda atau mulai sesi online sesuai jadwal.'
-        },
-        {
-            icon: <CheckCircle className="w-8 h-8" />,
-            title: 'Bayar Aman',
-            description: 'Pembayaran dilakukan setelah sesi belajar selesai.'
         }
     ];
 
@@ -32,7 +32,7 @@ const Steps = () => {
                     <p className="text-slate-600">Hanya butuh 4 langkah sederhana</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     {steps.map((step, index) => (
                         <div key={index} className="relative text-center">
                             <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-50 rounded-full text-emerald-600 mb-4 ring-8 ring-emerald-50/50">
