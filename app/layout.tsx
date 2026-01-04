@@ -24,6 +24,11 @@ export const metadata: Metadata = {
   description: "Layanan jasa guru les privat datang ke rumah dan online profesional di Indonesia. Bimbel privat TK, SD, SMP, SMA, SNBT, Mahasiswa & Umum untuk semua mata pelajaran dengan tutor berpengalaman.",
   keywords: "guru les privat, les privat datang ke rumah, guru privat, bimbel privat, les privat matematika, les privat terdekat, les privat online, datangin guru",
   authors: [{ name: "Datangin Guru" }],
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
   openGraph: {
     title: "Datangin Guru - Jasa Les Privat Datang ke Rumah",
     description: "Temukan guru les privat profesional untuk semua mata pelajaran dan jenjang.",
