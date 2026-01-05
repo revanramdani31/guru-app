@@ -350,7 +350,39 @@ const DaftarForm = () => {
     const ADMIN_WHATSAPP = "6285163215119";
 
     const generateWhatsAppMessage = (data: FormData): string => {
-        return `Halo Admin, saya *${data.namaLengkap}* ingin mengkonfirmasi pendaftaran les privat yang sudah saya kirim melalui website. Mohon informasi lebih lanjut. Terima kasih.`;
+        const jadwal = `${data.jadwalHari.join(', ')} - ${waktuOptions.find(w => w.value === data.jadwalWaktu)?.label || ''}`;
+        const programName = getProgram(data.program)?.name || data.program;
+        const programDetail = data.programOption === 'Lainnya' ? `Lainnya: ${data.customOption}` : data.programOption;
+        const mapelInfo = data.mapel === 'Lainnya' ? `Lainnya: ${data.customMapel}` : (data.mapel || '-');
+        const biaya = (data.programOption === 'Lainnya' || data.mapel === 'Lainnya' || data.mapel === 'Renang')
+            ? 'Kondisional'
+            : `Rp ${formatPrice(getTotalPrice())}`;
+
+        return `Halo Admin, saya ingin mengkonfirmasi pendaftaran les privat berikut:
+
+📋 *DATA PENDAFTAR*
+Nama: ${data.namaLengkap}
+Jenis Kelamin: ${data.jenisKelamin}
+WhatsApp: ${data.whatsapp}
+
+📚 *PROGRAM*
+Program: ${programName}
+Detail: ${programDetail}
+Mapel: ${mapelInfo}
+Mode: ${data.modeBelajar}
+Pertemuan: ${data.jumlahPertemuan}x
+Jadwal: ${jadwal}
+
+📍 *LOKASI*
+${data.provinsiName}, ${data.kotaName}
+${data.kecamatanName}, ${data.kelurahanName}
+${data.alamat}
+
+💰 *ESTIMASI BIAYA*: ${biaya}
+
+📝 Catatan: ${data.catatan || '-'}
+
+Mohon informasi lebih lanjut. Terima kasih.`;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -532,11 +564,11 @@ const DaftarForm = () => {
                         <div>
                             <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                                 <User className="w-5 h-5 text-emerald-600" />
-                                Data Pribadi
+                                Data Pribadi Calon Siswa
                             </h2>
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-semibold text-slate-700">Nama Lengkap <span className="text-red-500">*</span></label>
+                                    <label className="block text-sm font-semibold text-slate-700">Nama Lengkap calon siswa<span className="text-red-500">*</span></label>
                                     <input type="text" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" placeholder="Masukkan nama lengkap" />
                                 </div>
                                 <div className="space-y-2">

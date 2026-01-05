@@ -4,6 +4,7 @@
         "slug": "rivaldi-permana",
         "nama": "Rivaldi Permana",
         "active": false,
+        "featured": false,
         "mapel": [
             "Matematika",
             "IPA",
@@ -32,6 +33,7 @@
         "slug": "irham-rasya",
         "nama": "Irham Rasya Gustiawan",
         "active": true,
+        "featured": false,
         "mapel": [
             "Renang",
             "Olahraga"
@@ -57,7 +59,8 @@
         "id": 3,
         "slug": "muhamad-ikhsan",
         "nama": "Muhamad Ikhsan",
-        "active": false,
+        "active": true,
+        "featured": false,
         "mapel": [
             "Pendidikan Bahasa Indonesia"
         ],
@@ -83,6 +86,7 @@
         "slug": "dikdik-japar",
         "nama": "Dikdik Japar Sidik, M.Pd., Gr.",
         "active": true,
+        "featured": true,
         "mapel": [
             "Akuntansi",
             "Pendampingan Publikasi",
@@ -114,6 +118,7 @@
         "slug": "mohamad-yusril-huda",
         "nama": "Mohamad Yusril Huda, M.Pd",
         "active": true,
+        "featured": false,
         "mapel": [
             "Matematika"
         ],
@@ -137,6 +142,7 @@
         "slug": "ihkam-ismayadi",
         "nama": "Ihkam Ismayadi, S.Pd.",
         "active": true,
+        "featured": false,
         "mapel": [
             "Matematika"
         ],
@@ -160,6 +166,7 @@
         "slug": "yola-yolanda",
         "nama": "Yola Yolanda, M.Pd",
         "active": true,
+        "featured": false,
         "mapel": [
             "Ekonomi"
         ],
@@ -183,6 +190,7 @@
         "slug": "ana-muslimah",
         "nama": "Ana Muslimah",
         "active": true,
+        "featured": false,
         "mapel": [
             "Ekonomi"
         ],
@@ -205,6 +213,7 @@
         "slug": "dinda-kharisma-yandi",
         "nama": "Dinda Kharisma Yandi",
         "active": true,
+        "featured": false,
         "mapel": [
             "Kimia",
             "Biologi",
@@ -235,6 +244,7 @@
         "slug": "muhamad-setyaji",
         "nama": "Muhamad Setyaji, M.Pd.",
         "active": true,
+        "featured": true,
         "mapel": [
             "Matematika"
         ],
@@ -251,5 +261,95 @@
         ],
         "whatsapp": "6283806970127",
         "email": "muhamadsetyaji4@gmail.com"
+    },
+    {
+        "id": 11,
+        "slug": "tiktik-siti-jenab",
+        "nama": "Tiktik Siti Jenab, M.Pd",
+        "active": true,
+        "featured": true,
+        "mapel": [
+            "Bahasa Inggris",
+            "Calistung",
+            "Ekonomi",
+            "Sosiologi",
+            "Sejarah"
+        ],
+        "lokasi": "Cicendo, Kota Bandung",
+        "tipe": "keduanya",
+        "tingkat": [
+            "TK/PAUD",
+            "SD",
+            "Umum"
+        ],
+        "foto": "/images/tutor-11.jpg",
+        "deskripsi": "Lulusan S2 Pendidikan Ekonomi dari Universitas Pendidikan Indonesia. Berpengalaman mengajar Bahasa Inggris, Calistung, Ekonomi, Sosiologi, dan Sejarah untuk tingkat TK/PAUD, SD, hingga Umum. Siap mengajar secara online maupun tatap muka di wilayah Kota Bandung.",
+        "pendidikan": "S2 Pendidikan Ekonomi UPI",
+        "kategori": [
+            "bahasa",
+            "calistung",
+            "ekonomi",
+            "sosiologi",
+            "sejarah"
+        ],
+        "whatsapp": "6282117526521",
+        "email": "tiktiksitijenab97@gmail.com"
+    },
+    {
+        "id": 12,
+        "slug": "jajang-pirmansyah",
+        "nama": "Jajang Pirmansyah, S.Pd.,Gr.",
+        "active": true,
+        "featured": false,
+        "mapel": [
+            "IPA Terpadu"
+        ],
+        "lokasi": "Gedebage, Kota Bandung",
+        "tipe": "online",
+        "tingkat": [
+            "SMP"
+        ],
+        "foto": "/images/tutor-12.jpg",
+        "deskripsi": "Lulusan S1 Pendidikan Biologi dari Universitas Pasundan. Berpengalaman mengajar IPA Terpadu untuk tingkat SMP. Siap membimbing siswa dengan metode yang mudah dipahami secara online.",
+        "pendidikan": "S1 Pendidikan Biologi Universitas Pasundan",
+        "kategori": [
+            "ipa"
+        ],
+        "whatsapp": "6281223439125",
+        "email": "jpirmansyah@gmail.com"
+    },
+    {
+        "id": 13,
+        "slug": "rizky-prayoga-putra",
+        "nama": "Rizky Prayoga Putra",
+        "active": true,
+        "featured": true,
+        "mapel": [
+            "Ekonomi",
+            "Geografi",
+            "Sosiologi",
+            "IPS Terpadu",
+            "Mengaji"
+        ],
+        "lokasi": "Cikarang Utara, Kabupaten Bekasi",
+        "tipe": "keduanya",
+        "tingkat": [
+            "SMP",
+            "SMA",
+            "Kuliah",
+            "Umum"
+        ],
+        "foto": "/images/tutor-13.jpg",
+        "deskripsi": "Lulusan S1 Pendidikan Ekonomi dari Universitas Pasundan. Berpengalaman mengajar Ekonomi, Geografi, Sosiologi, IPS Terpadu, dan Mengaji untuk tingkat SMP, SMA, Kuliah, hingga Umum. Siap mengajar secara online maupun tatap muka di wilayah Kabupaten Bekasi.",
+        "pendidikan": "S1 Pendidikan Ekonomi Universitas Pasundan",
+        "kategori": [
+            "ekonomi",
+            "geografi",
+            "sosiologi",
+            "ips",
+            "mengaji"
+        ],
+        "whatsapp": "6285861541907",
+        "email": "rizkyprayogap1997@gmail.com"
     }
 ]

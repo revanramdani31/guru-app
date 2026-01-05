@@ -39,7 +39,7 @@ const Footer = () => {
                                 Katalog Guru
                             </Link>
                             <Link href="/daftar" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
-                                Daftar Siswa
+                                Daftar Jadi Siswa
                             </Link>
                             <Link href="/karir" className="text-slate-400 hover:text-emerald-400 transition-colors text-sm">
                                 Daftar Jadi Guru

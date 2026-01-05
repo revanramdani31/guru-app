@@ -13,14 +13,14 @@ const Steps = () => {
             description: 'Tim kami akan menghubungi via WhatsApp untuk konfirmasi dan diskusi jadwal.'
         },
         {
-            icon: <CheckCircle className="w-8 h-8" />,
-            title: 'Bayar Aman',
-            description: 'Lakukan pembayaran dan konfirmasi ke admin'
-        },
-        {
             icon: <Users className="w-8 h-8" />,
             title: 'Mulai Belajar',
             description: 'Guru terpilih datang ke rumah Anda atau mulai sesi online sesuai jadwal.'
+        },
+        {
+            icon: <CheckCircle className="w-8 h-8" />,
+            title: 'Bayar Aman',
+            description: 'Pembayaran dilakukan setelah sesi belajar selesai. Praktis dan terpercaya!'
         }
     ];
 

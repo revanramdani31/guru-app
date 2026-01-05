@@ -417,7 +417,7 @@ const KarirPage = () => {
         return doc;
     };
 
-    const ADMIN_WHATSAPP = "6285163215119";
+    const ADMIN_WHATSAPP = "6285871416334";
 
     const generateWhatsAppMessage = (data: FormData): string => {
         const modeLabel = data.modeMengajar === 'online' ? 'Online' : data.modeMengajar === 'tatap_muka' ? 'Tatap Muka' : 'Online & Tatap Muka';
@@ -842,7 +842,7 @@ Dikirim dari datanginguru Privat`;
                         <div className="grid md:grid-cols-3 gap-6">
                             {/* Pas Foto */}
                             <div className="bg-slate-50 rounded-xl p-4 overflow-hidden">
-                                <label className="block text-sm font-medium text-slate-700 mb-3">Pas Foto *</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-3">Foto Terbaru *</label>
                                 <div className="flex items-start gap-3">
                                     <div className="flex-shrink-0 relative">
                                         {formData.pasFotoPreview ? (

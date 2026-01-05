@@ -18,7 +18,7 @@ const Header = () => {
         { path: '/tutors', label: 'Guru Kami', icon: Users },
         { path: '/program', label: 'Program Kami', icon: GraduationCap },
         { path: '/biaya', label: 'Simulasi Biaya', icon: Calculator },
-        { path: '/daftar', label: 'Daftar Siswa', icon: UserPlus },
+        { path: '/daftar', label: 'Daftar Jadi Siswa', icon: UserPlus },
         { path: '/karir', label: 'Daftar Jadi Guru', icon: Briefcase },
         { path: '/artikel', label: 'Artikel Kami', icon: Newspaper },
     ];
