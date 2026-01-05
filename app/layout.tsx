@@ -20,6 +20,10 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://datanginguru.com'),
+  alternates: {
+    canonical: '/',
+  },
   title: "Datangin Guru - Jasa Les Privat Datang ke Rumah & Online Terbaik",
   description: "Layanan jasa guru les privat datang ke rumah dan online profesional di Indonesia. Bimbel privat TK, SD, SMP, SMA, SNBT, Mahasiswa & Umum untuk semua mata pelajaran dengan tutor berpengalaman.",
   keywords: "guru les privat, les privat datang ke rumah, guru privat, bimbel privat, les privat matematika, les privat terdekat, les privat online, datangin guru",
@@ -34,6 +38,7 @@ export const metadata: Metadata = {
     description: "Temukan guru les privat profesional untuk semua mata pelajaran dan jenjang.",
     type: "website",
     locale: "id_ID",
+    url: 'https://datanginguru.com',
   },
 };
 

@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  trailingSlash: false,
   productionBrowserSourceMaps: false,
   experimental: {
     serverSourceMaps: false,
