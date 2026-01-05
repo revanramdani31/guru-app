@@ -91,7 +91,7 @@ const Footer = () => {
                             </a>
                             <div className="flex items-center gap-2 text-slate-400 text-sm">
                                 <MapPin className="w-4 h-4" />
-                                <span>Indonesia</span>
+                                <span>Jl farmakologi, No 1. Cigadung, Kota Bandung</span>
                             </div>
                         </div>
                     </div>
