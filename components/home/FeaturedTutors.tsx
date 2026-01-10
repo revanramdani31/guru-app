@@ -26,7 +26,7 @@ const FeaturedTutors = () => {
                 <div className="text-center">
                     <Link href="/tutors">
                         <button className="px-8 py-3 bg-white text-emerald-600 border border-emerald-200 rounded-xl font-semibold hover:bg-emerald-50 transition-all inline-flex items-center gap-2">
-                            Lihat Semua Guru Privat <ArrowRight className="w-4 h-4" />
+                            Lihat Lebih Banyak Guru <ArrowRight className="w-4 h-4" />
                         </button>
                     </Link>
                 </div>

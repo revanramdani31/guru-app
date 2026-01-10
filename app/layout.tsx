@@ -29,9 +29,13 @@ export const metadata: Metadata = {
   keywords: "guru les privat, les privat datang ke rumah, guru privat, bimbel privat, les privat matematika, les privat terdekat, les privat online, datangin guru",
   authors: [{ name: "Datangin Guru" }],
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
     shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
+    apple: '/icon-192.png',
   },
   openGraph: {
     title: "Datangin Guru - Jasa Les Privat Datang ke Rumah",

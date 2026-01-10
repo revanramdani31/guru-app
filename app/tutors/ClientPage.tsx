@@ -7,8 +7,10 @@ import tutorsData from '@/data/tutors.json';
 import TutorCard, { Tutor } from '@/components/cards/TutorCard';
 
 const TutorsPage = () => {
-    // Filter hanya tutor yang active
-    const tutors = (tutorsData as Tutor[]).filter(tutor => tutor.active !== false);
+    // Filter hanya tutor yang active dan sort by order
+    const tutors = (tutorsData as (Tutor & { order?: number })[])
+        .filter(tutor => tutor.active !== false)
+        .sort((a, b) => (a.order || 999) - (b.order || 999));
 
     return (
         <div className="min-h-screen bg-slate-50">

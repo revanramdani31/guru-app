@@ -3,8 +3,9 @@
         "id": 1,
         "slug": "rivaldi-permana",
         "nama": "Rivaldi Permana",
-        "active": false,
+        "active": true,
         "featured": false,
+        "order": 5,
         "mapel": [
             "Matematika",
             "IPA",
@@ -34,6 +35,7 @@
         "nama": "Irham Rasya Gustiawan",
         "active": true,
         "featured": false,
+        "order": 16,
         "mapel": [
             "Renang",
             "Olahraga"
@@ -61,6 +63,7 @@
         "nama": "Muhamad Ikhsan",
         "active": true,
         "featured": false,
+        "order": 3,
         "mapel": [
             "Pendidikan Bahasa Indonesia"
         ],
@@ -87,6 +90,7 @@
         "nama": "Dikdik Japar Sidik, M.Pd., Gr.",
         "active": true,
         "featured": true,
+        "order": 1,
         "mapel": [
             "Akuntansi",
             "Pendampingan Publikasi",
@@ -119,6 +123,7 @@
         "nama": "Mohamad Yusril Huda, M.Pd",
         "active": true,
         "featured": false,
+        "order": 14,
         "mapel": [
             "Matematika"
         ],
@@ -143,6 +148,7 @@
         "nama": "Ihkam Ismayadi, S.Pd.",
         "active": true,
         "featured": false,
+        "order": 13,
         "mapel": [
             "Matematika"
         ],
@@ -167,6 +173,7 @@
         "nama": "Yola Yolanda, M.Pd",
         "active": true,
         "featured": false,
+        "order": 4,
         "mapel": [
             "Ekonomi"
         ],
@@ -191,6 +198,7 @@
         "nama": "Ana Muslimah",
         "active": true,
         "featured": false,
+        "order": 10,
         "mapel": [
             "Ekonomi"
         ],
@@ -214,6 +222,7 @@
         "nama": "Dinda Kharisma Yandi",
         "active": true,
         "featured": false,
+        "order": 11,
         "mapel": [
             "Kimia",
             "Biologi",
@@ -245,6 +254,7 @@
         "nama": "Muhamad Setyaji, M.Pd.",
         "active": true,
         "featured": true,
+        "order": 8,
         "mapel": [
             "Matematika"
         ],
@@ -268,6 +278,7 @@
         "nama": "Tiktik Siti Jenab, M.Pd",
         "active": true,
         "featured": true,
+        "order": 2,
         "mapel": [
             "Bahasa Inggris",
             "Calistung",
@@ -301,6 +312,7 @@
         "nama": "Jajang Pirmansyah, S.Pd.,Gr.",
         "active": true,
         "featured": false,
+        "order": 7,
         "mapel": [
             "IPA Terpadu"
         ],
@@ -324,6 +336,7 @@
         "nama": "Rizky Prayoga Putra",
         "active": true,
         "featured": true,
+        "order": 15,
         "mapel": [
             "Ekonomi",
             "Geografi",
@@ -351,5 +364,100 @@
         ],
         "whatsapp": "6285861541907",
         "email": "rizkyprayogap1997@gmail.com"
+    },
+    {
+        "id": 14,
+        "slug": "muhammad-lucky-fahrezi",
+        "nama": "Muhammad Lucky Fahrezi",
+        "active": true,
+        "featured": false,
+        "order": 6,
+        "mapel": [
+            "Mengaji",
+            "Sejarah"
+        ],
+        "lokasi": "Lembang, Kabupaten Bandung Barat",
+        "tipe": "keduanya",
+        "tingkat": [
+            "SD",
+            "SMP"
+        ],
+        "foto": "/images/tutor-14.jpg",
+        "deskripsi": "Mahasiswa S1 Pendidikan Agama Islam Universitas Islam Bandung. Berpengalaman mengajar Mengaji dan Sejarah untuk tingkat SD dan SMP. Siap mengajar secara online maupun tatap muka di wilayah Lembang, Kabupaten Bandung Barat.",
+        "pendidikan": "S1 Pendidikan Agama Islam Universitas Islam Bandung",
+        "kategori": [
+            "mengaji",
+            "sejarah"
+        ],
+        "whatsapp": "6281917478490",
+        "email": "luckyado181@gmail.com"
+    },
+    {
+        "id": 15,
+        "slug": "mirma-lutfiatunnisa",
+        "nama": "Mirma Lutfiatunnisa",
+        "active": true,
+        "featured": false,
+        "order": 9,
+        "mapel": [
+            "Bahasa Indonesia",
+            "Matematika",
+            "Bahasa Inggris",
+            "Calistung"
+        ],
+        "lokasi": "Lembang, Kabupaten Bandung Barat",
+        "tipe": "keduanya",
+        "tingkat": [
+            "TK/PAUD",
+            "SD"
+        ],
+        "foto": "/images/tutor-15.jpg",
+        "deskripsi": "Mahasiswa S1 Ilmu Pendidikan Sosial Universitas Pendidikan Indonesia. Berpengalaman mengajar Bahasa Indonesia, Matematika, Bahasa Inggris, dan Calistung untuk tingkat TK/PAUD dan SD. Siap mengajar secara online maupun tatap muka di wilayah Lembang, Kabupaten Bandung Barat.",
+        "pendidikan": "S1 Ilmu Pendidikan Sosial Universitas Pendidikan Indonesia",
+        "kategori": [
+            "bahasa-indonesia",
+            "matematika",
+            "bahasa-inggris",
+            "calistung"
+        ],
+        "whatsapp": "6289531502161",
+        "email": "lutfiatunnisa65@gmail.com"
+    },
+    {
+        "id": 16,
+        "slug": "linda-maryani",
+        "nama": "Linda Maryani, M.Pd",
+        "active": true,
+        "featured": false,
+        "order": 12,
+        "mapel": [
+            "Geografi",
+            "Ekonomi",
+            "IPS Terpadu",
+            "Karya Tulis Ilmiah",
+            "PKN",
+            "Sosiologi",
+            "Bimbingan Tesis"
+        ],
+        "lokasi": "Talang Kelapa, Kabupaten Banyu Asin",
+        "tipe": "keduanya",
+        "tingkat": [
+            "SMP",
+            "SMA",
+            "Kuliah"
+        ],
+        "foto": "/images/tutor-16.jpg",
+        "deskripsi": "Lulusan S2 Pendidikan Ekonomi dan Bisnis dari Universitas Pendidikan Indonesia. Berpengalaman mengajar Geografi, Ekonomi, IPS Terpadu, Karya Tulis Ilmiah, PKN, Sosiologi, dan bimbingan tesis untuk tingkat SMP, SMA, hingga Kuliah. Siap mengajar secara online maupun tatap muka di wilayah Sumatera Selatan.",
+        "pendidikan": "S2 Pendidikan Ekonomi dan Bisnis Universitas Pendidikan Indonesia",
+        "kategori": [
+            "geografi",
+            "ekonomi",
+            "ips",
+            "pkn",
+            "sosiologi",
+            "akademik"
+        ],
+        "whatsapp": "628986813835",
+        "email": "lindamaryani96@gmail.com"
     }
 ]
