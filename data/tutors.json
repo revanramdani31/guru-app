@@ -2,9 +2,9 @@
     {
         "id": 1,
         "slug": "rivaldi-permana",
-        "nama": "Rivaldi Permana",
+        "nama": "Rivaldi Permana S.Pd.",
         "active": true,
-        "featured": false,
+        "featured": true,
         "order": 5,
         "mapel": [
             "Matematika",
@@ -89,7 +89,7 @@
         "slug": "dikdik-japar",
         "nama": "Dikdik Japar Sidik, M.Pd., Gr.",
         "active": true,
-        "featured": true,
+        "featured": false,
         "order": 1,
         "mapel": [
             "Akuntansi",
@@ -195,7 +195,7 @@
     {
         "id": 8,
         "slug": "ana-muslimah",
-        "nama": "Ana Muslimah",
+        "nama": "Ana Muslimah S.Pd.",
         "active": true,
         "featured": false,
         "order": 10,
@@ -219,7 +219,7 @@
     {
         "id": 9,
         "slug": "dinda-kharisma-yandi",
-        "nama": "Dinda Kharisma Yandi",
+        "nama": "Dinda Kharisma Yandi S.Pd. ",
         "active": true,
         "featured": false,
         "order": 11,
@@ -277,7 +277,7 @@
         "slug": "tiktik-siti-jenab",
         "nama": "Tiktik Siti Jenab, M.Pd",
         "active": true,
-        "featured": true,
+        "featured": false,
         "order": 2,
         "mapel": [
             "Bahasa Inggris",
@@ -311,7 +311,7 @@
         "slug": "jajang-pirmansyah",
         "nama": "Jajang Pirmansyah, S.Pd.,Gr.",
         "active": true,
-        "featured": false,
+        "featured": true,
         "order": 7,
         "mapel": [
             "IPA Terpadu"
@@ -333,9 +333,9 @@
     {
         "id": 13,
         "slug": "rizky-prayoga-putra",
-        "nama": "Rizky Prayoga Putra",
+        "nama": "Rizky Prayoga Putra S.Pd",
         "active": true,
-        "featured": true,
+        "featured": false,
         "order": 15,
         "mapel": [
             "Ekonomi",
@@ -368,9 +368,9 @@
     {
         "id": 14,
         "slug": "muhammad-lucky-fahrezi",
-        "nama": "Muhammad Lucky Fahrezi",
+        "nama": "Muhammad Lucky Fahrezi S.Pd.",
         "active": true,
-        "featured": false,
+        "featured": true,
         "order": 6,
         "mapel": [
             "Mengaji",
@@ -395,7 +395,7 @@
     {
         "id": 15,
         "slug": "mirma-lutfiatunnisa",
-        "nama": "Mirma Lutfiatunnisa",
+        "nama": "Mirma Lutfiatunnisa S.Pd.",
         "active": true,
         "featured": false,
         "order": 9,
