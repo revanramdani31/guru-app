@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: `${tutor.nama} - Guru Les Privat ${tutor.mapel.join(', ')} | Datangin Guru`,
         description: `${tutor.nama} adalah guru les privat di ${tutor.lokasi} untuk mata pelajaran ${tutor.mapel.join(', ')}. ${tutor.deskripsi}`,
+        alternates: {
+            canonical: `/tutors/${slug}`,
+        },
         openGraph: {
             title: `${tutor.nama} - Guru Les Privat`,
             description: tutor.deskripsi,

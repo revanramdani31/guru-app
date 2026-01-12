@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: '/private/',
+            disallow: ['/private/', '/_next/static/', '/api/'],
         },
         sitemap: 'https://datanginguru.com/sitemap.xml',
     };

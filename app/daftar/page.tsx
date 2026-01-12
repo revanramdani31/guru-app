@@ -8,6 +8,9 @@ export const metadata: Metadata = {
     title: "Daftar Les Privat Guru Datang ke Rumah - Datangin Guru",
     description: "Formulir pendaftaran les privat. Isi data diri dan kriteria guru yang diinginkan. Tim kami akan segera mencarikan tutor yang cocok untuk Anda.",
     keywords: ["daftar les privat", "registrasi bimbel", "cari guru ngaji", "bimbingan belajar intensif"],
+    alternates: {
+        canonical: '/daftar',
+    },
 };
 
 export default function Page() {

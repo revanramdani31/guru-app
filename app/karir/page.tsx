@@ -8,6 +8,9 @@ export const metadata: Metadata = {
     title: "Lowongan Guru Les Privat / Tutor Privat - Gabung Datangin Guru",
     description: "Buka peluang karir sebagai guru les privat. Jadwal fleksibel, fee menarik, dan kesempatan mengajar siswa di seluruh Indonesia.",
     keywords: ["lowongan guru les", "loker guru privat", "jadi tutor online", "lowongan tenaga pengajar"],
+    alternates: {
+        canonical: '/karir',
+    },
 };
 
 export default function Page() {
