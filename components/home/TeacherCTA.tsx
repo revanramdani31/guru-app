@@ -16,7 +16,7 @@ const TeacherCTA = () => {
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link href="/karir">
-                                <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-emerald-600/20 transition-all flex items-center gap-2">
+                                <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 min-h-[48px] rounded-xl font-bold shadow-lg hover:shadow-emerald-600/20 transition-all flex items-center gap-2">
                                     Daftar Jadi Guru <ArrowRight className="w-5 h-5" />
                                 </button>
                             </Link>

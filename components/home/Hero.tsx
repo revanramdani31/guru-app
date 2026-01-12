@@ -36,7 +36,7 @@ const Hero = () => {
                             </button>
                         </Link>
                         <Link href="/biaya">
-                            <button className="inline-flex items-center justify-center bg-emerald-700/50 hover:bg-emerald-700 text-emerald-100 hover:text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all backdrop-blur-sm border border-emerald-500/30">
+                            <button className="inline-flex items-center justify-center bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all border border-emerald-600">
                                 <Calculator className="w-5 h-5 mr-2" />
                                 Simulasi Biaya Les
                             </button>

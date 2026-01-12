@@ -73,7 +73,8 @@ const Header = () => {
                         <div className="relative">
                             <button
                                 onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
-                                className="p-1 hover:bg-slate-100 rounded-lg transition-colors text-slate-600"
+                                className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-600"
+                                aria-label="Menu lainnya"
                             >
                                 <AlignJustify className="w-6 h-6" />
                             </button>
@@ -128,6 +129,7 @@ const Header = () => {
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         className="md:hidden p-2 text-slate-600 hover:text-emerald-600 transition-colors"
+                        aria-label={isMenuOpen ? "Tutup menu" : "Buka menu"}
                     >
                         {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
