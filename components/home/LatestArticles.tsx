@@ -16,7 +16,7 @@ const LatestArticles = () => {
                         <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Tips & Artikel Terbaru</h2>
                         <p className="text-slate-600">Informasi bermanfaat seputar pendidikan.</p>
                     </div>
-                    <Link href="/artikel" className="hidden md:flex items-center text-emerald-600 font-semibold hover:gap-2 transition-all">
+                    <Link href="/artikel" className="hidden md:flex items-center text-emerald-700 font-semibold hover:gap-2 transition-all">
                         Lihat Semua Artikel <ArrowRight className="w-4 h-4 ml-1" />
                     </Link>
                 </div>

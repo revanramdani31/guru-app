@@ -30,7 +30,7 @@ const Hero = () => {
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
                         <Link href="/daftar">
-                            <button className="inline-flex items-center justify-center bg-white text-emerald-600 hover:bg-emerald-50 px-8 py-4 text-lg rounded-xl font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                            <button className="inline-flex items-center justify-center bg-white text-emerald-700 hover:bg-emerald-50 px-8 py-4 text-lg rounded-xl font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                                 Cari Guru Sekarang
                                 <ArrowRight className="w-5 h-5 ml-2" />
                             </button>

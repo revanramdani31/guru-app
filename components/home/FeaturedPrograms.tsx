@@ -16,7 +16,7 @@ const FeaturedPrograms = () => {
                         <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Program Unggulan</h2>
                         <p className="text-slate-600">Pilih jenjang pendidikan yang sesuai dengan kebutuhan.</p>
                     </div>
-                    <Link href="/program" className="hidden md:flex items-center text-emerald-600 font-semibold hover:gap-2 transition-all">
+                    <Link href="/program" className="hidden md:flex items-center text-emerald-700 font-semibold hover:gap-2 transition-all">
                         Lihat Semua Program <ArrowRight className="w-4 h-4 ml-1" />
                     </Link>
                 </div>

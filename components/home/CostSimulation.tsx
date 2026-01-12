@@ -26,7 +26,7 @@ const CostSimulation = () => {
                             </div>
                         </div>
                         <Link href="/biaya" className="flex-shrink-0">
-                            <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-emerald-500/25 transition-all flex items-center gap-2">
+                            <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-emerald-500/25 transition-all flex items-center gap-2">
                                 <Calculator className="w-5 h-5" />
                                 Hitung Biaya Sekarang
                             </button>

@@ -16,7 +16,7 @@ const StudentCTA = () => {
                         </p>
                     </div>
                     <Link href="/daftar" className="flex-shrink-0">
-                        <button className="bg-white text-emerald-600 hover:bg-emerald-50 px-10 py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center gap-2">
+                        <button className="bg-white text-emerald-700 hover:bg-emerald-50 px-10 py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center gap-2">
                             Daftar Sebagai Siswa <ArrowRight className="w-5 h-5 ml-1" />
                         </button>
                     </Link>
