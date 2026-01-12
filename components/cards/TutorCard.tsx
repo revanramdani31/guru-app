@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { MapPin, GraduationCap, Star } from 'lucide-react';
 
@@ -43,15 +44,18 @@ const TutorCard = ({ tutor, index = 0 }: TutorCardProps) => {
             <Link href={`/tutors/${tutor.slug}`} className="block h-full flex flex-col">
                 <div className="relative aspect-[4/5] overflow-hidden bg-slate-100">
                     {tutor.foto ? (
-                        <img
+                        <Image
                             src={tutor.foto}
                             alt={tutor.nama}
-                            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                            loading={index === 0 ? "eager" : "lazy"}
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center text-4xl bg-emerald-50">👨‍🏫</div>
                     )}
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-emerald-700 flex items-center gap-1 shadow-sm">
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-emerald-700 flex items-center gap-1 shadow-sm z-10">
                         <Star className="w-3 h-3 fill-emerald-500 text-emerald-500" /> 4.9
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { MapPin, ArrowLeft, Monitor, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -72,10 +73,13 @@ const TutorDetailClient = ({ slug }: TutorDetailClientProps) => {
                         {/* Photo on Left - 2/5 width */}
                         <div className="lg:col-span-2 relative h-80 sm:h-96 lg:h-auto lg:min-h-[350px] overflow-hidden bg-gradient-to-br from-blue-400 to-purple-500">
                             {tutor.foto ? (
-                                <img
+                                <Image
                                     src={tutor.foto}
                                     alt={tutor.nama}
-                                    className="w-full h-full object-cover object-center lg:object-top"
+                                    fill
+                                    sizes="(max-width: 1024px) 100vw, 40vw"
+                                    className="object-cover object-center lg:object-top"
+                                    priority
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center">
