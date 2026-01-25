@@ -20,7 +20,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://datanginguru.com'),
+  metadataBase: new URL('https://www.datanginguru.com'),
   alternates: {
     canonical: '/',
   },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     description: "Temukan guru les privat profesional untuk semua mata pelajaran dan jenjang.",
     type: "website",
     locale: "id_ID",
-    url: 'https://datanginguru.com',
+    url: 'https://www.datanginguru.com',
   },
 };
 

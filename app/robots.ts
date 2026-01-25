@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/private/', '/_next/static/', '/api/'],
         },
-        sitemap: 'https://datanginguru.com/sitemap.xml',
+        sitemap: 'https://www.datanginguru.com/sitemap.xml',
     };
 }

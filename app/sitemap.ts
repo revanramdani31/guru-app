@@ -8,7 +8,7 @@ interface Tutor {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://datanginguru.com';
+    const baseUrl = 'https://www.datanginguru.com';
 
     const staticPages = [
         '',
