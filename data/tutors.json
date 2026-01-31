@@ -334,7 +334,7 @@
         "id": 13,
         "slug": "rizky-prayoga-putra",
         "nama": "Rizky Prayoga Putra S.Pd",
-        "active": true,
+        "active": false,
         "featured": false,
         "order": 15,
         "mapel": [
@@ -459,5 +459,34 @@
         ],
         "whatsapp": "628986813835",
         "email": "lindamaryani96@gmail.com"
+    },
+    {
+        "id": 17,
+        "slug": "rifqi-faizal-muzakki",
+        "nama": "Rifqi Faizal Muzakki, S.Pd., Gr.",
+        "active": true,
+        "featured": false,
+        "order": 15,
+        "mapel": [
+            "Ekonomi",
+            "Sosiologi",
+            "IPS Terpadu"
+        ],
+        "lokasi": "Buahbatu, Kota Bandung",
+        "tipe": "keduanya",
+        "tingkat": [
+            "SMP",
+            "SMA"
+        ],
+        "foto": "/images/tutor-17.jpg",
+        "deskripsi": "Lulusan S1 Pendidikan Ekonomi dari Universitas Pasundan. Berpengalaman mengajar Ekonomi, Sosiologi, dan IPS Terpadu untuk tingkat SMP dan SMA. Siap mengajar secara online maupun tatap muka di wilayah Buahbatu, Kota Bandung.",
+        "pendidikan": "S1 Pendidikan Ekonomi Universitas Pasundan",
+        "kategori": [
+            "ekonomi",
+            "sosiologi",
+            "ips"
+        ],
+        "whatsapp": "6287716833511",
+        "email": "rifqifaizalm@gmail.com"
     }
 ]
