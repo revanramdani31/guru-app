@@ -6,6 +6,17 @@ export interface Region {
     name: string;
 }
 
+export const JAWA_BARAT_ID = '32';
+export const JAWA_BARAT_NAME = 'JAWA BARAT';
+
+export const OPERATIONAL_CITIES: Region[] = [
+    { id: '3273', name: 'KOTA BANDUNG' },
+    { id: '3277', name: 'KOTA CIMAHI' },
+    { id: '3204', name: 'KABUPATEN BANDUNG' },
+    { id: '3217', name: 'KABUPATEN BANDUNG BARAT' },
+    { id: '3211', name: 'KABUPATEN SUMEDANG (Jatinangor & Sekitarnya)' }
+];
+
 export async function getProvinces(): Promise<Region[]> {
     try {
         const response = await fetch('/api/regions?type=provinces');

@@ -7,7 +7,7 @@ import { User, BookOpen, Clock, MapPin, MessageSquare, FileText, Check, Download
 import { Button } from '@/components/ui/button';
 import { jsPDF } from 'jspdf';
 import { submitToGoogleSheets } from '@/lib/googleSheets';
-import { getProvinces, getCities, getDistricts, getVillages, Region } from '@/lib/regionApi';
+import { getDistricts, getVillages, Region, OPERATIONAL_CITIES, JAWA_BARAT_ID, JAWA_BARAT_NAME } from '@/lib/regionApi';
 import { programs, programOptions, mataPelajaranByPeserta, pricing, isKondisional, formatPrice, getProgram, calculatePrice } from '@/lib/pricing';
 
 interface FormData {
@@ -60,8 +60,8 @@ const DaftarForm = () => {
         jumlahPertemuan: '4',
         jadwalHari: [],
         jadwalWaktu: '',
-        provinsiId: '',
-        provinsiName: '',
+        provinsiId: JAWA_BARAT_ID,
+        provinsiName: JAWA_BARAT_NAME,
         kotaId: '',
         kotaName: '',
         kecamatanId: '',
@@ -78,31 +78,18 @@ const DaftarForm = () => {
     const [availableMapel, setAvailableMapel] = useState<string[]>([]);
     const [estimatedPrice, setEstimatedPrice] = useState(0);
 
-    // Region states
-    const [provinces, setProvinces] = useState<Region[]>([]);
-    const [cities, setCities] = useState<Region[]>([]);
+    // Region states - Terkunci ke Bandung Raya, Cimahi, dan Sumedang
+    const [cities] = useState<Region[]>(OPERATIONAL_CITIES);
     const [districts, setDistricts] = useState<Region[]>([]);
     const [villages, setVillages] = useState<Region[]>([]);
     const [loadingRegion, setLoadingRegion] = useState({
-        provinces: false,
-        cities: false,
         districts: false,
         villages: false
     });
 
-    // Load provinces on mount and read URL params
+    // Read URL params from biaya page
     useEffect(() => {
         let mounted = true;
-
-        const loadProvinces = async () => {
-            if (mounted) setLoadingRegion(prev => ({ ...prev, provinces: true }));
-            const data = await getProvinces();
-            if (mounted) {
-                setProvinces(data);
-                setLoadingRegion(prev => ({ ...prev, provinces: false }));
-            }
-        };
-        loadProvinces();
 
         // Read URL params from biaya page
         const programParam = searchParams.get('program');
@@ -167,32 +154,7 @@ const DaftarForm = () => {
         setEstimatedPrice(basePrice);
     }, [formData.program, formData.programOption, formData.modeBelajar]);
 
-    // Load cities when province changes
-    useEffect(() => {
-        let mounted = true;
-        if (formData.provinsiId) {
-            const loadCities = async () => {
-                if (mounted) setLoadingRegion(prev => ({ ...prev, cities: true }));
-                const data = await getCities(formData.provinsiId);
-                if (mounted) {
-                    setCities(data);
-                    setLoadingRegion(prev => ({ ...prev, cities: false }));
-                }
-            };
-            loadCities();
-            if (mounted) {
-                setFormData(prev => ({
-                    ...prev,
-                    kotaId: '', kotaName: '',
-                    kecamatanId: '', kecamatanName: '',
-                    kelurahanId: '', kelurahanName: ''
-                }));
-                setDistricts([]);
-                setVillages([]);
-            }
-        }
-        return () => { mounted = false; };
-    }, [formData.provinsiId]);
+
 
     // Load districts when city changes
     useEffect(() => {
@@ -247,16 +209,18 @@ const DaftarForm = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const id = e.target.value;
-        const name = provinces.find(p => p.id === id)?.name || '';
-        setFormData(prev => ({ ...prev, provinsiId: id, provinsiName: name }));
-    };
-
     const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const id = e.target.value;
         const name = cities.find(c => c.id === id)?.name || '';
-        setFormData(prev => ({ ...prev, kotaId: id, kotaName: name }));
+        setFormData(prev => ({
+            ...prev,
+            kotaId: id,
+            kotaName: name,
+            kecamatanId: '',
+            kecamatanName: '',
+            kelurahanId: '',
+            kelurahanName: ''
+        }));
     };
 
     const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -444,8 +408,8 @@ Mohon informasi lebih lanjut. Terima kasih.`;
             jumlahPertemuan: '4',
             jadwalHari: [],
             jadwalWaktu: '',
-            provinsiId: '',
-            provinsiName: '',
+            provinsiId: JAWA_BARAT_ID,
+            provinsiName: JAWA_BARAT_NAME,
             kotaId: '',
             kotaName: '',
             kecamatanId: '',
@@ -458,7 +422,6 @@ Mohon informasi lebih lanjut. Terima kasih.`;
         setIsSubmitted(false);
         setAvailableOptions([]);
         setAvailableMapel([]);
-        setCities([]);
         setDistricts([]);
         setVillages([]);
     };
@@ -813,17 +776,31 @@ Mohon informasi lebih lanjut. Terima kasih.`;
 
                         {/* Alamat */}
                         <div>
-                            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                <MapPin className="w-5 h-5 text-emerald-600" />
-                                Alamat
-                            </h2>
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <MapPin className="w-5 h-5 text-emerald-600" />
+                                    Alamat & Domisili
+                                </h2>
+                            </div>
+
+                            {/* Banner Wilayah Layanan */}
+                            <div className="mb-4 p-3.5 bg-emerald-50/90 border border-emerald-200 rounded-xl flex items-start gap-3">
+                                <MapPin className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                                <p className="text-xs md:text-sm text-emerald-900 leading-relaxed">
+                                    <strong>Wilayah Layanan Aktif:</strong> Saat ini layanan Datangin Guru tersedia khusus untuk wilayah <strong>Kota Bandung, Kota Cimahi, Kabupaten Bandung, Kabupaten Bandung Barat</strong>, dan <strong>Kabupaten Sumedang (Jatinangor & Sekitarnya)</strong>.
+                                </p>
+                            </div>
+
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="block text-sm font-semibold text-slate-700">Provinsi <span className="text-red-500">*</span></label>
                                     <div className="relative">
-                                        <select value={formData.provinsiId} onChange={handleProvinceChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={loadingRegion.provinces}>
-                                            <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
-                                            {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
+                                        <select
+                                            value={formData.provinsiId}
+                                            disabled
+                                            className="w-full px-4 py-3 bg-slate-100 border-2 border-slate-200 rounded-xl appearance-none cursor-not-allowed text-slate-700 font-medium select-none"
+                                        >
+                                            <option value={JAWA_BARAT_ID}>Jawa Barat</option>
                                         </select>
                                         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
                                     </div>
@@ -831,8 +808,8 @@ Mohon informasi lebih lanjut. Terima kasih.`;
                                 <div className="space-y-2">
                                     <label className="block text-sm font-semibold text-slate-700">Kota/Kabupaten <span className="text-red-500">*</span></label>
                                     <div className="relative">
-                                        <select value={formData.kotaId} onChange={handleCityChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500" disabled={!formData.provinsiId || loadingRegion.cities}>
-                                            <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
+                                        <select value={formData.kotaId} onChange={handleCityChange} required className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl appearance-none cursor-pointer focus:outline-none focus:border-emerald-500">
+                                            <option value="">Pilih Kota/Kabupaten...</option>
                                             {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
                                         </select>
                                         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />

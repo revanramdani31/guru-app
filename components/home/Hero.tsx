@@ -24,7 +24,7 @@ const Hero = () => {
                         <span className="block text-emerald-100 text-shadow-sm mt-2">Guru Datang ke Rumah</span>
                     </h1>
                     <p className="text-emerald-50 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-medium leading-relaxed drop-shadow-sm">
-                        Temukan guru privat terbaik untuk TK, SD, SMP, SMA, hingga Umum.
+                        Temukan guru privat terbaik untuk TK, SD, SMP, SMA, hingga Umum di area Bandung Raya, Cimahi, dan Jatinangor.
                         Belajar jadi lebih fokus, nyaman, dan efektif.
                     </p>
 
@@ -65,14 +65,14 @@ const Hero = () => {
                         { label: 'Siswa Aktif', value: '5000+' },
                         { label: 'Guru Terdaftar', value: '2000+' },
                         { label: 'Rating Rata-rata', value: '4.8/5' },
-                        { label: 'Kota Jangkauan', value: '50+' }
+                        { label: 'Bandung Raya & Cimahi', value: '5 Wilayah' }
                     ].map((stat, i) => (
                         <motion.div
                             key={i}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.5 + (i * 0.1) }}
-                            className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/10"
+                            className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/10 flex flex-col justify-center"
                         >
                             <p className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</p>
                             <p className="text-emerald-100 text-xs md:text-sm">{stat.label}</p>

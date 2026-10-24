@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { jsPDF } from 'jspdf';
 import Link from 'next/link';
 import { submitToGoogleSheets, formatModeLabel } from '@/lib/googleSheets';
-import { getProvinces, getCities, getDistricts, getVillages, Region } from '@/lib/regionApi';
+import { getProvinces, getCities, getDistricts, getVillages, Region, OPERATIONAL_CITIES, JAWA_BARAT_ID, JAWA_BARAT_NAME } from '@/lib/regionApi';
 
 interface FormData {
     namaLengkap: string;
@@ -67,8 +67,8 @@ const KarirPage = () => {
         mapelLainnya: '',
         spesialisasiJenjang: [],
         modeMengajar: 'keduanya',
-        provinsiId: '',
-        provinsiName: '',
+        provinsiId: JAWA_BARAT_ID,
+        provinsiName: JAWA_BARAT_NAME,
         kotaId: '',
         kotaName: '',
         kecamatanId: '',
@@ -91,6 +91,7 @@ const KarirPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Region states
+    const isLocalOnly = formData.modeMengajar !== 'online';
     const [provinces, setProvinces] = useState<Region[]>([]);
     const [cities, setCities] = useState<Region[]>([]);
     const [districts, setDistricts] = useState<Region[]>([]);
@@ -102,7 +103,9 @@ const KarirPage = () => {
         villages: false
     });
 
-    // Load provinces on mount
+    const activeCities = isLocalOnly ? OPERATIONAL_CITIES : cities;
+
+    // Load provinces on mount (used if applicant switches to Online)
     useEffect(() => {
         let mounted = true;
         const loadProvinces = async () => {
@@ -117,10 +120,10 @@ const KarirPage = () => {
         return () => { mounted = false; };
     }, []);
 
-    // Load cities when province changes
+    // Load cities when province changes (for Online mode)
     useEffect(() => {
         let mounted = true;
-        if (formData.provinsiId) {
+        if (formData.modeMengajar === 'online' && formData.provinsiId) {
             const loadCities = async () => {
                 if (mounted) setLoadingRegion(prev => ({ ...prev, cities: true }));
                 const data = await getCities(formData.provinsiId);
@@ -142,7 +145,7 @@ const KarirPage = () => {
             }
         }
         return () => { mounted = false; };
-    }, [formData.provinsiId]);
+    }, [formData.provinsiId, formData.modeMengajar]);
 
     // Load districts when city changes
     useEffect(() => {
@@ -195,6 +198,31 @@ const KarirPage = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleModeChange = (newMode: string) => {
+        if (newMode !== 'online') {
+            setFormData(prev => {
+                const isValidCity = OPERATIONAL_CITIES.some(c => c.id === prev.kotaId);
+                return {
+                    ...prev,
+                    modeMengajar: newMode,
+                    provinsiId: JAWA_BARAT_ID,
+                    provinsiName: JAWA_BARAT_NAME,
+                    kotaId: isValidCity ? prev.kotaId : '',
+                    kotaName: isValidCity ? prev.kotaName : '',
+                    kecamatanId: isValidCity ? prev.kecamatanId : '',
+                    kecamatanName: isValidCity ? prev.kecamatanName : '',
+                    kelurahanId: isValidCity ? prev.kelurahanId : '',
+                    kelurahanName: isValidCity ? prev.kelurahanName : ''
+                };
+            });
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                modeMengajar: newMode
+            }));
+        }
+    };
+
     const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const id = e.target.value;
         const name = provinces.find(p => p.id === id)?.name || '';
@@ -203,8 +231,16 @@ const KarirPage = () => {
 
     const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const id = e.target.value;
-        const name = cities.find(c => c.id === id)?.name || '';
-        setFormData(prev => ({ ...prev, kotaId: id, kotaName: name }));
+        const name = activeCities.find(c => c.id === id)?.name || '';
+        setFormData(prev => ({
+            ...prev,
+            kotaId: id,
+            kotaName: name,
+            kecamatanId: '',
+            kecamatanName: '',
+            kelurahanId: '',
+            kelurahanName: ''
+        }));
     };
 
     const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -771,7 +807,7 @@ Dikirim dari datanginguru Privat`;
                             <div className="flex flex-wrap gap-3">
                                 {[{ value: 'tatap_muka', label: 'Tatap Muka' }, { value: 'online', label: 'Online' }, { value: 'keduanya', label: 'Keduanya' }].map(mode => (
                                     <label key={mode.value} className="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="modeMengajar" value={mode.value} checked={formData.modeMengajar === mode.value} onChange={handleChange} className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500" />
+                                        <input type="radio" name="modeMengajar" value={mode.value} checked={formData.modeMengajar === mode.value} onChange={() => handleModeChange(mode.value)} className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500" />
                                         <span className="text-sm text-slate-700">{mode.label}</span>
                                     </label>
                                 ))}
@@ -781,27 +817,60 @@ Dikirim dari datanginguru Privat`;
 
                     {/* 4. Domisili */}
                     <div className="mb-8">
-                        <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                            <MapPin className="w-5 h-5 text-emerald-600" />
-                            Domisili
-                        </h3>
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                                <MapPin className="w-5 h-5 text-emerald-600" />
+                                Domisili & Wilayah Mengajar
+                            </h3>
+                        </div>
+
+                        {/* Banner status domisili sesuai mode mengajar */}
+                        {isLocalOnly ? (
+                            <div className="mb-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-3">
+                                <MapPin className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                                <p className="text-xs md:text-sm text-emerald-900 leading-relaxed">
+                                    <strong>Wilayah Tatap Muka:</strong> Khusus untuk calon pengajar berdomisili di <strong>Kota Bandung, Kota Cimahi, Kabupaten Bandung, Kabupaten Bandung Barat</strong>, dan <strong>Kabupaten Sumedang (Jatinangor & Sekitarnya)</strong>. <em>(Pilih mode Online jika Anda berdomisili di luar wilayah ini)</em>.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="mb-4 p-3.5 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+                                <MapPin className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                                <p className="text-xs md:text-sm text-blue-900 leading-relaxed">
+                                    <strong>Mode Online:</strong> Terbuka untuk calon pengajar di <strong>seluruh wilayah Indonesia</strong>.
+                                </p>
+                            </div>
+                        )}
+
                         <div className="grid md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Provinsi *</label>
-                                <div className="relative">
-                                    <select value={formData.provinsiId} onChange={handleProvinceChange} required className="input-modern appearance-none" disabled={loadingRegion.provinces}>
-                                        <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
-                                        {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
-                                    </select>
-                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-                                </div>
+                                {isLocalOnly ? (
+                                    <div className="relative">
+                                        <select
+                                            value={formData.provinsiId}
+                                            disabled
+                                            className="input-modern appearance-none bg-slate-100 cursor-not-allowed text-slate-700 font-medium"
+                                        >
+                                            <option value={JAWA_BARAT_ID}>Jawa Barat</option>
+                                        </select>
+                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                ) : (
+                                    <div className="relative">
+                                        <select value={formData.provinsiId} onChange={handleProvinceChange} required className="input-modern appearance-none" disabled={loadingRegion.provinces}>
+                                            <option value="">{loadingRegion.provinces ? 'Memuat...' : 'Pilih provinsi...'}</option>
+                                            {provinces.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
+                                        </select>
+                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                                    </div>
+                                )}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Kota/Kabupaten *</label>
                                 <div className="relative">
-                                    <select value={formData.kotaId} onChange={handleCityChange} required className="input-modern appearance-none" disabled={!formData.provinsiId || loadingRegion.cities}>
-                                        <option value="">{!formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota...'}</option>
-                                        {cities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                                    <select value={formData.kotaId} onChange={handleCityChange} required className="input-modern appearance-none" disabled={!isLocalOnly && (!formData.provinsiId || loadingRegion.cities)}>
+                                        <option value="">{!isLocalOnly && !formData.provinsiId ? 'Pilih provinsi dulu' : loadingRegion.cities ? 'Memuat...' : 'Pilih kota/kabupaten...'}</option>
+                                        {activeCities.map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
                                     </select>
                                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
                                 </div>
