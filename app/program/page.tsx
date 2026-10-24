@@ -3,9 +3,9 @@ import { Metadata } from 'next';
 import ClientPage from './ClientPage';
 
 export const metadata: Metadata = {
-    title: "Program Les Privat Terbaik TK, SD, SMP, SMA - Datangin Guru",
-    description: "Pilihan program les privat lengkap untuk TK, SD, SMP, SMA, hingga Alumni. Kurikulum nasional & internasional dengan guru datang ke rumah.",
-    keywords: ["les privat sd", "les privat smp", "les privat sma", "les privat tk", "persiapan utbk", "bimbel snbt", "les privat online", "program bimbel privat", "les privat datang ke rumah"],
+    title: "Program Les Privat TK, SD, SMP, SMA Bandung Raya - Datangin Guru",
+    description: "Program les privat lengkap untuk TK, SD, SMP, SMA, hingga SNBT di area Bandung Raya & Cimahi. Guru datang langsung ke rumah Anda.",
+    keywords: ["les privat sd bandung", "les privat smp bandung", "les privat sma bandung", "les privat datang ke rumah bandung", "bimbel privat cimahi", "les privat jatinangor"],
     alternates: {
         canonical: '/program',
     },

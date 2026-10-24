@@ -3,9 +3,9 @@ import { Metadata } from 'next';
 import ClientPage from './ClientPage';
 
 export const metadata: Metadata = {
-    title: "Cari Guru Les Privat Terdekat & Berkualitas - Datangin Guru",
-    description: "Temukan 2000+ guru les privat profesional lulusan UI, ITB, UGM. Profil lengkap, rating transparan, dan jadwal fleksibel.",
-    keywords: ["cari guru privat", "tutor les privat", "guru privat terdekat", "guru les matematika", "guru les bahasa inggris", "les privat datang ke rumah", "guru privat online", "guru ngaji ke rumah"],
+    title: "Cari Guru Les Privat Bandung Raya & Cimahi - Datangin Guru",
+    description: "Temukan guru les privat profesional di area Bandung Raya, Cimahi, dan Jatinangor. Profil lengkap, tutor lulusan kampus ternama, dan jadwal fleksibel.",
+    keywords: ["cari guru privat bandung", "guru les privat cimahi", "guru privat terdekat bandung", "guru les matematika bandung", "les privat datang ke rumah bandung", "tutor privat bandung barat"],
     alternates: {
         canonical: '/tutors',
     },

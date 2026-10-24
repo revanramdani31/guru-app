@@ -38,8 +38,8 @@ export const metadata: Metadata = {
     apple: '/icon-192.png',
   },
   openGraph: {
-    title: "Datangin Guru - Jasa Les Privat Datang ke Rumah",
-    description: "Temukan guru les privat profesional untuk semua mata pelajaran dan jenjang.",
+    title: "Datangin Guru - Jasa Les Privat Datang ke Rumah | Bandung Raya & Cimahi",
+    description: "Temukan guru les privat profesional untuk semua mata pelajaran dan jenjang di area Bandung Raya, Cimahi, dan Jatinangor.",
     type: "website",
     locale: "id_ID",
     url: 'https://www.datanginguru.com',

@@ -3,9 +3,9 @@ import { Metadata } from 'next';
 import ClientPage from './ClientPage';
 
 export const metadata: Metadata = {
-    title: "Simulasi Biaya Les Privat Hemat & Transparan - Datangin Guru",
-    description: "Hitung estimasi biaya les privat Anda sekarang. Harga transparan mulai dari Rp 75.000/sesi. Sesuaikan dengan kebutuhan dan budget.",
-    keywords: ["biaya les privat", "harga bimbel privat", "les privat murah", "biaya guru ke rumah", "tarif les privat per jam", "harga les privat sd", "harga les privat smp", "harga les privat sma"],
+    title: "Biaya Les Privat Bandung & Cimahi - Tarif Hemat & Transparan",
+    description: "Hitung estimasi biaya les privat datang ke rumah di area Bandung Raya dan Cimahi. Tarif transparan mulai dari Rp 75.000/sesi.",
+    keywords: ["biaya les privat bandung", "harga les privat cimahi", "tarif guru privat bandung", "biaya guru ke rumah bandung", "les privat murah bandung"],
     alternates: {
         canonical: '/biaya',
     },
